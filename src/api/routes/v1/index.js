@@ -1,7 +1,7 @@
 const express = require('express');
 const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
-const postRoutes = require('./post.route');
+const themeRoutes = require('./theme.route');
 
 const router = express.Router();
 
@@ -17,6 +17,6 @@ router.use('/docs', express.static('docs'));
 
 router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
-router.use('/posts', postRoutes);
+router.use('/themes', themeRoutes);
 
 module.exports = router;

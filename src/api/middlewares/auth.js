@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 const APIError = require('../utils/APIError');
 
 const ADMIN = 'admin';
-const LOGGED_USER = 'user';
+const LOGGED_USER = '_loggedUser';
 
 const handleJWT = (req, res, next, roles) => async (err, user, info) => {
   const error = err || info;
@@ -22,22 +22,16 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
     return next(apiError);
   }
 
-  if (roles === LOGGED_USER) {
-    if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
+  console.log('handleJWT', user, req.params.userId);
+
+  if (roles === ADMIN) {
+    if (user.role !== 'admin') {
       apiError.status = httpStatus.FORBIDDEN;
       apiError.message = 'Forbidden';
       return next(apiError);
     }
-  } else if (!roles.includes(user.role)) {
-    apiError.status = httpStatus.FORBIDDEN;
-    apiError.message = 'Forbidden';
-    return next(apiError);
-  } else if (err || !user) {
-    return next(apiError);
   }
-
   req.user = user;
-
   return next();
 };
 

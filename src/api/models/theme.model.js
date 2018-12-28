@@ -1,78 +1,83 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const { omitBy, isNil } = require('lodash');
-const moment = require('moment-timezone');
-const jwt = require('jwt-simple');
 const APIError = require('../utils/APIError');
-const { env, jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 
 /**
  * User Schema
  * @private
  */
 
-const postSchema = new mongoose.Schema(
+const types = ['profesional', 'personal'];
+
+const themeSchema = new mongoose.Schema(
   {
-    id_user: {
+    title: {
       type: String,
-      required: true,
-    },
-    id_parent: {
-      type: String,
-      required: true,
-    },
-    id_caregories: {
-      type: String,
-      maxlength: 50,
-    },
-    name: {
-      type: String,
-      maxlength: 128,
-      index: true,
+      maxlength: 20,
       trim: true,
+      required: true
     },
     description: {
       type: String,
-      maxlength: 128,
+      maxlength: 120
     },
-    media: {
+    type: {
       type: String,
+      enum: types,
+      required: true
     },
-    isVisible: {
+    verified: {
       type: Boolean,
-      default: true,
-    },
+      default: true
+    }
   },
   {
-    timestamps: true,
-  },
+    timestamps: true
+  }
 );
 
 /**
  * Methods
  */
-postSchema.method({
+themeSchema.method({
   transform() {
     const transformed = {};
-    const fields = [
-      'id_user',
-      'id_parent',
-      'id_caregories',
-      'name',
-      'description',
-      'media',
-      'isVisible',
-    ];
+    const fields = ['title', 'description', 'type', 'verified'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
     });
 
     return transformed;
-  },
+  }
 });
 
-postSchema.statics = {
+themeSchema.statics = {
+  types,
+  /**
+   * Get theme
+   *
+   * @param {ObjectId} id - The objectId of theme.
+   * @returns {Promise<Category, APIError>}
+   */
+  async get(id) {
+    try {
+      let theme;
+
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        theme = await this.findById(id).exec();
+      }
+      if (theme) return theme;
+
+      throw new APIError({
+        message: 'Theme does not exist',
+        status: httpStatus.NOT_FOUND
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
   /**
    * List posts in descending order of 'createdAt' timestamp.
    *
@@ -88,11 +93,11 @@ postSchema.statics = {
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
-  },
+  }
 };
 
 /**
  * @typedef Posts
  */
 
-module.exports = mongoose.model('Post', postSchema);
+module.exports = mongoose.model('Theme', themeSchema);

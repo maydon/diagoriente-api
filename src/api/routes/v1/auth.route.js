@@ -13,12 +13,11 @@ const router = express.Router();
  * @api {post} v1/auth/login Login
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
- * @apiName Login
+ * @apiName Login user
  * @apiGroup Auth
  * @apiPermission public
  *
- * @apiParam  {String}         email     User's email
- * @apiParam  {String{..128}}  password  User's password
+ * @apiParam  {String}         uniqId     User's uniqId phone
  *
  * @apiSuccess  {String}  token.tokenType     Access Token's type
  * @apiSuccess  {String}  token.accessToken   Authorization Token
@@ -28,8 +27,7 @@ const router = express.Router();
  *                                                   in miliseconds
  *
  * @apiSuccess  {String}  user.id             User's id
- * @apiSuccess  {String}  user.name           User's name
- * @apiSuccess  {String}  user.email          User's email
+ * @apiSuccess  {String}  user.uniqId         User's uniqId
  * @apiSuccess  {String}  user.role           User's role
  * @apiSuccess  {Date}    user.createdAt      Timestamp
  *
@@ -41,7 +39,7 @@ router.route('/user').post(validate(login), controller.login);
  * @api {post} v1/auth/login Login
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
- * @apiName Login
+ * @apiName Login admin
  * @apiGroup Auth
  * @apiPermission public
  *
@@ -55,10 +53,9 @@ router.route('/user').post(validate(login), controller.login);
  * @apiSuccess  {Number}  token.expiresIn     Access Token's expiration time
  *                                                   in miliseconds
  *
- * @apiSuccess  {String}  user.id             User's id
- * @apiSuccess  {String}  user.name           User's name
- * @apiSuccess  {String}  user.email          User's email
- * @apiSuccess  {String}  user.role           User's role
+ * @apiSuccess  {String}  user.id             Admin's id
+ * @apiSuccess  {String}  user.email          Admin's email
+ * @apiSuccess  {String}  user.role           Admin's role
  * @apiSuccess  {Date}    user.createdAt      Timestamp
  *
  * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
