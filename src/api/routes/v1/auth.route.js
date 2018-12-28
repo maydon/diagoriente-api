@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 /**
- * @api {post} v1/auth/login Login
+ * @api {post} v1/auth/login Login user
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
  * @apiName Login user
@@ -36,7 +36,7 @@ const router = express.Router();
  */
 router.route('/user').post(validate(login), controller.login);
 /**
- * @api {post} v1/auth/login Login
+ * @api {post} v1/auth/login Login admin
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
  * @apiName Login admin
