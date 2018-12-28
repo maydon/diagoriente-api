@@ -1,12 +1,17 @@
 const Joi = require('joi');
-const User = require('../models/user.model');
 
 module.exports = {
-  // POST /v1/auth/login
+  // POST /v1/auth/user
   login: {
     body: {
-      role: Joi.string().valid(User.roles),
       uniqId: Joi.string()
+    }
+  },
+  // POST /v1/auth/admin
+  loginAdmin: {
+    body: {
+      email: Joi.string().required(),
+      password: Joi.string().required()
     }
   },
 
@@ -14,6 +19,14 @@ module.exports = {
   refresh: {
     body: {
       uniqId: Joi.string(),
+      refreshToken: Joi.string().required()
+    }
+  },
+
+  // POST /v1/auth/refresh
+  refreshAdmin: {
+    body: {
+      email: Joi.string(),
       refreshToken: Joi.string().required()
     }
   }

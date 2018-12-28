@@ -7,7 +7,7 @@ const User = require('../api/models/user.model');
 
 const jwtOptions = {
   secretOrKey: jwtSecret,
-  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer'),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('Bearer')
 };
 
 const jwt = async (payload, done) => {
@@ -20,7 +20,7 @@ const jwt = async (payload, done) => {
   }
 };
 
-const oAuth = service => async (token, done) => {
+const oAuth = (service) => async (token, done) => {
   try {
     const userData = await authProviders[service](token);
     const user = await User.oAuthLogin(userData);

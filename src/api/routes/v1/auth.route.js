@@ -1,7 +1,11 @@
 const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/auth.controller');
-const { login, refresh } = require('../../validations/auth.validation');
+const {
+  login,
+  loginAdmin,
+  refresh
+} = require('../../validations/auth.validation');
 
 const router = express.Router();
 
@@ -9,7 +13,33 @@ const router = express.Router();
  * @api {post} v1/auth/login Login
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
- * @apiName Login
+ * @apiName Login user
+ * @apiGroup Auth
+ * @apiPermission public
+ *
+ * @apiParam  {String}         uniqId     User's uniqId phone
+ *
+ * @apiSuccess  {String}  token.tokenType     Access Token's type
+ * @apiSuccess  {String}  token.accessToken   Authorization Token
+ * @apiSuccess  {String}  token.refreshToken  Token to get a new accessToken
+ *                                                   after expiration time
+ * @apiSuccess  {Number}  token.expiresIn     Access Token's expiration time
+ *                                                   in miliseconds
+ *
+ * @apiSuccess  {String}  user.id             User's id
+ * @apiSuccess  {String}  user.uniqId         User's uniqId
+ * @apiSuccess  {String}  user.role           User's role
+ * @apiSuccess  {Date}    user.createdAt      Timestamp
+ *
+ * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+ * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
+ */
+router.route('/user').post(validate(login), controller.login);
+/**
+ * @api {post} v1/auth/login Login
+ * @apiDescription Get an accessToken
+ * @apiVersion 1.0.0
+ * @apiName Login admin
  * @apiGroup Auth
  * @apiPermission public
  *
@@ -23,16 +53,15 @@ const router = express.Router();
  * @apiSuccess  {Number}  token.expiresIn     Access Token's expiration time
  *                                                   in miliseconds
  *
- * @apiSuccess  {String}  user.id             User's id
- * @apiSuccess  {String}  user.name           User's name
- * @apiSuccess  {String}  user.email          User's email
- * @apiSuccess  {String}  user.role           User's role
+ * @apiSuccess  {String}  user.id             Admin's id
+ * @apiSuccess  {String}  user.email          Admin's email
+ * @apiSuccess  {String}  user.role           Admin's role
  * @apiSuccess  {Date}    user.createdAt      Timestamp
  *
  * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
  * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
  */
-router.route('/login').post(validate(login), controller.login);
+router.route('/admin').post(validate(loginAdmin), controller.loginAdmin);
 
 /**
  * @api {post} v1/auth/refresh-token Refresh Token

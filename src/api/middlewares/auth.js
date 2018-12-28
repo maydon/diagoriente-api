@@ -12,7 +12,7 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
   const apiError = new APIError({
     message: error ? error.message : 'Unauthorized',
     status: httpStatus.UNAUTHORIZED,
-    stack: error ? error.stack : undefined,
+    stack: error ? error.stack : undefined
   });
 
   try {
@@ -22,22 +22,16 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
     return next(apiError);
   }
 
-  if (roles === LOGGED_USER) {
-    if (user.role !== 'admin' && req.params.userId !== user._id.toString()) {
+  console.log('handleJWT', user, req.params.userId);
+
+  if (roles === ADMIN) {
+    if (user.role !== 'admin') {
       apiError.status = httpStatus.FORBIDDEN;
       apiError.message = 'Forbidden';
       return next(apiError);
     }
-  } else if (!roles.includes(user.role)) {
-    apiError.status = httpStatus.FORBIDDEN;
-    apiError.message = 'Forbidden';
-    return next(apiError);
-  } else if (err || !user) {
-    return next(apiError);
   }
-
   req.user = user;
-
   return next();
 };
 
@@ -48,7 +42,7 @@ exports.authorize = (roles = User.roles) => (req, res, next) =>
   passport.authenticate(
     'jwt',
     { session: false },
-    handleJWT(req, res, next, roles),
+    handleJWT(req, res, next, roles)
   )(req, res, next);
 
-exports.oAuth = service => passport.authenticate(service, { session: false });
+exports.oAuth = (service) => passport.authenticate(service, { session: false });
