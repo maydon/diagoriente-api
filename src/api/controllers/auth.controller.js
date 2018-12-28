@@ -1,4 +1,3 @@
-const httpStatus = require('http-status');
 const User = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 const moment = require('moment-timezone');
@@ -21,22 +20,6 @@ function generateTokenResponse(user, accessToken) {
 }
 
 /**
- * Returns jwt token if registration was successful
- * @public
- */
-exports.register = async (req, res, next) => {
-  try {
-    const user = await new User(req.body).save();
-    const userTransformed = user.transform();
-    const token = generateTokenResponse(user, user.token());
-    res.status(httpStatus.CREATED);
-    return res.json({ token, user: userTransformed });
-  } catch (error) {
-    return next(User.checkDuplicateEmail(error));
-  }
-};
-
-/**
  * Returns jwt token if valid username and password is provided
  * @public
  */
@@ -52,17 +35,17 @@ exports.login = async (req, res, next) => {
 };
 
 /**
- * login with an existing user or creates a new one if valid accessToken token
- * Returns jwt token
+ * Returns jwt token if valid username and password is provided
  * @public
  */
-exports.oAuth = async (req, res, next) => {
+exports.loginAdmin = async (req, res, next) => {
   try {
-    const { user } = req;
-    const accessToken = user.token();
+    const { user, accessToken } = await User.findAdminAndGenerateToken(
+      req.body
+    );
     const token = generateTokenResponse(user, accessToken);
     const userTransformed = user.transform();
-    return res.json({ token, user: userTransformed });
+    return res.json({ token, admin: userTransformed });
   } catch (error) {
     return next(error);
   }

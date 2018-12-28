@@ -5,7 +5,7 @@ const bcrypt = require('bcryptjs');
 const moment = require('moment-timezone');
 const jwt = require('jwt-simple');
 const APIError = require('../utils/APIError');
-const { env, jwtSecret, jwtExpirationInterval } = require('../../config/vars');
+const { jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 
 /**
  * User Roles
@@ -19,16 +19,25 @@ const roles = ['user', 'admin'];
 
 const userSchema = new mongoose.Schema(
   {
-    uniqId: {
-      type: String,
-      required: true,
-      trim: true,
-      lowercase: true
-    },
     role: {
       type: String,
       enum: roles,
       default: 'user'
+    },
+    uniqId: {
+      type: String,
+      trim: true,
+      lowercase: true
+    },
+    email: {
+      type: String,
+      match: /^\S+@\S+\.\S+$/,
+      trim: true,
+      lowercase: true
+    },
+    password: {
+      type: String,
+      trim: true
     },
     skills: {
       type: Object
@@ -40,34 +49,12 @@ const userSchema = new mongoose.Schema(
 );
 
 /**
- * Add your
- * - pre-save hooks
- * - validations
- * - virtuals
- */
-
-userSchema.pre('save', async function save(next) {
-  try {
-    if (!this.isModified('password')) return next();
-
-    const rounds = env === 'test' ? 1 : 10;
-
-    const hash = await bcrypt.hash(this.password, rounds);
-    this.password = hash;
-
-    return next();
-  } catch (error) {
-    return next(error);
-  }
-});
-
-/**
  * Methods
  */
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'uniqId', 'role', 'skills', 'createdAt'];
+    const fields = ['id', 'uniqId', 'role', 'email', 'skills', 'createdAt'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -125,7 +112,7 @@ userSchema.statics = {
   },
 
   /**
-   * Find user by email and tries to generate a JWT token
+   * Find user by uniqId and tries to generate a JWT token
    *
    * @param {ObjectId} id - The objectId of user.
    * @returns {Promise<User, APIError>}
@@ -142,8 +129,44 @@ userSchema.statics = {
     if (!user) {
       user = await this.create(options);
     }
-
     return { user, accessToken: user.token() };
+  },
+
+  /**
+   * Find admin by email and tries to generate a JWT token
+   *
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<User, APIError>}
+   */
+
+  async findAdminAndGenerateToken(options) {
+    const { email, password, refreshObject } = options;
+    console.log('refreshObject', refreshObject);
+    if (!email) {
+      throw new APIError({
+        message: 'An email is required to generate a token'
+      });
+    }
+    const user = await this.findOne({ email }).exec();
+    const err = {
+      status: httpStatus.UNAUTHORIZED,
+      isPublic: true
+    };
+    if (password) {
+      if (user && (await user.passwordMatches(password))) {
+        return { user, accessToken: user.token() };
+      }
+      err.message = 'Incorrect email or password';
+    } else if (refreshObject && refreshObject.userEmail === email) {
+      if (moment(refreshObject.expires).isBefore()) {
+        err.message = 'Invalid refresh token.';
+      } else {
+        return { user, accessToken: user.token() };
+      }
+    } else {
+      err.message = 'Incorrect email or refreshToken';
+    }
+    throw new APIError(err);
   },
 
   /**
