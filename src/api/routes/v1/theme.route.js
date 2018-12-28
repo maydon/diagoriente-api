@@ -43,7 +43,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}             title     Theme's title
-   * @apiParam  {String{6..128}}     password  Theme's description
+   * @apiParam  {String{..120}}     description  Theme's description
    * @apiParam  {Boolean}            verified    Theme's verified
    * @apiParam  {String=profesional,personal}  [role]    Theme's role
    *

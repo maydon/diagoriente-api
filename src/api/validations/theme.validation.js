@@ -29,7 +29,7 @@ module.exports = {
         .required()
     },
 
-    // POST /v1/themes/:themeId
+    // PATCH /v1/themes/:themeId
     update: {
       body: {
         title: Joi.string()
@@ -44,11 +44,6 @@ module.exports = {
           .valid(Theme.types)
           .required()
       }
-    },
-    params: {
-      postId: Joi.string()
-        .regex(/^[a-fA-F0-9]{24}$/)
-        .required()
     }
   }
 };

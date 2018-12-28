@@ -1,5 +1,4 @@
 const express = require('express');
-const userRoutes = require('./user.route');
 const authRoutes = require('./auth.route');
 const themeRoutes = require('./theme.route');
 
@@ -15,7 +14,6 @@ router.get('/status', (req, res) => res.send('OK'));
  */
 router.use('/docs', express.static('docs'));
 
-router.use('/users', userRoutes);
 router.use('/auth', authRoutes);
 router.use('/themes', themeRoutes);
 
