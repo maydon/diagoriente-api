@@ -1,35 +1,23 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
 const APIError = require('../utils/APIError');
 
 /**
- * User Schema
+ * Inetersts Schema
  * @private
  */
 
-const types = ['profesional', 'personal'];
-
-const themeSchema = new mongoose.Schema(
+const interestSchema = new mongoose.Schema(
   {
-    title: {
+    nom: {
       type: String,
       maxlength: 20,
       trim: true,
       required: true
     },
-    description: {
+    rank: {
       type: String,
-      maxlength: 120
-    },
-    type: {
-      type: String,
-      enum: types,
       required: true
-    },
-    verified: {
-      type: Boolean,
-      default: true
     }
   },
   {
@@ -40,10 +28,10 @@ const themeSchema = new mongoose.Schema(
 /**
  * Methods
  */
-themeSchema.method({
+interestSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'title', 'description', 'type', 'verified'];
+    const fields = ['_id', 'nom', 'rank'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -53,25 +41,23 @@ themeSchema.method({
   }
 });
 
-themeSchema.statics = {
-  types,
+interestSchema.statics = {
   /**
-   * Get theme
+   * Get interest
    *
-   * @param {ObjectId} id - The objectId of theme.
+   * @param {ObjectId} id - The objectId of interest.
    * @returns {Promise<Category, APIError>}
    */
   async get(id) {
     try {
-      let theme;
+      let interest;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        theme = await this.findById(id).exec();
+        interest = await this.findById(id).exec();
       }
-      if (theme) return theme;
-
+      if (interest) return interest;
       throw new APIError({
-        message: 'Theme does not exist',
+        message: 'Interest does not exist',
         status: httpStatus.NOT_FOUND
       });
     } catch (error) {
@@ -85,11 +71,11 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, name }) {
-    const options = omitBy({ name }, isNil);
-
-    return this.find(options)
-      .sort({ createdAt: -1 })
+  list({ page = 1, perPage = 30, search }) {
+    const reg = new RegExp(search, 'i');
+    return this.find({
+      $or: [{ nom: reg }, { rank: reg }]
+    })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
@@ -100,4 +86,4 @@ themeSchema.statics = {
  * @typedef Posts
  */
 
-module.exports = mongoose.model('Theme', themeSchema);
+module.exports = mongoose.model('Interest', interestSchema);
