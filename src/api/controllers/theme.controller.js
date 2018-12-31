@@ -76,8 +76,6 @@ exports.remove = async (req, res, next) => {
  * @public
  */
 exports.list = async (req, res, next) => {
-  console.log('list themes');
-
   try {
     const themes = await Theme.list(req.query);
     const transformedThemes = themes.map((theme) => theme.transform());

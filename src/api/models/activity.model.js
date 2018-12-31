@@ -1,35 +1,30 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
 const APIError = require('../utils/APIError');
 
+const types = ['professional', 'personal'];
 /**
- * User Schema
+ * Activities Schema
  * @private
  */
 
-const types = ['profesional', 'personal'];
-
-const themeSchema = new mongoose.Schema(
+const activitySchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 20,
+      maxlength: 120,
       trim: true,
       required: true
-    },
-    description: {
-      type: String,
-      maxlength: 120
     },
     type: {
       type: String,
       enum: types,
       required: true
     },
+    interests: [{ id: 'ObjectId' }],
     verified: {
       type: Boolean,
-      default: true
+      required: true
     }
   },
   {
@@ -40,10 +35,10 @@ const themeSchema = new mongoose.Schema(
 /**
  * Methods
  */
-themeSchema.method({
+activitySchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'title', 'description', 'type', 'verified'];
+    const fields = ['_id', 'title', 'type', 'interests', 'verified'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -53,25 +48,24 @@ themeSchema.method({
   }
 });
 
-themeSchema.statics = {
+activitySchema.statics = {
   types,
   /**
-   * Get theme
+   * Get activity
    *
-   * @param {ObjectId} id - The objectId of theme.
+   * @param {ObjectId} id - The objectId of activity.
    * @returns {Promise<Category, APIError>}
    */
   async get(id) {
     try {
-      let theme;
+      let activity;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        theme = await this.findById(id).exec();
+        activity = await this.findById(id).exec();
       }
-      if (theme) return theme;
-
+      if (activity) return activity;
       throw new APIError({
-        message: 'Theme does not exist',
+        message: 'Activity does not exist',
         status: httpStatus.NOT_FOUND
       });
     } catch (error) {
@@ -79,17 +73,17 @@ themeSchema.statics = {
     }
   },
   /**
-   * List posts in descending order of 'createdAt' timestamp.
+   * List activities in descending order of 'createdAt' timestamp.
    *
-   * @param {number} skip - Number of posts to be skipped.
-   * @param {number} limit - Limit number of posts to be returned.
+   * @param {number} skip - Number of activities to be skipped.
+   * @param {number} limit - Limit number of activities to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, name }) {
-    const options = omitBy({ name }, isNil);
-
-    return this.find(options)
-      .sort({ createdAt: -1 })
+  list({ page = 1, perPage = 30, search }) {
+    const reg = new RegExp(search, 'i');
+    return this.find({
+      title: reg
+    })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
@@ -100,4 +94,4 @@ themeSchema.statics = {
  * @typedef Posts
  */
 
-module.exports = mongoose.model('Theme', themeSchema);
+module.exports = mongoose.model('Activity', activitySchema);

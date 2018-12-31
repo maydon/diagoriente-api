@@ -25,6 +25,7 @@ router
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  theme's per page
+   * @apiParam  {String}      search  search param
    *
    * @apiSuccess {Object[]}   List of themes.
    *
@@ -114,6 +115,8 @@ router
    *
    *
    * @apiHeader {String} Authorization   access token
+   *
+   * @apiParam  {String}      id id theme
    *
    * @apiSuccess (No Content 204)  Successfully deleted
    *
