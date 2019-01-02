@@ -71,7 +71,7 @@ router.route('/admin').post(validate(loginAdmin), controller.loginAdmin);
  * @apiGroup Auth
  * @apiPermission public
  *
- * @apiParam  {String}  email         User's email
+ * @apiParam  {String}  id         User's document id
  * @apiParam  {String}  refreshToken  Refresh token aquired when user logged in
  *
  * @apiSuccess {String}  tokenType     Access Token's type
