@@ -57,15 +57,29 @@ exports.loginAdmin = async (req, res, next) => {
  */
 exports.refresh = async (req, res, next) => {
   try {
-    const { uniqId, refreshToken } = req.body;
+    const { userId, refreshToken } = req.body;
     const refreshObject = await RefreshToken.findOneAndRemove({
-      uniqId,
+      userId,
       token: refreshToken
     });
-    const { user, accessToken } = await User.findAndGenerateToken({
-      uniqId,
-      refreshObject
-    });
+
+    const { email, uniqId, role } = await User.get(userId);
+
+    let globals = null;
+    if (role === 'admin') {
+      globals = await User.findAdminAndGenerateToken({
+        email,
+        refreshObject
+      });
+    } else {
+      globals = await User.findAndGenerateToken({
+        uniqId,
+        refreshObject
+      });
+    }
+
+    const { user, accessToken } = globals;
+
     const response = generateTokenResponse(user, accessToken);
     return res.json(response);
   } catch (error) {
