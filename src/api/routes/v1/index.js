@@ -3,6 +3,8 @@ const authRoutes = require('./auth.route');
 const themeRoutes = require('./theme.route');
 const interestRoutes = require('./interest.route');
 const activityRoutes = require('./activity.route');
+const jobRoutes = require('./job.route');
+const formationRoutes = require('./formation.route');
 
 const router = express.Router();
 
@@ -20,5 +22,7 @@ router.use('/auth', authRoutes);
 router.use('/themes', themeRoutes);
 router.use('/interests', interestRoutes);
 router.use('/activities', activityRoutes);
+router.use('/jobs', jobRoutes);
+router.use('/formations', formationRoutes);
 
 module.exports = router;
