@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/theme.controller');
 const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
-const { create, list } = require('../../validations/theme.validation');
+const { create, update, list } = require('../../validations/theme.validation');
 
 const router = express.Router();
 
@@ -85,10 +85,10 @@ router
    */
   .get(authorize(LOGGED_USER), controller.get)
   /**
-   * @api {get} v1/themes/:id Get Theme
-   * @apiDescription Get user information
+   * @api {get} v1/themes/:id Patch Theme
+   * @apiDescription Patch theme information
    * @apiVersion 1.0.0
-   * @apiName GetTheme
+   * @apiName UpdateTheme
    * @apiGroup Theme
    * @apiPermission admin
    *
@@ -104,7 +104,7 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .patch(authorize(ADMIN), controller.update)
+  .patch(authorize(ADMIN), validate(update), controller.update)
   /**
    * @api {patch} v1/themes/:id Delete Theme
    * @apiDescription Delete a theme

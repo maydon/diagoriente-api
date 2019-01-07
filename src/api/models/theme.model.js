@@ -27,10 +27,24 @@ const themeSchema = new mongoose.Schema(
       enum: types,
       required: true
     },
+    resources: {
+      icon: {
+        type: String
+      },
+      color: {
+        type: String,
+        maxlength: 10
+      },
+      backgroundColor: {
+        type: String,
+        maxlength: 10
+      }
+    },
     verified: {
       type: Boolean,
       default: true
-    }
+    },
+    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
   },
   {
     timestamps: true
@@ -43,7 +57,14 @@ const themeSchema = new mongoose.Schema(
 themeSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'title', 'description', 'type', 'verified'];
+    const fields = [
+      '_id',
+      'title',
+      'description',
+      'type',
+      'verified',
+      'activities'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -78,6 +99,7 @@ themeSchema.statics = {
       throw error;
     }
   },
+
   /**
    * List posts in descending order of 'createdAt' timestamp.
    *
