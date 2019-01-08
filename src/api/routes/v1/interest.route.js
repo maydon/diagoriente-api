@@ -44,8 +44,8 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiSuccess {String}  nom       Interest's name
+   * @apiSuccess {String}  rank      Interest's email
    *
    * @apiSuccess {Object[]}   List of intersts.
    *
@@ -66,9 +66,8 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiSuccess {String}  id         Themes's id
-   * @apiSuccess {String}  nom       Themes's name
-   * @apiSuccess {String}  rank      Themes's email
+   * @apiSuccess {String}  nom       Interest's name
+   * @apiSuccess {String}  rank      Interest's email
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
