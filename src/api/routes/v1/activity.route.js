@@ -67,6 +67,25 @@ router
    * @api {get} v1/activities/:id patch Activities
    * @apiDescription Get activities information
    * @apiVersion 1.0.0
+   * @apiName GetIActivity
+   * @apiGroup Activity
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}            id     Activity id
+   * @apiParam  {Object[]}          interests    interests's ids
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
+   * @apiError (Not Found 404)    NotFound     Theme does not exist
+   */
+  .get(authorize(ADMIN), controller.get)
+  /**
+   * @api {get} v1/activities/:id patch Activities
+   * @apiDescription Get activities information
+   * @apiVersion 1.0.0
    * @apiName GetIActivities
    * @apiGroup Activity
    * @apiPermission admin
