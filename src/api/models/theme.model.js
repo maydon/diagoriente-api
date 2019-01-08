@@ -63,6 +63,7 @@ themeSchema.method({
       'description',
       'type',
       'verified',
+      'resources',
       'activities'
     ];
 

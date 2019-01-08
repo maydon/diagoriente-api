@@ -53,7 +53,7 @@ module.exports = {
         .items(Joi.objectId())
         .unique(),
       resources: {
-        icon: Joi.string(),
+        icon: Joi.binary(),
         color: Joi.string().max(10),
         backgroundColor: Joi.string().max(10)
       }

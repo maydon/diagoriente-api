@@ -1,10 +1,21 @@
 const express = require('express');
 const validate = require('express-validation');
+const multer = require('multer');
 const controller = require('../../controllers/theme.controller');
 const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
 const { create, update, list } = require('../../validations/theme.validation');
 
 const router = express.Router();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, __dirname + '../../../../uploads');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + file.originalname);
+  }
+});
+
+const uploadIcon = multer({ storage });
 
 /**
  * Load user when API with userId route parameter is hit
@@ -123,5 +134,25 @@ router
    * @apiError (Forbidden 403)   Forbidden  Only admins can delete the data
    */
   .delete(authorize(ADMIN), controller.remove);
+
+router
+  .route('/icon/:themeId')
+  /**
+   * @api {post} v1/themes/media/:themeId Theme upload icon
+   * @apiDescription theme icon upload
+   * @apiVersion 1.0.0
+   * @apiName ThemeMedia
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}   themeId     Theme id
+   *
+   * @apiSuccess {Date}    createdAt  Timestamp
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
+   */
+  .post(authorize(), uploadIcon.single('icon'), controller.upload);
 
 module.exports = router;

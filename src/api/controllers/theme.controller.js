@@ -55,6 +55,24 @@ exports.update = async (req, res, next) => {
 };
 
 /**
+ * Create icon theme
+ * @public
+ */
+exports.upload = async (req, res, next) => {
+  try {
+    const { filename } = req.file;
+    const { theme } = req.locals;
+    const { resources } = theme;
+    resources.icon = `https://api-dev.projetttv.org/v1/icons/${filename}`;
+    theme.set({ resources });
+    const savedTheme = await theme.save();
+    res.json(savedTheme.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * Delete Post
  * @public
  */
