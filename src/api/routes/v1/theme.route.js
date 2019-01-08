@@ -88,7 +88,8 @@ router
    * @apiSuccess {String}  id         Themes's id
    * @apiSuccess {String}  title       Themes's name
    * @apiSuccess {String}  description      Themes's email
-   * @apiSuccess {String}  role       Themes's role
+   * @apiSuccess {String}  type       Themes's type
+   * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Date}    createdAt  Timestamp
    *
@@ -108,7 +109,7 @@ router
    * @apiSuccess {String}  id         Themes's id
    * @apiSuccess {String}  title       Themes's name
    * @apiSuccess {String}  description      Themes's email
-   * @apiSuccess {String}  role       Themes's role
+   * @apiSuccess {String}  type       Themes's type
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Date}    createdAt  Timestamp
    *

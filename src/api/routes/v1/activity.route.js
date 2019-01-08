@@ -45,8 +45,14 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}            title     Activity's title
+   * @apiParam  {String}            type     Activity's type ['professional', 'personal']
+   * @apiParam  {Boolean}           verified    Activity's verified
+   * @apiParam  {Object[]}          interests    interests's ids
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
    * @apiSuccess {Object[]}   Activity object.
    *
@@ -67,11 +73,12 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiSuccess {String}  id         Activities's id
-   * @apiSuccess {String}  nom       Activities's title
-   * @apiSuccess {String}  type      Activities's type
-   * @apiSuccess {Boolean}  verified      Verified
-   * @apiSuccess {Object}  interrests      list of interests
+   * @apiParam  {String}            title     Activity's title
+   * @apiParam  {String}            type     Activity's type ['professional', 'personal']
+   * @apiParam  {Boolean}           verified    Activity's verified
+   * @apiParam  {Object[]}          interests    interests's ids
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     Theme does not exist
