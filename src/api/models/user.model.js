@@ -157,14 +157,14 @@ userSchema.statics = {
         return { user, accessToken: user.token() };
       }
       err.message = 'Incorrect email or password';
-    } else if (refreshObject && refreshObject.userEmail === email) {
+    } else if (refreshObject) {
       if (moment(refreshObject.expires).isBefore()) {
         err.message = 'Invalid refresh token.';
       } else {
         return { user, accessToken: user.token() };
       }
     } else {
-      err.message = 'Incorrect email or refreshToken';
+      err.message = 'Incorrect userId or refreshToken';
     }
     throw new APIError(err);
   },

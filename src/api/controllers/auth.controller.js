@@ -58,10 +58,12 @@ exports.loginAdmin = async (req, res, next) => {
 exports.refresh = async (req, res, next) => {
   try {
     const { userId, refreshToken } = req.body;
-    const refreshObject = await RefreshToken.findOneAndRemove({
+    const refreshObject = await RefreshToken.findOneAndDelete({
       userId,
       token: refreshToken
     });
+
+    console.log('refresh refreshObject', refreshObject);
 
     const { email, uniqId, role } = await User.get(userId);
 
