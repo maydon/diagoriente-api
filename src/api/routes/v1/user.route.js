@@ -48,7 +48,10 @@ router
    *
    * @apiSuccess {String}  id         User id
    *
-   * @apiSuccess {Object}  user      User object
+   * @apiSuccess {String}  id      User id
+   * @apiSuccess {String}  uniqId      User device id
+   * @apiSuccess {String}  role      User role
+   * @apiSuccess {String}  createdAt      User date creation
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
