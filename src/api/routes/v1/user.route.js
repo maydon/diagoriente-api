@@ -48,7 +48,7 @@ router
    *
    * @apiSuccess {String}  id         User id
    *
-   * @apiSuccess {Object{}}  user      User object
+   * @apiSuccess {Object}  user      User object
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
