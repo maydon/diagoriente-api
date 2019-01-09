@@ -27,78 +27,17 @@ function validateAdress(adress) {
 
 module.exports = {
   // GET /v1/users
-  listUsers: {
+  list: {
     query: {
       page: Joi.number().min(1),
       perPage: Joi.number()
         .min(1)
-        .max(100),
-      email: Joi.string(),
-      role: Joi.string().valid(User.roles)
-    }
-  },
-
-  // POST /v1/users
-  createUser: {
-    body: {
-      email: Joi.string()
-        .email()
-        .required(),
-      password: Joi.string()
-        .min(6)
-        .max(128)
-        .required(),
-      last_name: Joi.string(),
-      first_name: Joi.string(),
-      phone: Joi.string()
-        .min(6)
-        .max(20)
-        .required(),
-      role: Joi.string().valid(User.roles),
-      adress: validateAdress()
-    }
-  },
-
-  // PUT /v1/users/:userId
-  replaceUser: {
-    body: {
-      email: Joi.string()
-        .email()
-        .required(),
-      password: Joi.string()
-        .min(6)
-        .max(128)
-        .required(),
-      last_name: Joi.string(),
-      first_name: Joi.string(),
-      phone: Joi.string()
-        .min(6)
-        .max(20)
-        .required(),
-      role: Joi.string().valid(User.roles)
-    },
-    params: {
-      userId: Joi.string()
-        .regex(/^[a-fA-F0-9]{24}$/)
-        .required()
+        .max(100)
     }
   },
 
   // PATCH /v1/users/:userId
-  updateUser: {
-    body: {
-      email: Joi.string().email(),
-      password: Joi.string()
-        .min(6)
-        .max(128),
-      last_name: Joi.string(),
-      first_name: Joi.string(),
-      phone: Joi.string()
-        .min(6)
-        .max(20)
-        .required(),
-      role: Joi.string().valid(User.roles)
-    },
+  update: {
     params: {
       userId: Joi.string()
         .regex(/^[a-fA-F0-9]{24}$/)

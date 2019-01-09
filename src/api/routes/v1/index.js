@@ -1,5 +1,6 @@
 const express = require('express');
 const authRoutes = require('./auth.route');
+const userRoutes = require('./user.route');
 const themeRoutes = require('./theme.route');
 const interestRoutes = require('./interest.route');
 const activityRoutes = require('./activity.route');
@@ -20,6 +21,7 @@ router.use('/docs', express.static('docs'));
 router.use('/icons', express.static('src/uploads'));
 
 router.use('/auth', authRoutes);
+router.use('/users', userRoutes);
 router.use('/themes', themeRoutes);
 router.use('/interests', interestRoutes);
 router.use('/activities', activityRoutes);
