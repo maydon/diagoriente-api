@@ -20,9 +20,9 @@ const jobSchema = new mongoose.Schema(
       type: String,
       maxlength: 120
     },
-    interests: [],
-    activities: [],
-    formations: []
+    interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }],
+    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
+    formations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }]
   },
   {
     timestamps: true

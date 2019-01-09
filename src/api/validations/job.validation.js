@@ -22,7 +22,16 @@ module.exports = {
       description: Joi.string()
         .min(3)
         .max(120)
-        .required()
+        .required(),
+      interests: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      activities: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      formations: Joi.array()
+        .items(Joi.objectId())
+        .unique()
     }
   },
 
@@ -36,7 +45,16 @@ module.exports = {
       description: Joi.string()
         .min(3)
         .max(120)
-        .required()
+        .required(),
+      interests: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      activities: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      formations: Joi.array()
+        .items(Joi.objectId())
+        .unique()
     }
   }
 };

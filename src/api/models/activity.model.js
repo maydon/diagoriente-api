@@ -21,7 +21,7 @@ const activitySchema = new mongoose.Schema(
       enum: types,
       required: true
     },
-    interests: [{ id: 'ObjectId' }],
+    interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }],
     verified: {
       type: Boolean,
       required: true

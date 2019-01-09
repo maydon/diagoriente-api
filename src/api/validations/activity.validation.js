@@ -37,6 +37,9 @@ module.exports = {
       type: Joi.string()
         .valid(Activity.types)
         .required(),
+      interests: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
       verified: Joi.boolean().required()
     }
   }
