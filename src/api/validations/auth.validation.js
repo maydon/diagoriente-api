@@ -1,10 +1,12 @@
 const Joi = require('joi');
+const User = require('../models/user.model');
 
 module.exports = {
   // POST /v1/auth/user
   login: {
     body: {
-      uniqId: Joi.string()
+      uniqId: Joi.string(),
+      platform: Joi.string().valid(User.platform)
     }
   },
   // POST /v1/auth/admin

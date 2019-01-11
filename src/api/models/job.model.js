@@ -84,7 +84,6 @@ jobSchema.statics = {
    * @returns {Promise<Post[]>}
    */
   list({ page = 1, perPage = 30, search }) {
-    console.log('search ___ search ____ ');
     const reg = new RegExp(search, 'i');
     return this.find({
       $or: [{ title: reg }, { description: reg }]

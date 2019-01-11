@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
 const bcrypt = require('bcryptjs');
 const moment = require('moment-timezone');
 const jwt = require('jwt-simple');
@@ -13,6 +12,10 @@ const { jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 const roles = ['user', 'admin'];
 
 /**
+ * User Platforms
+ */
+const platform = ['android', 'ios'];
+/**
  * User Schema
  * @private
  */
@@ -23,6 +26,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: roles,
       default: 'user'
+    },
+    platform: {
+      type: String,
+      enum: platform,
+      default: 'android'
     },
     uniqId: {
       type: String,
@@ -54,7 +62,15 @@ const userSchema = new mongoose.Schema(
 userSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['id', 'uniqId', 'role', 'email', 'skills', 'createdAt'];
+    const fields = [
+      'id',
+      'uniqId',
+      'role',
+      'email',
+      'platform',
+      'skills',
+      'createdAt'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -84,6 +100,7 @@ userSchema.method({
  */
 userSchema.statics = {
   roles,
+  platform,
 
   /**
    * Get user
@@ -125,7 +142,6 @@ userSchema.statics = {
       });
     }
     let user = await this.findOne({ uniqId });
-    console.log('user', options);
     if (!user) {
       user = await this.create(options);
     }
@@ -141,7 +157,6 @@ userSchema.statics = {
 
   async findAdminAndGenerateToken(options) {
     const { email, password, refreshObject } = options;
-    console.log('refreshObject', refreshObject);
     if (!email) {
       throw new APIError({
         message: 'An email is required to generate a token'

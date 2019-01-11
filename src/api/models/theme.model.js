@@ -108,10 +108,12 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, name }) {
-    const options = omitBy({ name }, isNil);
+  list({ page = 1, perPage = 30, search }) {
+    const reg = new RegExp(search, 'i');
 
-    return this.find(options)
+    return this.find({
+      $or: [{ title: reg }, { description: reg }]
+    })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
