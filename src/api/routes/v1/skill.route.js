@@ -44,6 +44,13 @@ router
    *
    * @apiParam  {String}             personalSkills     personalSkills's liste
    * @apiParam  {String{..120}}     professionalSkills  Theme's description
+   * 
+   * @apiParam  {String}            parcourId     parcour's id
+   * @apiParam  {String}            type     skill's type ['professional', 'personal']
+   * @apiParam  {Boolean}           theme    theme's id
+   * @apiParam  {Object[]}          activities    selected activities's ids
+   * @apiParam  {Object[]}          competences    selected competences's ids {id : competenceId,value : [1,2,3,4]}
+
    *
    * @apiSuccess (Created 201) {String}  id         Skill's id
    *

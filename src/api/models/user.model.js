@@ -47,9 +47,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
-    skills: {
-      type: Object
-    }
+    parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcours' }]
   },
   {
     timestamps: true
@@ -63,12 +61,12 @@ userSchema.method({
   transform() {
     const transformed = {};
     const fields = [
-      'id',
+      '_id',
       'uniqId',
       'role',
       'email',
       'platform',
-      'skills',
+      'parcours',
       'createdAt'
     ];
 

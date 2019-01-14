@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
+const Fawn = require('fawn');
 const Theme = require('./theme.model');
 const APIError = require('../utils/APIError');
+
+Fawn.init(mongoose);
 
 /**
  * Skill Schema
@@ -12,6 +15,7 @@ const competencesValues = [1, 2, 3, 4];
 
 const skillSchema = new mongoose.Schema(
   {
+    parcourId: mongoose.Schema.Types.ObjectId,
     type: { type: String, enum: Theme.types },
     theme: { type: mongoose.Schema.Types.ObjectId, ref: 'Theme' },
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
@@ -72,13 +76,49 @@ skillSchema.post('save', (doc, next) => {
 skillSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'type', 'theme', 'activities', 'competences'];
+    const fields = [
+      '_id',
+      'parcourId',
+      'type',
+      'theme',
+      'activities',
+      'competences'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
     });
 
     return transformed;
+  },
+
+  /**
+   * Save Skill and update parcour
+   *
+   * @param {Skill} skill object - The objectId of user.
+   * @returns {Promise<saved, APIError>}
+   */
+  async saveSkillAndUpdateParcour(skill) {
+    const task = Fawn.Task();
+
+    console.log('skill to save', skill);
+
+    task
+      .save('skill', skill)
+      .update(
+        'Parcour',
+        { _id: skill.parcourId },
+        { $push: { skills: skill._id } }
+      )
+      .run()
+      .then(() => {
+        return skill;
+      })
+      .catch((err) => {
+        throw new APIError({
+          message: 'Parcour doesnt exist'
+        });
+      });
   }
 });
 

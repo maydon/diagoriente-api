@@ -36,7 +36,7 @@ router
    */
   .get(authorize(LOGGED_USER), validate(list), controller.list)
   /**
-   * @api {get} v1/interests Create Activities
+   * @api {get} v1/activities Create Activities
    * @apiDescription Create a new of Activities
    * @apiVersion 1.0.0
    * @apiName CreateActivities

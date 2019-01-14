@@ -30,8 +30,9 @@ exports.get = (req, res) => res.json(req.locals.skill.transform());
 exports.create = async (req, res, next) => {
   try {
     const skill = new Skill(req.body);
-    const savedSkill = await skill.save();
-    // ==> user
+
+    const savedSkill = await skill.saveSkillAndUpdateParcour(skill);
+    // ==> parcour
     res.status(httpStatus.CREATED);
     res.json(savedSkill.transform());
   } catch (error) {
@@ -60,10 +61,10 @@ exports.update = async (req, res, next) => {
  * @public
  */
 exports.remove = async (req, res, next) => {
-  const { theme } = req.locals;
+  const { skill } = req.locals;
 
   try {
-    theme
+    skill
       .remove()
       .then(() => res.status(httpStatus.NO_CONTENT).end())
       .catch((e) => next(e));

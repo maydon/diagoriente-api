@@ -1,0 +1,89 @@
+const httpStatus = require('http-status');
+const Parcour = require('../models/parcour.model');
+const { omit } = require('lodash');
+const { handler: errorHandler } = require('../middlewares/error');
+
+/**
+ * Load parcour and append to req.
+ * @public
+ */
+exports.load = async (req, res, next, id) => {
+  try {
+    const parcour = await Parcour.get(id);
+    req.locals = { parcour };
+    return next();
+  } catch (error) {
+    return errorHandler(error, req, res);
+  }
+};
+
+/**
+ * Get parcour
+ * @public
+ */
+exports.get = (req, res) => res.json(req.locals.parcour.transform());
+
+/**
+ * Create new parcour
+ * @public
+ */
+exports.create = async (req, res, next) => {
+  const { user } = req;
+  try {
+    const parcour = new Parcour({ userId: user._id, ...req.body });
+    const savedParcour = await parcour.save();
+    res.status(httpStatus.CREATED);
+    res.json(savedParcour.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+/**
+ * Update  parcour
+ * @public
+ */
+exports.update = async (req, res, next) => {
+  const { parcour } = req.locals;
+  try {
+    const newParcour = omit(req.body, '_id');
+    const updatedParcour = Object.assign(parcour, newParcour);
+    const savedParcour = await updatedParcour.save();
+    res.json(savedParcour.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Delete parcour
+ * @public
+ */
+exports.remove = async (req, res, next) => {
+  const { parcour } = req.locals;
+  try {
+    parcour
+      .remove()
+      .then(() => res.status(httpStatus.NO_CONTENT).end())
+      .catch((e) => next(e));
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get parcours list
+ * @public
+ */
+exports.list = async (req, res, next) => {
+  const { user } = req;
+  try {
+    const parcours = await Parcour.list({
+      ...req.query,
+      userId: user._id
+    });
+    const transformedParcours = parcours.map((parcour) => parcour.transform());
+    res.json(transformedParcours);
+  } catch (error) {
+    next(error);
+  }
+};

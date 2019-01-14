@@ -8,6 +8,8 @@ const jobRoutes = require('./job.route');
 const formationRoutes = require('./formation.route');
 const competenceRoutes = require('./competence.route');
 const skillRoutes = require('./skill.route');
+const parcourRoutes = require('./parcour.route');
+
 const router = express.Router();
 
 /**
@@ -30,5 +32,6 @@ router.use('/jobs', jobRoutes);
 router.use('/formations', formationRoutes);
 router.use('/competences', competenceRoutes);
 router.use('/skills', skillRoutes);
+router.use('/parcours', parcourRoutes);
 
 module.exports = router;

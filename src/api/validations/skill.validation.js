@@ -17,6 +17,7 @@ module.exports = {
   // POST /v1/themes
   create: {
     body: {
+      parcourId: Joi.objectId().required(),
       type: Joi.string()
         .valid(Theme.types)
         .required(),
