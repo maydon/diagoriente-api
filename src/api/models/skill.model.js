@@ -1,10 +1,7 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const Fawn = require('fawn');
 const Theme = require('./theme.model');
 const APIError = require('../utils/APIError');
-
-Fawn.init(mongoose);
 
 /**
  * Skill Schema
@@ -90,35 +87,6 @@ skillSchema.method({
     });
 
     return transformed;
-  },
-
-  /**
-   * Save Skill and update parcour
-   *
-   * @param {Skill} skill object - The objectId of user.
-   * @returns {Promise<saved, APIError>}
-   */
-  async saveSkillAndUpdateParcour(skill) {
-    const task = Fawn.Task();
-
-    console.log('skill to save', skill);
-
-    task
-      .save('skill', skill)
-      .update(
-        'Parcour',
-        { _id: skill.parcourId },
-        { $push: { skills: skill._id } }
-      )
-      .run()
-      .then(() => {
-        return skill;
-      })
-      .catch((err) => {
-        throw new APIError({
-          message: 'Parcour doesnt exist'
-        });
-      });
   }
 });
 

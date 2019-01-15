@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Skill = require('../models/skill.model');
+const Parcour = require('../models/parcour.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -30,9 +31,10 @@ exports.get = (req, res) => res.json(req.locals.skill.transform());
 exports.create = async (req, res, next) => {
   try {
     const skill = new Skill(req.body);
-
-    const savedSkill = await skill.saveSkillAndUpdateParcour(skill);
-    // ==> parcour
+    const savedSkill = await skill.save();
+    await Parcour.findOneAndUpdate(savedSkill.parcourId, {
+      $push: { skills: savedSkill._id }
+    });
     res.status(httpStatus.CREATED);
     res.json(savedSkill.transform());
   } catch (error) {

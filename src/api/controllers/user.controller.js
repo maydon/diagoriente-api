@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
+const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -88,7 +89,18 @@ exports.list = async (req, res, next) => {
     const users = await User.list(req.query);
 
     const transformedUsers = users.map((user) => user.transform());
-    res.json(transformedUsers);
+
+    const reg = new RegExp(req.query.search, 'i');
+    const querySearch = { role: 'user' };
+
+    const responstPagination = await pagination(
+      transformedUsers,
+      req.query,
+      User,
+      querySearch
+    );
+
+    res.json(responstPagination);
   } catch (error) {
     next(error);
   }

@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { pagination } = require('../utils/Pagination');
 const Activity = require('../models/activity.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -79,7 +80,16 @@ exports.list = async (req, res, next) => {
     const transformedActivity = actitvities.map((actitvity) =>
       actitvity.transform()
     );
-    res.json(transformedActivity);
+
+    const reg = new RegExp(req.query.search, 'i');
+    const querySearch = { title: reg };
+    const responstPagination = await pagination(
+      transformedActivity,
+      req.query,
+      Activity,
+      querySearch
+    );
+    res.json(responstPagination);
   } catch (error) {
     next(error);
   }

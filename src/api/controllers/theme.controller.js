@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Theme = require('../models/theme.model');
+const { pagination } = require('../utils/Pagination');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -97,7 +98,18 @@ exports.list = async (req, res, next) => {
   try {
     const themes = await Theme.list(req.query);
     const transformedThemes = themes.map((theme) => theme.transform());
-    res.json(transformedThemes);
+
+    const reg = new RegExp(req.query.search, 'i');
+    const querySearch = { $or: [{ title: reg }, { description: reg }] };
+
+    const responstPagination = await pagination(
+      transformedThemes,
+      req.query,
+      Theme,
+      querySearch
+    );
+
+    res.json(responstPagination);
   } catch (error) {
     next(error);
   }

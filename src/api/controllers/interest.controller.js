@@ -1,6 +1,8 @@
 const Interest = require('../models/interest.model');
 const { omit } = require('lodash');
+const { pagination } = require('../utils/Pagination');
 const httpStatus = require('http-status');
+
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -50,7 +52,16 @@ exports.list = async (req, res, next) => {
     const transformedInterest = interests.map((interest) =>
       interest.transform()
     );
-    res.json(transformedInterest);
+    const reg = new RegExp(req.query.search, 'i');
+    const querySearch = { $or: [{ nom: reg }, { rank: reg }] };
+    const responstPagination = await pagination(
+      transformedInterest,
+      req.query,
+      Interest,
+      querySearch
+    );
+
+    res.json(responstPagination);
   } catch (error) {
     next(error);
   }
