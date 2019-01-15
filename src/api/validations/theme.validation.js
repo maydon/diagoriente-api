@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Theme = require('../models/theme.model');
+const Activity = require('../models/activity.model');
 Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {
@@ -10,7 +11,8 @@ module.exports = {
       perPage: Joi.number()
         .min(1)
         .max(100),
-      search: Joi.string()
+      search: Joi.string(),
+      type: Joi.string().valid(Activity.types)
     }
   },
 

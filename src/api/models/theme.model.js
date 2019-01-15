@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
 const APIError = require('../utils/APIError');
 
 /**
@@ -108,11 +107,13 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search }) {
+  list({ page = 1, perPage = 30, search, type }) {
     const reg = new RegExp(search, 'i');
+    const reg1 = new RegExp(type, 'i');
 
     return this.find({
-      $or: [{ title: reg }, { description: reg }]
+      $or: [{ title: reg }, { description: reg }],
+      type: reg1
     })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))

@@ -100,7 +100,12 @@ exports.list = async (req, res, next) => {
     const transformedThemes = themes.map((theme) => theme.transform());
 
     const reg = new RegExp(req.query.search, 'i');
-    const querySearch = { $or: [{ title: reg }, { description: reg }] };
+    const reg1 = new RegExp(req.query.type, 'i');
+
+    const querySearch = {
+      $or: [{ title: reg }, { description: reg }],
+      type: reg1
+    };
 
     const responstPagination = await pagination(
       transformedThemes,

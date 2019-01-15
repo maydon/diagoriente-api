@@ -80,9 +80,10 @@ exports.list = async (req, res, next) => {
     const transformedActivity = actitvities.map((actitvity) =>
       actitvity.transform()
     );
-
     const reg = new RegExp(req.query.search, 'i');
-    const querySearch = { title: reg };
+    const reg1 = new RegExp(req.query.type, 'i');
+
+    const querySearch = { title: reg, type: reg1 };
     const responstPagination = await pagination(
       transformedActivity,
       req.query,

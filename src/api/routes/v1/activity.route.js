@@ -26,7 +26,9 @@ router
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
-   * @apiParam  {String}  search    search param
+   * @apiParam  {String}  search      search param
+   * @apiParam  {String}  type      search by type param ['professional', 'personal']
+
 
    *
    * @apiSuccess {Object[]}   List of Activities.
