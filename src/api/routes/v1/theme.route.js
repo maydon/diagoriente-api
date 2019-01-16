@@ -80,9 +80,9 @@ router
   .route('/all')
   /**
    * @api {get} v1/themes/all List Themes with activities object
-   * @apiDescription Get a list of themes
+   * @apiDescription Get a list of themes with activities object
    * @apiVersion 1.0.0
-   * @apiName ListThemes
+   * @apiName ListThemesAll
    * @apiGroup Theme
    * @apiPermission admin / user
    *
