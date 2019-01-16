@@ -77,6 +77,32 @@ router
   .post(authorize(ADMIN), validate(create), controller.create);
 
 router
+  .route('/all')
+  /**
+   * @api {get} v1/themes/all List Themes with activities object
+   * @apiDescription Get a list of themes
+   * @apiVersion 1.0.0
+   * @apiName ListThemes
+   * @apiGroup Theme
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  theme's per page
+   * @apiParam  {String}      search  search param
+   * @apiParam  {String}  type      search by type param ['professional', 'personal']
+   *
+   *
+   *
+   * @apiSuccess {Object[]}   List of themes.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize(LOGGED_USER), validate(list), controller.listAll);
+
+router
   .route('/:themeId')
   /**
    * @api {get} v1/themes/:id Get Theme

@@ -87,7 +87,9 @@ themeSchema.statics = {
       let theme;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        theme = await this.findById(id).exec();
+        theme = await this.findById(id)
+          .populate('activities', 'title type verified')
+          .exec();
       }
       if (theme) return theme;
 
@@ -115,6 +117,31 @@ themeSchema.statics = {
       $or: [{ title: reg }, { description: reg }],
       type: reg1
     })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
+  },
+
+  /**
+   * List posts in descending order of 'createdAt' timestamp.
+   *
+   * @param {number} skip - Number of posts to be skipped.
+   * @param {number} limit - Limit number of posts to be returned.
+   * @returns {Promise<Post[]>}
+   */
+  listAll({ page = 1, perPage = 30, search, type }) {
+    const reg = new RegExp(search, 'i');
+    const reg1 = new RegExp(type, 'i');
+
+    return this.find({
+      $or: [{ title: reg }, { description: reg }],
+      type: reg1
+    })
+      .populate({
+        path: 'activities',
+        populate: { path: 'activities' }
+      })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

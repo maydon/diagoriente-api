@@ -119,3 +119,33 @@ exports.list = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Get themes list
+ * @public
+ */
+exports.listAll = async (req, res, next) => {
+  try {
+    const themes = await Theme.listAll(req.query);
+    const transformedThemes = themes.map((theme) => theme.transform());
+
+    const reg = new RegExp(req.query.search, 'i');
+    const reg1 = new RegExp(req.query.type, 'i');
+
+    const querySearch = {
+      $or: [{ title: reg }, { description: reg }],
+      type: reg1
+    };
+
+    const responstPagination = await pagination(
+      transformedThemes,
+      req.query,
+      Theme,
+      querySearch
+    );
+
+    res.json(responstPagination);
+  } catch (error) {
+    next(error);
+  }
+};
