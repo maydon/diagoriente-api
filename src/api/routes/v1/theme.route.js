@@ -61,6 +61,7 @@ router
    * @apiParam  {String{..120}}     description  Theme's description
    * @apiParam  {Boolean}            verified    Theme's verified
    * @apiParam  {String=profesional,personal}  [role]    Theme's role
+   * @apiParam  {String}  resources     add resources object {'color','backgroundColor'}
    *
    * @apiSuccess (Created 201) {String}  id         Theme's id
    * @apiSuccess (Created 201) {String}  title       Theme's title
@@ -95,6 +96,8 @@ router
    *
    *
    *
+   *
+   *
    * @apiSuccess {Object[]}   List of themes.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
@@ -113,6 +116,13 @@ router
    * @apiPermission admin / user
    *
    * @apiHeader {String} Authorization    access token
+   *
+   *
+   * @apiParam  {String}             title     Theme's title
+   * @apiParam  {String{..120}}     description  Theme's description
+   * @apiParam  {Boolean}            verified    Theme's verified
+   * @apiParam  {String=profesional,personal}  [role]    Theme's role
+   * @apiParam  {String}  resources     add resources object {'color','backgroundColor'}
    *
    * @apiSuccess {String}  id         Themes's id
    * @apiSuccess {String}  title       Themes's name
@@ -178,6 +188,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}   themeId     Theme id
+   * @apiParam  {String}   icon     icon file
    *
    * @apiSuccess {Date}    createdAt  Timestamp
    *
