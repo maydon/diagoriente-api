@@ -7,7 +7,7 @@ const APIError = require('../utils/APIError');
  * @private
  */
 
-const types = ['profesional', 'personal'];
+const types = ['professional', 'personal'];
 
 const themeSchema = new mongoose.Schema(
   {
