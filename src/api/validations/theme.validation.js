@@ -29,14 +29,17 @@ module.exports = {
         .required(),
       type: Joi.string()
         .valid(Theme.types)
-        .required(),
-      resources: {
+        .required()
+    }
+  },
+
+  /*
+    resources: {
         icon: Joi.string(),
         color: Joi.string().max(10),
         backgroundColor: Joi.string().max(10)
       }
-    }
-  },
+      */
 
   // PATCH /v1/themes/:themeId
   update: {
@@ -53,12 +56,7 @@ module.exports = {
         .required(),
       activities: Joi.array()
         .items(Joi.objectId())
-        .unique(),
-      resources: {
-        icon: Joi.binary(),
-        color: Joi.string().max(10),
-        backgroundColor: Joi.string().max(10)
-      }
+        .unique()
     }
   }
 };

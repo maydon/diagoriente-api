@@ -6,11 +6,14 @@ const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
 const { create, update, list } = require('../../validations/theme.validation');
 
 const router = express.Router();
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, __dirname + '../../../../uploads');
   },
   filename: (req, file, cb) => {
+    console.log('filename', file);
+
     cb(null, Date.now() + file.originalname);
   }
 });
@@ -178,8 +181,8 @@ router
 router
   .route('/icon/:themeId')
   /**
-   * @api {post} v1/themes/media/:themeId Theme upload icon
-   * @apiDescription theme icon upload
+   * @api {post} v1/themes/media/:themeId Theme upload resources
+   * @apiDescription theme resources upload formdata
    * @apiVersion 1.0.0
    * @apiName ThemeMedia
    * @apiGroup Theme
@@ -189,6 +192,9 @@ router
    *
    * @apiParam  {String}   themeId     Theme id
    * @apiParam  {String}   icon     icon file
+   * @apiParam  {String}   backgroundColor     backgroundColor code #343422
+   * @apiParam  {String}   color     color code  #343422
+   *
    *
    * @apiSuccess {Date}    createdAt  Timestamp
    *

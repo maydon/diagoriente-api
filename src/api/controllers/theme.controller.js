@@ -30,7 +30,8 @@ exports.get = (req, res) => res.json(req.locals.theme.transform());
  */
 exports.create = async (req, res, next) => {
   try {
-    const theme = new Theme(req.body);
+    const newTheme = omit(req.body, 'resources');
+    const theme = new Theme(newTheme);
     const savedTheme = await theme.save();
     res.status(httpStatus.CREATED);
     res.json(savedTheme.transform());
@@ -62,9 +63,17 @@ exports.update = async (req, res, next) => {
 exports.upload = async (req, res, next) => {
   try {
     const { filename } = req.file;
+    const { color, backgroundColor } = req.body;
+
     const { theme } = req.locals;
     const { resources } = theme;
-    resources.icon = `https://api-dev.projetttv.org/v1/icons/${filename}`;
+
+    if (color) resources.color = color;
+    if (backgroundColor) resources.backgroundColor = backgroundColor;
+    if (filename) {
+      resources.icon = `https://api-dev.projetttv.org/v1/icons/${filename}`;
+    }
+
     theme.set({ resources });
     const savedTheme = await theme.save();
     res.json(savedTheme.transform());
