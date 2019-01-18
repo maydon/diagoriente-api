@@ -10,14 +10,15 @@ const {
 const router = express.Router();
 
 /**
- * @api {post} v1/auth/login Login user
+ * @api {post} v1/auth/user Login user
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
  * @apiName Login user
  * @apiGroup Auth
  * @apiPermission public
  *
- * @apiParam  {String}         uniqId     User's uniqId phone
+ * @apiParam  {String}         uniqId     User's uniqId phone platform
+ * @apiParam  {String}         platform     User's platform phone ['android', 'ios']
  *
  * @apiSuccess  {String}  token.tokenType     Access Token's type
  * @apiSuccess  {String}  token.accessToken   Authorization Token
@@ -36,7 +37,7 @@ const router = express.Router();
  */
 router.route('/user').post(validate(login), controller.login);
 /**
- * @api {post} v1/auth/login Login admin
+ * @api {post} v1/auth/admin Login admin
  * @apiDescription Get an accessToken
  * @apiVersion 1.0.0
  * @apiName Login admin
