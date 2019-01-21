@@ -69,6 +69,7 @@ parcourSchema.statics = {
    */
   list({ page = 1, perPage = 30, userId }) {
     return this.find({ userId })
+      .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();

@@ -87,6 +87,7 @@ activitySchema.statics = {
       title: reg,
       type: reg1
     })
+      .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();

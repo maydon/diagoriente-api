@@ -76,6 +76,7 @@ interestSchema.statics = {
     return this.find({
       $or: [{ nom: reg }, { rank: reg }]
     })
+      .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
