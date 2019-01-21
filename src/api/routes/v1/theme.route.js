@@ -179,7 +179,7 @@ router
   .delete(authorize(ADMIN), controller.remove);
 
 router
-  .route('/icon/:themeId')
+  .route('/media/:themeId')
   /**
    * @api {post} v1/themes/media/:themeId Theme upload resources
    * @apiDescription theme resources upload formdata
