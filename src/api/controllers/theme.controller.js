@@ -104,16 +104,19 @@ exports.remove = async (req, res, next) => {
  * @public
  */
 exports.list = async (req, res, next) => {
+  const { role } = req.user;
   try {
-    const themes = await Theme.list(req.query);
+    const themes = await Theme.list({ ...req.query, role });
     const transformedThemes = themes.map((theme) => theme.transform());
 
     const reg = new RegExp(req.query.search, 'i');
     const reg1 = new RegExp(req.query.type, 'i');
+    const verified = role === 'admin' ? {} : { verified: true };
 
     const querySearch = {
       $or: [{ title: reg }, { description: reg }],
-      type: reg1
+      type: reg1,
+      ...verified
     };
 
     const responstPagination = await pagination(
@@ -134,16 +137,20 @@ exports.list = async (req, res, next) => {
  * @public
  */
 exports.listAll = async (req, res, next) => {
+  const { role } = req.user;
+
   try {
-    const themes = await Theme.listAll(req.query);
+    const themes = await Theme.listAll({ ...req.query, role });
     const transformedThemes = themes.map((theme) => theme.transform());
+    const verified = role === 'admin' ? {} : { verified: true };
 
     const reg = new RegExp(req.query.search, 'i');
     const reg1 = new RegExp(req.query.type, 'i');
 
     const querySearch = {
       $or: [{ title: reg }, { description: reg }],
-      type: reg1
+      type: reg1,
+      ...verified
     };
 
     const responstPagination = await pagination(

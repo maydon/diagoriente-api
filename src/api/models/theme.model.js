@@ -109,13 +109,15 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search, type }) {
+  list({ page = 1, perPage = 30, search, type, role }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
+    const verified = role === 'admin' ? {} : { verified: true };
 
     return this.find({
       $or: [{ title: reg }, { description: reg }],
-      type: reg1
+      type: reg1,
+      ...verified
     })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
@@ -130,13 +132,15 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  listAll({ page = 1, perPage = 30, search, type }) {
+  listAll({ page = 1, perPage = 30, search, type, role }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
+    const verified = role === 'admin' ? {} : { verified: true };
 
     return this.find({
       $or: [{ title: reg }, { description: reg }],
-      type: reg1
+      type: reg1,
+      ...verified
     })
       .populate({
         path: 'activities',
