@@ -61,7 +61,9 @@ activitySchema.statics = {
       let activity;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        activity = await this.findById(id).exec();
+        activity = await this.findById(id)
+          .populate('interests', '_id nom rank')
+          .exec();
       }
       if (activity) return activity;
       throw new APIError({

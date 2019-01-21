@@ -33,11 +33,8 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(120)
-        .required(),
-      type: Joi.string()
-        .valid(Activity.types)
-        .required(),
+        .max(120),
+      type: Joi.string().valid(Activity.types),
       interests: Joi.array()
         .items(Joi.objectId())
         .unique(),
