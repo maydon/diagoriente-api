@@ -47,7 +47,7 @@ exports.update = async (req, res, next) => {
   const { theme } = req.locals;
 
   try {
-    const newTheme = omit(req.body, '_id');
+    const newTheme = omit(req.body, '_id', 'resources');
     const updatedTheme = Object.assign(theme, newTheme);
     const savedpost = await updatedTheme.save();
     res.json(savedpost.transform());
