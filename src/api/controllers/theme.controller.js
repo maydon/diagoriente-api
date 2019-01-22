@@ -62,7 +62,7 @@ exports.update = async (req, res, next) => {
  */
 exports.upload = async (req, res, next) => {
   try {
-    const { filename } = req.file;
+    const { file } = req;
     const { color, backgroundColor } = req.body;
 
     const { theme } = req.locals;
@@ -70,8 +70,10 @@ exports.upload = async (req, res, next) => {
 
     if (color) resources.color = color;
     if (backgroundColor) resources.backgroundColor = backgroundColor;
-    if (filename) {
-      resources.icon = `https://api-dev.projetttv.org/v1/icons/${filename}`;
+    if (file) {
+      resources.icon = `https://api-dev.projetttv.org/v1/icons/${
+        file.filename
+      }`;
     }
 
     theme.set({ resources });
