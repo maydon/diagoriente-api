@@ -11,7 +11,7 @@ const interestSchema = new mongoose.Schema(
   {
     nom: {
       type: String,
-      maxlength: 20,
+      maxlength: 30,
       trim: true,
       required: true
     },

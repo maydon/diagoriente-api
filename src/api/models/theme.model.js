@@ -13,7 +13,7 @@ const themeSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 20,
+      maxlength: 30,
       trim: true,
       required: true
     },

@@ -21,7 +21,7 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(20)
+        .max(30)
         .required(),
       description: Joi.string()
         .min(3)
@@ -46,7 +46,7 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(20)
+        .max(30)
         .required(),
       description: Joi.string()
         .min(3)
