@@ -27,16 +27,19 @@ router
   .get(authorize(LOGGED_USER), validate(list), controller.list)
   /**
    * @api {get} v1/competences List competences cart
-   * @apiDescription Get a list of competences
+   * @apiDescription Create competence
    * @apiVersion 1.0.0
-   * @apiName ListCompetences
+   * @apiName CreateCompetence
    * @apiGroup Competence
    * @apiPermission admin / user
    *
    * @apiHeader {String} Authorization  access token
    *
    *
-   * @apiSuccess {Object[]}   List of competences.
+   * @apiSuccess {String}   id of competence.
+   * @apiSuccess {String}   title of competence.
+   * @apiSuccess {String}   rank of competence.
+   *
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
