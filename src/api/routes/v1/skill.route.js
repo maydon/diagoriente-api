@@ -42,8 +42,6 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}             personalSkills     personalSkills's liste
-   * @apiParam  {String{..120}}     professionalSkills  Theme's description
    * 
    * @apiParam  {String}            parcourId     parcour's id
    * @apiParam  {String}            type     skill's type ['professional', 'personal']

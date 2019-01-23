@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Parcour = require('../models/parcour.model');
+const User = require('../models/user.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -32,6 +33,13 @@ exports.create = async (req, res, next) => {
   try {
     const parcour = new Parcour({ userId: user._id, ...req.body });
     const savedParcour = await parcour.save();
+    console.log('user._id,', savedParcour);
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      {
+        $push: { parcours: savedParcour._id }
+      }
+    );
     res.status(httpStatus.CREATED);
     res.json(savedParcour.transform());
   } catch (error) {

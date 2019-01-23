@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
-    parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcours' }]
+    parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }]
   },
   {
     timestamps: true

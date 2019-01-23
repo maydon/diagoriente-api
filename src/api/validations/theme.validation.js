@@ -33,14 +33,6 @@ module.exports = {
     }
   },
 
-  /*
-    resources: {
-        icon: Joi.string(),
-        color: Joi.string().max(10),
-        backgroundColor: Joi.string().max(10)
-      }
-      */
-
   // PATCH /v1/themes/:themeId
   update: {
     body: {
