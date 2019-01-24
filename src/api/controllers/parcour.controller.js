@@ -1,4 +1,5 @@
 const httpStatus = require('http-status');
+const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
 const User = require('../models/user.model');
 const { omit } = require('lodash');
@@ -83,14 +84,25 @@ exports.remove = async (req, res, next) => {
  * @public
  */
 exports.list = async (req, res, next) => {
-  const { user } = req;
+  const { role, _id } = req.user;
   try {
     const parcours = await Parcour.list({
       ...req.query,
-      userId: user._id
+      role,
+      _id
     });
     const transformedParcours = parcours.map((parcour) => parcour.transform());
-    res.json(transformedParcours);
+    const userId = role === 'admin' ? {} : { userId: _id };
+    const querySearch = { ...userId };
+
+    const responstPagination = await pagination(
+      transformedParcours,
+      req.query,
+      Parcour,
+      querySearch
+    );
+
+    res.json(responstPagination);
   } catch (error) {
     next(error);
   }

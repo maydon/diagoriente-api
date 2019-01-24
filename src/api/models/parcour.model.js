@@ -67,8 +67,9 @@ parcourSchema.statics = {
    * @param {number} limit - Limit number of parcours to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, userId }) {
-    return this.find({ userId })
+  list({ page = 1, perPage = 30, role, _id }) {
+    const userId = role === 'admin' ? {} : { userId: _id };
+    return this.find({ ...userId })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
