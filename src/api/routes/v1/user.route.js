@@ -1,7 +1,7 @@
 const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/user.controller');
-const { authorize, ADMIN } = require('../../middlewares/auth');
+const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 const { list } = require('../../validations/user.validation');
 
 const router = express.Router();
@@ -56,7 +56,6 @@ router
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
   .get(authorize(ADMIN), controller.get)
-
   /**
    * @api {patch} v1/users/:id Delete User
    * @apiDescription Delete a user
@@ -75,5 +74,27 @@ router
    * @apiError (Forbidden 403)   Forbidden  Only admins can delete the data
    */
   .delete(authorize(ADMIN), controller.remove);
+
+router
+  .route('/me/profil')
+  /**
+   * @api {get} v1/users/me/profil Get me profil
+   * @apiDescription Get my object user information
+   * @apiVersion 1.0.0
+   * @apiName GetMe
+   * @apiGroup User
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization    access token
+   *
+   *
+   * @apiSuccess {String}  id      User id
+   * @apiSuccess {String}  uniqId      User device id
+   * @apiSuccess {String}  role      User role
+   * @apiSuccess {String}  createdAt      User date creation
+   *
+   * @apiError (Not Found 404)    NotFound     User does not exist
+   */
+  .get(authorize(LOGGED_USER), controller.loggedIn);
 
 module.exports = router;
