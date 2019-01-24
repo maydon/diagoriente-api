@@ -27,7 +27,7 @@ const parcourSchema = new mongoose.Schema(
 parcourSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'completed', 'skills'];
+    const fields = ['_id', 'userId', 'completed', 'skills'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];

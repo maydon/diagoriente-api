@@ -32,7 +32,6 @@ exports.get = (req, res) => res.json(req.locals.parcour.transform());
 exports.create = async (req, res, next) => {
   const { user } = req;
   try {
-    console.log('user', user.parcours);
     let parcourResponse = null;
     if (user.parcours.length === 0) {
       const parcour = new Parcour({ userId: user._id, ...req.body });
