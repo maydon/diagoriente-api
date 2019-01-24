@@ -12,7 +12,7 @@ const parcourSchema = new mongoose.Schema(
     userId: mongoose.Schema.Types.ObjectId,
     completed: {
       type: Boolean,
-      default: true
+      default: false
     },
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }]
   },

@@ -21,11 +21,10 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(30)
+        .max(250)
         .required(),
       description: Joi.string()
         .min(3)
-        .max(120)
         .required(),
       type: Joi.string()
         .valid(Theme.types)
@@ -38,11 +37,9 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(30)
+        .max(250)
         .required(),
-      description: Joi.string()
-        .min(3)
-        .max(120),
+      description: Joi.string().min(3),
       type: Joi.string()
         .valid(Theme.types)
         .required(),

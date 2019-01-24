@@ -19,7 +19,7 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(120)
+        .max(250)
         .required(),
       type: Joi.string()
         .valid(Activity.types)
@@ -31,9 +31,7 @@ module.exports = {
   // PATCH /v1/activities
   update: {
     body: {
-      title: Joi.string()
-        .min(3)
-        .max(120),
+      title: Joi.string().min(3),
       type: Joi.string().valid(Activity.types),
       interests: Joi.array()
         .items(Joi.objectId())

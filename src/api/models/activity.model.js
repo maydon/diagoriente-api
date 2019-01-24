@@ -12,7 +12,7 @@ const activitySchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 120,
+      maxlength: 250,
       trim: true,
       required: true
     },

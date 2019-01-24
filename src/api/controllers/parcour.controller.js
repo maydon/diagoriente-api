@@ -32,17 +32,24 @@ exports.get = (req, res) => res.json(req.locals.parcour.transform());
 exports.create = async (req, res, next) => {
   const { user } = req;
   try {
-    const parcour = new Parcour({ userId: user._id, ...req.body });
-    const savedParcour = await parcour.save();
-    console.log('user._id,', savedParcour);
-    await User.findOneAndUpdate(
-      { _id: user._id },
-      {
-        $push: { parcours: savedParcour._id }
-      }
-    );
-    res.status(httpStatus.CREATED);
-    res.json(savedParcour.transform());
+    console.log('user', user.parcours);
+    let parcourResponse = null;
+    if (user.parcours.length === 0) {
+      const parcour = new Parcour({ userId: user._id, ...req.body });
+      parcourResponse = await parcour.save();
+      await User.findOneAndUpdate(
+        { _id: user._id },
+        {
+          $push: { parcours: parcourResponse._id }
+        }
+      );
+      res.status(httpStatus.CREATED);
+    } else {
+      parcourResponse = await Parcour.get(user.parcours[0]);
+      res.status(httpStatus.OK);
+    }
+
+    res.json(parcourResponse.transform());
   } catch (error) {
     next(error);
   }

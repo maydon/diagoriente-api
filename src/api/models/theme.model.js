@@ -13,13 +13,12 @@ const themeSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 30,
+      maxlength: 250,
       trim: true,
       required: true
     },
     description: {
-      type: String,
-      maxlength: 120
+      type: String
     },
     type: {
       type: String,
