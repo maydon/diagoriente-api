@@ -47,7 +47,6 @@ parcourSchema.statics = {
   async get(id) {
     try {
       let parcour;
-
       if (mongoose.Types.ObjectId.isValid(id)) {
         parcour = await this.findById(id).exec();
       }

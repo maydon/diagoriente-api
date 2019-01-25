@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/parcour.controller');
 const { authorize, LOGGED_USER } = require('../../middlewares/auth');
-const { list, create } = require('../../validations/parcour.validation');
+const { list, get, create } = require('../../validations/parcour.validation');
 
 const router = express.Router();
 
@@ -54,5 +54,28 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .post(authorize(LOGGED_USER), validate(create), controller.create);
+
+router
+  .route('/:parcourId')
+  /**
+   * @api {get} v1/parcours List Parcours
+   * @apiDescription Get a list of Parcours
+   * @apiVersion 1.0.0
+   * @apiName ListActivities
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+ 
+   *
+   * @apiSuccess {Object[]}   List of parcours.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize(LOGGED_USER), validate(get), controller.get);
 
 module.exports = router;

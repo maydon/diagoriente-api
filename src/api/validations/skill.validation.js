@@ -31,5 +31,25 @@ module.exports = {
           .max(4)
       })
     }
+  },
+  // patch /v1/themes
+  update: {
+    body: {
+      type: Joi.string().valid(Theme.types),
+      theme: Joi.objectId(),
+      activities: Joi.array().items(Joi.objectId()),
+      competences: Joi.array().items({
+        id: Joi.objectId(),
+        value: Joi.number()
+          .integer()
+          .min(1)
+          .max(4)
+      })
+    },
+    params: {
+      skillId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
   }
 };

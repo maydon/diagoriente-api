@@ -37,7 +37,7 @@ const skillSchema = new mongoose.Schema(
  *
  */
 
-skillSchema.pre('list', (doc, next) => {
+skillSchema.post('list', (doc, next) => {
   doc
     .populate('theme', 'title description type')
     .populate('activities', 'title type verified')

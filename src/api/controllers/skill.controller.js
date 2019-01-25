@@ -49,7 +49,7 @@ exports.update = async (req, res, next) => {
   const { skill } = req.locals;
 
   try {
-    const newSkill = omit(req.body, '_id');
+    const newSkill = omit(req.body, ['_id', 'parcourId']);
     const updatedSkill = Object.assign(skill, newSkill);
     const savedSkill = await updatedSkill.save();
     res.json(savedSkill.transform());
