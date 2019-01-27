@@ -6,7 +6,7 @@ const httpStatus = require('http-status');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
- * Get intersest
+ * Get interest
  * @public
  */
 exports.get = (req, res) => res.json(req.locals.interest.transform());

@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const authRoutes = require('./auth.route');
 const userRoutes = require('./user.route');
 const themeRoutes = require('./theme.route');
@@ -20,8 +21,9 @@ router.get('/status', (req, res) => res.send('OK'));
 /**
  * GET v1/docs
  */
-router.use('/docs', express.static('docs'));
-router.use('/icons', express.static('src/uploads'));
+
+router.use('/docs', express.static(path.join(__dirname, '../../../../docs')));
+router.use('/icons', express.static(path.join(__dirname, '../../../uploads')));
 
 router.use('/auth', authRoutes);
 router.use('/users', userRoutes);

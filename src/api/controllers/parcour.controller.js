@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
+const Skill = require('../models/skill.model');
 const User = require('../models/user.model');
+const Competence = require('../models/competence.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -23,7 +25,45 @@ exports.load = async (req, res, next, id) => {
  * Get parcour
  * @public
  */
-exports.get = (req, res) => res.json(req.locals.parcour.transform());
+exports.get = async (req, res, next) => {
+  try {
+    const { parcour } = req.locals;
+
+    const skills = await Skill.find({
+      _id: { $in: parcour.skills }
+    })
+      .populate('theme', 'title description type')
+      .populate({
+        path: 'activities',
+        model: 'Activity',
+        populate: {
+          path: 'interests',
+          model: 'Interest'
+        }
+      });
+
+    const staticCompentences = await Competence.find({}).select('_id');
+
+    const formatSkills = skills.map((item) => {
+      const competencesList = Parcour.AddGlobalCompetence({
+        skills: [item],
+        competencesCart: staticCompentences
+      });
+      item.competences = competencesList;
+      return item;
+    });
+
+    parcour.skills = formatSkills;
+    parcour.globalCopmetences = Parcour.AddGlobalCompetence({
+      skills: parcour.skills,
+      competencesCart: staticCompentences
+    });
+
+    return res.json(parcour.transform());
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * Create new parcour

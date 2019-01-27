@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
+const { flatten } = require('lodash');
 const APIError = require('../utils/APIError');
 
 /**
@@ -27,7 +28,13 @@ const parcourSchema = new mongoose.Schema(
 parcourSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'userId', 'completed', 'skills'];
+    const fields = [
+      '_id',
+      'userId',
+      'completed',
+      'skills',
+      'globalCopmetences'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -47,7 +54,6 @@ parcourSchema.statics = {
   async get(id) {
     try {
       let parcour;
-
       if (mongoose.Types.ObjectId.isValid(id)) {
         parcour = await this.findById(id).exec();
       }
@@ -59,6 +65,31 @@ parcourSchema.statics = {
     } catch (error) {
       throw error;
     }
+  },
+
+  /**
+   * add global
+   * competences to parcour and
+   * insialize list of competences
+   */
+  AddGlobalCompetence({ skills, competencesCart }) {
+    const competencesCartInitialized = {};
+
+    competencesCart.map((item) => {
+      const keyItem = item._id;
+      competencesCartInitialized[keyItem] = { _id: keyItem, value: 0 };
+    });
+
+    const competences = flatten(skills.map((item) => item.competences));
+
+    competences.forEach((item) => {
+      const refItem = competencesCartInitialized[item._id];
+      if (refItem.value < item.value) {
+        competencesCartInitialized[item._id] = item;
+      }
+    });
+
+    return Object.values(competencesCartInitialized);
   },
   /**
    * List parcours in descending order of 'createdAt' timestamp.

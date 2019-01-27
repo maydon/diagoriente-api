@@ -3,6 +3,7 @@ const Theme = require('../models/theme.model');
 const { pagination } = require('../utils/Pagination');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
+const { serverUrl } = require('../../config/vars');
 
 /**
  * Load user and append to req.
@@ -71,9 +72,7 @@ exports.upload = async (req, res, next) => {
     if (color) resources.color = color;
     if (backgroundColor) resources.backgroundColor = backgroundColor;
     if (file) {
-      resources.icon = `https://api-dev.projetttv.org/v1/icons/${
-        file.filename
-      }`;
+      resources.icon = `${serverUrl}/v1/icons/${file.filename}`;
     }
 
     theme.set({ resources });

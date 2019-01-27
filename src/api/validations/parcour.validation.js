@@ -20,5 +20,14 @@ module.exports = {
         .unique(),
       completed: Joi.boolean()
     }
+  },
+
+  // get /v1/parcour/:id
+  get: {
+    params: {
+      parcourId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
   }
 };
