@@ -43,8 +43,10 @@ exports.get = async (req, res, next) => {
       });
 
     const staticCompentences = await Competence.find({}).select('_id');
+    const globalInterest = [];
 
     const formatSkills = skills.map((item) => {
+      globalInterest.concat(item.interests);
       const competencesList = Parcour.AddGlobalCompetence({
         skills: [item],
         competencesCart: staticCompentences

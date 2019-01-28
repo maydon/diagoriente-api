@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const Theme = require('../models/theme.model');
-const Skill = require('../models/skill.model');
 Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {
@@ -39,7 +38,7 @@ module.exports = {
       theme: Joi.objectId(),
       activities: Joi.array().items(Joi.objectId()),
       competences: Joi.array().items({
-        id: Joi.objectId(),
+        id: Joi.objectId().required(),
         value: Joi.number()
           .integer()
           .min(1)
