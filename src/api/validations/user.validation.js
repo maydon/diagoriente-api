@@ -18,5 +18,15 @@ module.exports = {
         .regex(/^[a-fA-F0-9]{24}$/)
         .required()
     }
+  },
+
+  // PUT /v1/users/me/profil
+  aprouvedUser: {
+    body: {
+      email: Joi.string()
+        .email()
+        .required(),
+      pseudo: Joi.string().max(25)
+    }
   }
 };

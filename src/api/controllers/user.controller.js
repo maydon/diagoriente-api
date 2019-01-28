@@ -118,3 +118,19 @@ exports.remove = (req, res, next) => {
     .then(() => res.status(httpStatus.NO_CONTENT).end())
     .catch((e) => next(e));
 };
+
+/**
+ * approuve user
+ * @public
+ */
+exports.aprouvedUser = (req, res, next) => {
+  const { user } = req.locals;
+  const { email, pseudo } = req.body;
+  user.profile = { email, pseudo };
+  console.log('updated', user);
+
+  user
+    .save()
+    .then((savedUser) => res.json(savedUser.transform()))
+    .catch((e) => next(e));
+};

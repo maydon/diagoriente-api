@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/user.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const { list } = require('../../validations/user.validation');
+const { list, aprouvedUser } = require('../../validations/user.validation');
 
 const router = express.Router();
 
@@ -73,7 +73,25 @@ router
    *
    * @apiError (Forbidden 403)   Forbidden  Only admins can delete the data
    */
-  .delete(authorize(ADMIN), controller.remove);
+  .delete(authorize(ADMIN), controller.remove)
+  /**
+   * @api {get} v1/users/:id Approuve user
+   * @apiDescription Add profil object to user
+   * @apiVersion 1.0.0
+   * @apiName ApprouveUser
+   * @apiGroup User
+   * @apiPermission user
+   *
+   * @apiHeader {String} Authorization    access token
+   *
+   * @apiParam  {Object[]}         profil    profil Object {'email','pseuso'}
+   *
+   *
+   * @apiParam  {Object[]}         user    updated user
+   *
+   * @apiError (Not Found 404)    NotFound     User does not exist
+   */
+  .put(authorize(LOGGED_USER), validate(aprouvedUser), controller.aprouvedUser);
 
 router
   .route('/me/profil')

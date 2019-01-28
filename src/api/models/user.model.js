@@ -47,6 +47,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    profile: {
+      pseudo: {
+        type: String,
+        trim: true
+      },
+      email: {
+        type: String,
+        match: /^\S+@\S+\.\S+$/,
+        trim: true,
+        lowercase: true
+      }
+    },
     parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }]
   },
   {
@@ -67,6 +79,7 @@ userSchema.method({
       'email',
       'platform',
       'parcours',
+      'profile',
       'createdAt'
     ];
 
