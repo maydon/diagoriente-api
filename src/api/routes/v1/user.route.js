@@ -84,10 +84,11 @@ router
    *
    * @apiHeader {String} Authorization    access token
    *
+   * @apiParam  {String}         id    user
    * @apiParam  {Object[]}         profil    profil Object {'email','pseuso'}
    *
    *
-   * @apiParam  {Object[]}         user    updated user
+   * @apiSuccess  {Object[]}         user    updated user
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
