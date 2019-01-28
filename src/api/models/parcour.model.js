@@ -33,7 +33,8 @@ parcourSchema.method({
       'userId',
       'completed',
       'skills',
-      'globalCopmetences'
+      'globalCopmetences',
+      'globalInterest'
     ];
 
     fields.forEach((field) => {

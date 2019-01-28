@@ -4,6 +4,7 @@ const Parcour = require('../models/parcour.model');
 const Skill = require('../models/skill.model');
 const User = require('../models/user.model');
 const Competence = require('../models/competence.model');
+const { reduceId } = require('../utils/reduceId');
 const { omit, flatten } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -49,8 +50,6 @@ exports.get = async (req, res, next) => {
     const formatSkills = skills.map((item) => {
       const interests = item.activities.map((activity) => activity.interests);
 
-      //console.log('interests', flatten(interests));
-
       globalInterest = globalInterest.concat(flatten(interests));
       const competencesList = Parcour.AddGlobalCompetence({
         skills: [item],
@@ -60,8 +59,7 @@ exports.get = async (req, res, next) => {
       return item;
     });
 
-    console.log('globalInterest', globalInterest);
-
+    parcour.globalInterest = reduceId(globalInterest, '_id');
     parcour.skills = formatSkills;
     parcour.globalCopmetences = Parcour.AddGlobalCompetence({
       skills: parcour.skills,
