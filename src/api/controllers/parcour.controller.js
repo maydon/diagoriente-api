@@ -39,18 +39,19 @@ exports.get = async (req, res, next) => {
         populate: {
           path: 'interests',
           model: 'Interest',
-          select: '_id rank nom'
+          select: 'rank nom'
         }
       });
 
     const staticCompentences = await Competence.find({}).select('_id');
-    const globalInterest = [];
+    let globalInterest = [];
 
     const formatSkills = skills.map((item) => {
       const interests = item.activities.map((activity) => activity.interests);
 
-      console.log('interests', flatten(interests));
-      globalInterest.concat(flatten(interests));
+      //console.log('interests', flatten(interests));
+
+      globalInterest = globalInterest.concat(flatten(interests));
       const competencesList = Parcour.AddGlobalCompetence({
         skills: [item],
         competencesCart: staticCompentences

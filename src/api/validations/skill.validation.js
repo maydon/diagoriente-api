@@ -23,7 +23,7 @@ module.exports = {
       theme: Joi.objectId(),
       activities: Joi.array().items(Joi.objectId()),
       competences: Joi.array().items({
-        id: Joi.objectId().required(),
+        _id: Joi.objectId().required(),
         value: Joi.number()
           .integer()
           .min(1)
@@ -38,7 +38,7 @@ module.exports = {
       theme: Joi.objectId(),
       activities: Joi.array().items(Joi.objectId()),
       competences: Joi.array().items({
-        id: Joi.objectId().required(),
+        _id: Joi.objectId().required(),
         value: Joi.number()
           .integer()
           .min(1)
