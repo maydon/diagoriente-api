@@ -4,7 +4,7 @@ const Parcour = require('../models/parcour.model');
 const Skill = require('../models/skill.model');
 const User = require('../models/user.model');
 const Competence = require('../models/competence.model');
-const { omit } = require('lodash');
+const { omit, flatten } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -38,7 +38,8 @@ exports.get = async (req, res, next) => {
         model: 'Activity',
         populate: {
           path: 'interests',
-          model: 'Interest'
+          model: 'Interest',
+          select: '_id rank nom'
         }
       });
 
@@ -46,7 +47,10 @@ exports.get = async (req, res, next) => {
     const globalInterest = [];
 
     const formatSkills = skills.map((item) => {
-      globalInterest.concat(item.interests);
+      const interests = item.activities.map((activity) => activity.interests);
+
+      console.log('interests', flatten(interests));
+      globalInterest.concat(flatten(interests));
       const competencesList = Parcour.AddGlobalCompetence({
         skills: [item],
         competencesCart: staticCompentences
@@ -54,6 +58,8 @@ exports.get = async (req, res, next) => {
       item.competences = competencesList;
       return item;
     });
+
+    console.log('globalInterest', globalInterest);
 
     parcour.skills = formatSkills;
     parcour.globalCopmetences = Parcour.AddGlobalCompetence({
