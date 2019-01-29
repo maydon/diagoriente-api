@@ -149,7 +149,7 @@ exports.listAll = async (req, res, next) => {
     const reg1 = new RegExp(req.query.type, 'i');
 
     const querySearch = {
-      $or: [{ title: reg }, { description: reg }],
+      $or: [{ title: reg }, { description: reg }, { search: reg }],
       type: reg1,
       ...verified
     };
