@@ -10,7 +10,7 @@ const APIError = require('../utils/APIError');
 
 const parcourSchema = new mongoose.Schema(
   {
-    userId: mongoose.Schema.Types.ObjectId,
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     completed: {
       type: Boolean,
       default: false
@@ -102,6 +102,7 @@ parcourSchema.statics = {
   list({ page = 1, perPage = 30, role, _id }) {
     const userId = role === 'admin' ? {} : { userId: _id };
     return this.find({ ...userId })
+      .populate('userId', 'uniqId platform profile')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
