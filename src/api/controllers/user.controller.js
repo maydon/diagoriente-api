@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
+const Parcour = require('../models/parcour.model');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -123,11 +124,16 @@ exports.remove = (req, res, next) => {
  * approuve user
  * @public
  */
-exports.aprouvedUser = (req, res, next) => {
+exports.aprouvedUser = async (req, res, next) => {
   const { user } = req.locals;
   const { email, pseudo } = req.body;
   user.profile = { email, pseudo };
-  console.log('updated', user);
+
+  const parcour = await Parcour.find({ userId: user._id });
+  parcour[0].completed = true;
+  const updateParcour = parcour[0];
+
+  updateParcour.save();
 
   user
     .save()

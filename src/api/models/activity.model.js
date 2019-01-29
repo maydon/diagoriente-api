@@ -86,7 +86,7 @@ activitySchema.statics = {
     const reg1 = new RegExp(type, 'i');
 
     return this.find({
-      title: reg,
+      $or: [{ title: reg }, { search: reg }],
       type: reg1
     })
       .sort({ createdAt: -1 })

@@ -137,7 +137,7 @@ themeSchema.statics = {
     const verified = role === 'admin' ? {} : { verified: true };
 
     return this.find({
-      $or: [{ title: reg }, { description: reg }],
+      $or: [{ title: reg }, { description: reg }, { search: reg }],
       type: reg1,
       ...verified
     })

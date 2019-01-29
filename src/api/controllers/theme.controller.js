@@ -115,7 +115,7 @@ exports.list = async (req, res, next) => {
     const verified = role === 'admin' ? {} : { verified: true };
 
     const querySearch = {
-      $or: [{ title: reg }, { description: reg }],
+      $or: [{ title: reg }, { description: reg }, { search: reg }],
       type: reg1,
       ...verified
     };
