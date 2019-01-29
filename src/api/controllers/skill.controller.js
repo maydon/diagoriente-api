@@ -32,9 +32,12 @@ exports.create = async (req, res, next) => {
   try {
     const skill = new Skill(req.body);
     const savedSkill = await skill.save();
-    await Parcour.findOneAndUpdate(savedSkill.parcourId, {
-      $push: { skills: savedSkill._id }
-    });
+    await Parcour.findOneAndUpdate(
+      { _id: savedSkill.parcourId },
+      {
+        $push: { skills: savedSkill._id }
+      }
+    );
     res.status(httpStatus.CREATED);
     res.json(savedSkill.transform());
   } catch (error) {
