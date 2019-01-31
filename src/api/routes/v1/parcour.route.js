@@ -48,6 +48,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}            id     Parcours's id
+   * @apiParam  {String}            userId     Parcours  userId
    * @apiParam  {Boolean}          completed    parcour completed or not
    * @apiParam  {Object[]}          skills    skill's ids associated to parcour
    *
