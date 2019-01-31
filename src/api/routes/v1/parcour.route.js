@@ -1,7 +1,7 @@
 const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/parcour.controller');
-const { authorize, LOGGED_USER } = require('../../middlewares/auth');
+const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
 const {
   list,
   get,
@@ -97,6 +97,6 @@ router
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    */
-  .delete(authorize(LOGGED_USER), validate(deleteParcour), controller.remove);
+  .delete(authorize(ADMIN), validate(deleteParcour), controller.remove);
 
 module.exports = router;

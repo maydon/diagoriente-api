@@ -125,15 +125,12 @@ exports.update = async (req, res, next) => {
 exports.remove = async (req, res, next) => {
   const { parcour } = req.locals;
   try {
-    console.log('remove parcour', parcour);
-
     await User.findOneAndUpdate(
       { _id: parcour.userId },
       {
         $pull: { parcours: parcour._id }
       }
     );
-
     parcour
       .remove()
       .then(() => res.status(httpStatus.NO_CONTENT).end())
