@@ -31,13 +31,30 @@ exports.get = (req, res) => res.json(req.locals.skill.transform());
 exports.create = async (req, res, next) => {
   try {
     const skill = new Skill(req.body);
-    const savedSkill = await skill.save();
-    await Parcour.findOneAndUpdate(
-      { _id: savedSkill.parcourId },
-      {
-        $push: { skills: savedSkill._id }
-      }
+    console.log('skill', skill.theme);
+
+    const parcour = await Parcour.findById(skill.parcourId);
+    const parcourWithThemes = await Parcour.findById(skill.parcourId).populate(
+      'skills',
+      'theme'
     );
+    const listThemesInParcour = parcourWithThemes.skills.map((item) =>
+      item.theme.toString()
+    );
+    const skillDuplicated = listThemesInParcour.includes(
+      skill.theme.toString()
+    );
+    if (skillDuplicated) {
+      const duplicatedSkillId = parcourWithThemes.skills.filter(
+        (item) => item.theme.toString() === skill.theme.toString()
+      );
+      parcour.skills.filter(
+        (item) => item.id.string() === duplicatedSkillId[0]._id
+      );
+    }
+    const savedSkill = await skill.save();
+    parcour.skills.push(savedSkill._id);
+    await parcour.save();
     res.status(httpStatus.CREATED);
     res.json(savedSkill.transform());
   } catch (error) {
