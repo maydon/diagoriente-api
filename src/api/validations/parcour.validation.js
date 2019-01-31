@@ -15,6 +15,7 @@ module.exports = {
   // POST /v1/activities
   create: {
     body: {
+      userId: Joi.objectId().required(),
       skills: Joi.array()
         .items(Joi.objectId())
         .unique(),
@@ -24,6 +25,14 @@ module.exports = {
 
   // get /v1/parcour/:id
   get: {
+    params: {
+      parcourId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
+  },
+
+  deleteParcour: {
     params: {
       parcourId: Joi.string()
         .regex(/^[a-fA-F0-9]{24}$/)

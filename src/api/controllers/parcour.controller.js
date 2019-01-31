@@ -83,12 +83,14 @@ exports.create = async (req, res, next) => {
     if (user.parcours.length === 0) {
       const parcour = new Parcour({ userId: user._id, ...req.body });
       parcourResponse = await parcour.save();
+
       await User.findOneAndUpdate(
         { _id: user._id },
         {
           $push: { parcours: parcourResponse._id }
         }
       );
+
       res.status(httpStatus.CREATED);
     } else {
       parcourResponse = await Parcour.get(user.parcours[0]);
@@ -123,6 +125,15 @@ exports.update = async (req, res, next) => {
 exports.remove = async (req, res, next) => {
   const { parcour } = req.locals;
   try {
+    console.log('remove parcour', parcour);
+
+    await User.findOneAndUpdate(
+      { _id: parcour.userId },
+      {
+        $pull: { parcours: parcour._id }
+      }
+    );
+
     parcour
       .remove()
       .then(() => res.status(httpStatus.NO_CONTENT).end())

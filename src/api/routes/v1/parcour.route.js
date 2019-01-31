@@ -2,7 +2,12 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/parcour.controller');
 const { authorize, LOGGED_USER } = require('../../middlewares/auth');
-const { list, get, create } = require('../../validations/parcour.validation');
+const {
+  list,
+  get,
+  create,
+  deleteParcour
+} = require('../../validations/parcour.validation');
 
 const router = express.Router();
 
@@ -61,21 +66,37 @@ router
    * @api {get} v1/parcours List Parcours
    * @apiDescription Get a list of Parcours
    * @apiVersion 1.0.0
-   * @apiName ListActivities
+   * @apiName ListParcours
    * @apiGroup Parcour
    * @apiPermission  user
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
- 
+   * @apiParam  {String}         id     parcour object id
    *
-   * @apiSuccess {Object[]}   List of parcours.
+   *
+   * @apiSuccess {Object[]} parcour  parcour full object.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize(LOGGED_USER), validate(get), controller.get);
+  .get(authorize(LOGGED_USER), validate(get), controller.get)
+  /**
+   * @api {get} v1/parcours Delete Parcours
+   * @apiDescription Delete Parcour
+   * @apiVersion 1.0.0
+   * @apiName DeleteParcour
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiSuccess (No Content 204)  Successfully deleted
+   *
+   * @apiSuccess {Object[]}   List of parcours.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   */
+  .delete(authorize(LOGGED_USER), validate(deleteParcour), controller.remove);
 
 module.exports = router;

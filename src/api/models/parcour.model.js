@@ -34,7 +34,9 @@ parcourSchema.method({
       'completed',
       'skills',
       'globalCopmetences',
-      'globalInterest'
+      'globalInterest',
+      'createdAt',
+      'updatedAt'
     ];
 
     fields.forEach((field) => {
