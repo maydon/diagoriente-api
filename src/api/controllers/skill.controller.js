@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Skill = require('../models/skill.model');
 const Parcour = require('../models/parcour.model');
-const { omit } = require('lodash');
+const { omit, remove } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -31,27 +31,20 @@ exports.get = (req, res) => res.json(req.locals.skill.transform());
 exports.create = async (req, res, next) => {
   try {
     const skill = new Skill(req.body);
-    console.log('skill', skill.theme);
 
     const parcour = await Parcour.findById(skill.parcourId);
     const parcourWithThemes = await Parcour.findById(skill.parcourId).populate(
       'skills',
       'theme'
     );
-    const listThemesInParcour = parcourWithThemes.skills.map((item) =>
-      item.theme.toString()
-    );
-    const skillDuplicated = listThemesInParcour.includes(
-      skill.theme.toString()
-    );
-    if (skillDuplicated) {
-      const duplicatedSkillId = parcourWithThemes.skills.filter(
-        (item) => item.theme.toString() === skill.theme.toString()
-      );
-      parcour.skills.filter(
-        (item) => item.id.string() === duplicatedSkillId[0]._id
-      );
-    }
+    parcourWithThemes.skills.forEach((item) => {
+      if (item.theme._id.toString() === skill.theme.toString()) {
+        parcour.skills = parcour.skills.filter(
+          (e) => e._id.toString() !== item._id.toString()
+        );
+      }
+    });
+
     const savedSkill = await skill.save();
     parcour.skills.push(savedSkill._id);
     await parcour.save();
