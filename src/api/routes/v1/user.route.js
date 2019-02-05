@@ -2,7 +2,11 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/user.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const { list, aprouvedUser } = require('../../validations/user.validation');
+const {
+  list,
+  addAdvisor,
+  aprouvedUser
+} = require('../../validations/user.validation');
 
 const router = express.Router();
 
@@ -33,6 +37,30 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize(ADMIN), validate(list), controller.list);
+
+router
+  .route('/advisors')
+  /**
+   * @api {post} v1/users/advisors add  advisor
+   * @apiDescription add new advisor
+   * @apiVersion 1.0.0
+   * @apiName AddAdvisor
+   * @apiGroup User
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         email    advisor email
+   * @apiParam  {String}         password    advisor password
+   * @apiParam  {String}       firstName    advisor firstName
+   * @apiParam  {String}       lastName    advisor firstName
+   * @apiParam  {String}       institution    advisor institution
+   *
+   * @apiSuccess {Object[]}   advisor object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(authorize(ADMIN), validate(addAdvisor), controller.addAdvisor);
 
 router
   .route('/:userId')

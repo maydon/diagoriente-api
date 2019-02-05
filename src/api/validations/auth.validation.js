@@ -17,6 +17,19 @@ module.exports = {
     }
   },
 
+  // POST /v1/auth/advisor
+  loginAdvisor: {
+    body: {
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .max(30)
+        .required()
+    }
+  },
+
   // POST /v1/auth/refresh
   refresh: {
     body: {

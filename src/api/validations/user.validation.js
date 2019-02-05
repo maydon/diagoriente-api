@@ -20,6 +20,22 @@ module.exports = {
     }
   },
 
+  // POST /v1/users/advisors
+  addAdvisor: {
+    body: {
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .max(30)
+        .required(),
+      firstName: Joi.string().max(30),
+      lastName: Joi.string().max(30),
+      institution: Joi.string().max(70)
+    }
+  },
+
   // PUT /v1/users/me/profil
   aprouvedUser: {
     body: {

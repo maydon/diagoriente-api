@@ -104,7 +104,7 @@ parcourSchema.statics = {
   list({ page = 1, perPage = 30, role, _id }) {
     const userId = role === 'admin' ? {} : { userId: _id };
     return this.find({ ...userId })
-      .populate('userId', 'uniqId platform profile')
+      .populate('userId', 'uniqId email platform profile')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

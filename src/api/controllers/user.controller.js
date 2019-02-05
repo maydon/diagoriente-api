@@ -3,6 +3,7 @@ const { omit } = require('lodash');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
+const { hashPassword } = require('../utils/Bcrypt');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -91,7 +92,6 @@ exports.list = async (req, res, next) => {
 
     const transformedUsers = users.map((user) => user.transform());
 
-    const reg = new RegExp(req.query.search, 'i');
     const querySearch = { role: 'user' };
 
     const responstPagination = await pagination(
@@ -126,10 +126,11 @@ exports.remove = (req, res, next) => {
  */
 exports.aprouvedUser = async (req, res, next) => {
   const { user } = req.locals;
-  const { email, pseudo } = req.body;
-  user.profile = { email, pseudo };
+  const { email, pseudo, firstName, lastName } = req.body;
+  user.profile = { pseudo, firstName, lastName };
 
   const parcour = await Parcour.find({ userId: user._id });
+  user.email = email;
   parcour[0].completed = true;
   const updateParcour = parcour[0];
 
@@ -139,4 +140,37 @@ exports.aprouvedUser = async (req, res, next) => {
     .save()
     .then((savedUser) => res.json(savedUser.transform()))
     .catch((e) => next(e));
+};
+
+/**
+ * approuve user
+ * @public
+ */
+exports.addAdvisor = async (req, res, next) => {
+  try {
+    const { body } = req;
+    await User.checkDuplicateEmail(body.email, next);
+
+    const advisorProp = {
+      role: 'advisor',
+      platform: 'web',
+      email: body.email,
+      password: await hashPassword(body.password),
+      profile: {
+        pseudo: body.pseudo,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        institution: body.institution
+      }
+    };
+
+    const advisor = new User(advisorProp);
+    advisor.parcours = undefined;
+    const savedAdvisor = await advisor.save();
+    res.status(httpStatus.CREATED);
+    res.json(savedAdvisor.transform());
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 };

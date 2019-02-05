@@ -4,6 +4,7 @@ const controller = require('../../controllers/auth.controller');
 const {
   login,
   loginAdmin,
+  loginAdvisor,
   refresh
 } = require('../../validations/auth.validation');
 
@@ -63,6 +64,31 @@ router.route('/user').post(validate(login), controller.login);
  * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
  */
 router.route('/admin').post(validate(loginAdmin), controller.loginAdmin);
+
+/**
+ * @api {post} v1/auth/zdvisor Login advisor
+ * @apiDescription Get an accessToken for advisor
+ * @apiVersion 1.0.0
+ * @apiName Login advisor
+ * @apiGroup Auth
+ * @apiPermission public
+ *
+ * @apiParam  {String}         email     advisor email
+ * @apiParam  {String}         password     advisor password
+ *
+ * @apiSuccess  {String}  token.tokenType     Access Token's type
+ * @apiSuccess  {String}  token.accessToken   Authorization Token
+ * @apiSuccess  {String}  token.refreshToken  Token to get a new accessToken
+ *                                                   after expiration time
+ * @apiSuccess  {Number}  token.expiresIn     Access Token's expiration time
+ *                                                   in miliseconds
+ *
+ * @apiSuccess  {object[]}  advisor             advisor object
+ *
+ * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+ * @apiError (Unauthorized 401)  Unauthorized     Incorrect email or password
+ */
+router.route('/advisor').post(validate(loginAdvisor), controller.loginAdvisor);
 
 /**
  * @api {post} v1/auth/refresh-token Refresh Token

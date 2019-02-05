@@ -9,12 +9,12 @@ const { jwtSecret, jwtExpirationInterval } = require('../../config/vars');
 /**
  * User Roles
  */
-const roles = ['user', 'admin'];
+const roles = ['user', 'admin', 'advisor'];
 
 /**
  * User Platforms
  */
-const platform = ['android', 'ios'];
+const platform = ['android', 'ios', 'web'];
 /**
  * User Schema
  * @private
@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema(
     platform: {
       type: String,
       enum: platform,
-      default: 'android'
+      required: true
     },
     uniqId: {
       type: String,
@@ -41,7 +41,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       match: /^\S+@\S+\.\S+$/,
       trim: true,
-      lowercase: true
+      lowercase: true,
+      index: true,
+      unique: true
     },
     password: {
       type: String,
@@ -52,11 +54,20 @@ const userSchema = new mongoose.Schema(
         type: String,
         trim: true
       },
-      email: {
+      firstName: {
         type: String,
-        match: /^\S+@\S+\.\S+$/,
         trim: true,
-        lowercase: true
+        max: 30
+      },
+      lastName: {
+        type: String,
+        trim: true,
+        max: 30
+      },
+      institution: {
+        type: String,
+        trim: true,
+        max: 30
       }
     },
     parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }]
@@ -196,6 +207,37 @@ userSchema.statics = {
   },
 
   /**
+   * Find admin by email and tries to generate a JWT token
+   *
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<User, APIError>}
+   */
+
+  async findAdvisorAndGenerateToken(options) {
+    const { email, password, refreshObject } = options;
+    const advisor = await this.findOne({ email }).exec();
+    const err = {
+      status: httpStatus.UNAUTHORIZED,
+      isPublic: true
+    };
+    if (password) {
+      if (advisor && (await advisor.passwordMatches(password))) {
+        return { advisor, accessToken: advisor.token() };
+      }
+      err.message = 'Incorrect email or password';
+    } else if (refreshObject) {
+      if (moment(refreshObject.expires).isBefore()) {
+        err.message = 'Invalid refresh token.';
+      } else {
+        return { advisor, accessToken: advisor.token() };
+      }
+    } else {
+      err.message = 'Incorrect userId or refreshToken';
+    }
+    throw new APIError(err);
+  },
+
+  /**
    * List users in descending order of 'createdAt' timestamp.
    *
    * @param {number} skip - Number of users to be skipped.
@@ -208,6 +250,27 @@ userSchema.statics = {
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
+  },
+
+  /**
+   * Return new validation error
+   * if error is a mongoose duplicate key error
+   *
+   * @param {Error} error
+   * @returns {Error|APIError}
+   */
+  async checkDuplicateEmail(email, next) {
+    try {
+      const user = await this.findOne({ email }).exec();
+      if (user) {
+        throw new APIError({
+          message: 'email already exists',
+          status: httpStatus.CONFLICT
+        });
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 };
 

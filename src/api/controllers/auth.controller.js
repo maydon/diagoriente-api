@@ -52,6 +52,23 @@ exports.loginAdmin = async (req, res, next) => {
 };
 
 /**
+ * Returns jwt token if valid username and password is provided
+ * @public
+ */
+exports.loginAdvisor = async (req, res, next) => {
+  try {
+    const { advisor, accessToken } = await User.findAdvisorAndGenerateToken(
+      req.body
+    );
+    const token = generateTokenResponse(advisor, accessToken);
+    const advisorTransformed = advisor.transform();
+    return res.json({ token, advisor: advisorTransformed });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
  * Returns a new jwt when given a valid refresh token
  * @public
  */
