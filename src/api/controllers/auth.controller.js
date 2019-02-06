@@ -80,12 +80,10 @@ exports.refresh = async (req, res, next) => {
       token: refreshToken
     });
 
-    console.log('refresh refreshObject', refreshObject);
-
     const { email, uniqId, role } = await User.get(userId);
 
     let globals = null;
-    if (role === 'admin') {
+    if (role === 'admin' || role === 'advisor') {
       globals = await User.findAdminAndGenerateToken({
         email,
         refreshObject

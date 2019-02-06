@@ -3,7 +3,12 @@ const validate = require('express-validation');
 const multer = require('multer');
 const controller = require('../../controllers/theme.controller');
 const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
-const { create, update, list } = require('../../validations/theme.validation');
+const {
+  create,
+  update,
+  list,
+  secteurChildLidt
+} = require('../../validations/theme.validation');
 
 const router = express.Router();
 
@@ -104,7 +109,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize(LOGGED_USER), validate(list), controller.listAll);
+  .get(authorize(LOGGED_USER), validate(list), controller.list);
 
 router
   .route('/:themeId')
@@ -199,5 +204,30 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
    */
   .post(authorize(), uploadIcon.single('icon'), controller.upload);
+
+router
+  .route('/secteur/:themeId')
+  /**
+   * @api {post} v1/secteur/:themeId  secteur child
+   * @apiDescription get secteur childs themes
+   * @apiVersion 1.0.0
+   * @apiName SecteurChild
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}   secteyrId     secteur id
+   *
+   *
+   * @apiSuccess {Object[]}    secteur  list secteur themes
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
+   */
+  .get(
+    authorize(LOGGED_USER),
+    validate(secteurChildLidt),
+    controller.secteurChildList
+  );
 
 module.exports = router;

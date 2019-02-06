@@ -25,7 +25,7 @@ const handleJWT = (req, res, next, roles) => async (err, user, info) => {
   }
 
   if (typeof roles === 'string') {
-    if (roles === user.role) {
+    if (roles !== user.role && user.role !== ADMIN) {
       apiError.status = httpStatus.FORBIDDEN;
       apiError.message = 'Forbidden';
       return next(apiError);

@@ -12,13 +12,22 @@ module.exports = {
         .min(1)
         .max(100),
       search: Joi.string().empty(''),
-      type: Joi.string().valid(Activity.types)
+      type: Joi.string().valid(Theme.types)
+    }
+  },
+
+  secteurChildLidt: {
+    params: {
+      themeId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
     }
   },
 
   // POST /v1/themes
   create: {
     body: {
+      parentId: Joi.objectId().allow(null),
       title: Joi.string()
         .min(3)
         .max(250)
@@ -35,6 +44,7 @@ module.exports = {
   // PATCH /v1/themes/:themeId
   update: {
     body: {
+      parentId: Joi.objectId().allow(null),
       title: Joi.string()
         .min(3)
         .max(250)

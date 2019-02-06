@@ -106,8 +106,17 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   const { role } = req.user;
+  const { path } = req.route;
+
+  /*
+   * populate if path = /all
+   */
+  const population = path !== '/';
+
+  console.log('population test', population, path);
+
   try {
-    const themes = await Theme.list({ ...req.query, role });
+    const themes = await Theme.list({ ...req.query, role, population });
     const transformedThemes = themes.map((theme) => theme.transform());
 
     const reg = new RegExp(req.query.search, 'i');
@@ -134,31 +143,21 @@ exports.list = async (req, res, next) => {
 };
 
 /**
- * Get themes list
+ * Get secteur child list
  * @public
  */
-exports.listAll = async (req, res, next) => {
-  const { role } = req.user;
-
+exports.secteurChildList = async (req, res, next) => {
   try {
-    const themes = await Theme.listAll({ ...req.query, role });
-    const transformedThemes = themes.map((theme) => theme.transform());
-    const verified = role === 'admin' ? {} : { verified: true };
+    const { themeId: parentId } = req.params;
 
-    const reg = new RegExp(req.query.search, 'i');
-    const reg1 = new RegExp(req.query.type, 'i');
-
-    const querySearch = {
-      $or: [{ title: reg }, { description: reg }, { search: reg }],
-      type: reg1,
-      ...verified
-    };
+    const secteurs = await Theme.listSecteur({ parentId });
+    const transformedSecteurs = secteurs.map((theme) => theme.transform());
 
     const responstPagination = await pagination(
-      transformedThemes,
+      transformedSecteurs,
       req.query,
       Theme,
-      querySearch
+      null
     );
 
     res.json(responstPagination);

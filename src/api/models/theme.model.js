@@ -7,10 +7,15 @@ const APIError = require('../utils/APIError');
  * @private
  */
 
-const types = ['professional', 'personal'];
+const types = ['professional', 'personal', 'secteur'];
 
 const themeSchema = new mongoose.Schema(
   {
+    parentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Theme',
+      default: null
+    },
     title: {
       type: String,
       maxlength: 250,
@@ -57,6 +62,7 @@ themeSchema.method({
     const transformed = {};
     const fields = [
       '_id',
+      'parentId',
       'title',
       'description',
       'type',
@@ -102,22 +108,30 @@ themeSchema.statics = {
   },
 
   /**
-   * List posts in descending order of 'createdAt' timestamp.
+   * List themes in descending order of 'createdAt' timestamp.
    *
    * @param {number} skip - Number of posts to be skipped.
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search, type, role }) {
+  list({ page = 1, perPage = 30, search, type, role, population }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
     const verified = role === 'admin' ? {} : { verified: true };
+
+    const populateProp = population
+      ? {
+          path: 'activities',
+          populate: { path: 'activities' }
+        }
+      : '';
 
     return this.find({
       $or: [{ title: reg }, { description: reg }, { search: reg }],
       type: reg1,
       ...verified
     })
+      .populate(populateProp)
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
@@ -125,29 +139,18 @@ themeSchema.statics = {
   },
 
   /**
-   * List posts in descending order of 'createdAt' timestamp.
+   * List secteurs in descending order of 'createdAt' timestamp.
    *
-   * @param {number} skip - Number of posts to be skipped.
-   * @param {number} limit - Limit number of posts to be returned.
-   * @returns {Promise<Post[]>}
+ 
    */
-  listAll({ page = 1, perPage = 30, search, type, role }) {
-    const reg = new RegExp(search, 'i');
-    const reg1 = new RegExp(type, 'i');
-    const verified = role === 'admin' ? {} : { verified: true };
 
-    return this.find({
-      $or: [{ title: reg }, { description: reg }, { search: reg }],
-      type: reg1,
-      ...verified
-    })
+  listSecteur({ parentId }) {
+    return this.find({ parentId })
       .populate({
         path: 'activities',
         populate: { path: 'activities' }
       })
       .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
       .exec();
   }
 };
