@@ -113,8 +113,10 @@ router
    * @apiHeader {String} Authorization    access token
    *
    * @apiParam  {String}         id    user
-   * @apiParam  {Object[]}         profil    profil Object {'email','pseuso'}
-   *
+   * @apiParam  {String}         email    user email
+   * @apiParam  {String}         password    user password
+   * @apiParam  {String}         firstName    user firstName
+   * @apiParam  {String}         lastName    user lastName
    *
    * @apiSuccess  {Object[]}         user    updated user
    *

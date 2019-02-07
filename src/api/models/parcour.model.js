@@ -10,6 +10,7 @@ const APIError = require('../utils/APIError');
 
 const parcourSchema = new mongoose.Schema(
   {
+    advisorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     completed: {
       type: Boolean,
@@ -30,6 +31,7 @@ parcourSchema.method({
     const transformed = {};
     const fields = [
       '_id',
+      'advisorId',
       'userId',
       'completed',
       'skills',

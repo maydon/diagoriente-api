@@ -125,21 +125,29 @@ exports.remove = (req, res, next) => {
  * @public
  */
 exports.aprouvedUser = async (req, res, next) => {
-  const { user } = req.locals;
-  const { email, pseudo, firstName, lastName } = req.body;
-  user.profile = { pseudo, firstName, lastName };
+  try {
+    const { user } = req.locals;
+    const { email, pseudo, password, firstName, lastName } = req.body;
 
-  const parcour = await Parcour.find({ userId: user._id });
-  user.email = email;
-  parcour[0].completed = true;
-  const updateParcour = parcour[0];
+    user.profile = {
+      pseudo,
+      firstName,
+      lastName
+    };
+    const parcour = await Parcour.find({ userId: user._id });
+    user.email = email;
+    user.password = await hashPassword(password);
+    if (parcour.length > 0) {
+      parcour[0].completed = true;
+      const updateParcour = parcour[0];
+      await updateParcour.save();
+    }
 
-  updateParcour.save();
-
-  user
-    .save()
-    .then((savedUser) => res.json(savedUser.transform()))
-    .catch((e) => next(e));
+    const savedUser = await user.save();
+    res.json(savedUser.transform());
+  } catch (e) {
+    next(e);
+  }
 };
 
 /**

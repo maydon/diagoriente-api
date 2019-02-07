@@ -1,8 +1,7 @@
 const Joi = require('joi');
-const Activity = require('../models/activity.model');
 
 module.exports = {
-  // GET /v1/activities
+  // GET /v1/parcours
   list: {
     query: {
       page: Joi.number().min(1),
@@ -12,9 +11,10 @@ module.exports = {
     }
   },
 
-  // POST /v1/activities
+  // POST /v1/parcours
   create: {
     body: {
+      advisorId: Joi.objectId(),
       userId: Joi.objectId().required(),
       skills: Joi.array()
         .items(Joi.objectId())
@@ -23,7 +23,7 @@ module.exports = {
     }
   },
 
-  // get /v1/parcour/:id
+  // get /v1/parcours/:id
   get: {
     params: {
       parcourId: Joi.string()

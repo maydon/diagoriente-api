@@ -36,11 +36,15 @@ module.exports = {
     }
   },
 
-  // PUT /v1/users/me/profil
+  // PUT /v1/users/me/:id
   aprouvedUser: {
     body: {
       email: Joi.string()
         .email()
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .max(30)
         .required(),
       pseudo: Joi.string().max(25)
     }

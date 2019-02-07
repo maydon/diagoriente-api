@@ -1,5 +1,4 @@
 const Joi = require('joi');
-const Theme = require('../models/theme.model');
 
 module.exports = {
   // GET /v1/formations
