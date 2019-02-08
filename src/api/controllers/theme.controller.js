@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const Theme = require('../models/theme.model');
 const { pagination } = require('../utils/Pagination');
+const { normalize } = require('../utils/Normalize');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 const { serverUrl } = require('../../config/vars');
@@ -31,6 +32,9 @@ exports.get = (req, res) => res.json(req.locals.theme.transform());
  */
 exports.create = async (req, res, next) => {
   try {
+    const { title, description } = req.body;
+    console.log('normalize', normalize([title]));
+    req.body.search = normalize([title, description]);
     const newTheme = omit(req.body, 'resources');
     const theme = new Theme(newTheme);
     const savedTheme = await theme.save();
@@ -48,6 +52,8 @@ exports.update = async (req, res, next) => {
   const { theme } = req.locals;
 
   try {
+    const { title, description } = req.body;
+    req.body.search = normalize([title, description]);
     const newTheme = omit(req.body, '_id', 'resources');
     const updatedTheme = Object.assign(theme, newTheme);
     const savedpost = await updatedTheme.save();

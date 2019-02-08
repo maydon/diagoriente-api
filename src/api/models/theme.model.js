@@ -47,7 +47,8 @@ const themeSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
-    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
+    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
+    search: { type: String, trim: true }
   },
   {
     timestamps: true

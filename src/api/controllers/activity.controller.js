@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const Activity = require('../models/activity.model');
 const { omit } = require('lodash');
+const { normalize } = require('../utils/Normalize');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -30,6 +31,8 @@ exports.get = (req, res) => res.json(req.locals.activity.transform());
  */
 exports.create = async (req, res, next) => {
   try {
+    const { title } = req.body;
+    req.body.search = normalize([title]);
     const activity = new Activity(req.body);
     const savedActivity = await activity.save();
     res.status(httpStatus.CREATED);
@@ -45,6 +48,8 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   const { activity } = req.locals;
   try {
+    const { title } = req.body;
+    req.body.search = normalize([title, description]);
     const newActivity = omit(req.body, '_id');
     const updatedActivity = Object.assign(activity, newActivity);
     const savedActitvity = await updatedActivity.save();

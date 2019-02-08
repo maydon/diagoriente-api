@@ -25,7 +25,8 @@ const activitySchema = new mongoose.Schema(
     verified: {
       type: Boolean,
       required: true
-    }
+    },
+    search: { type: String, trim: true }
   },
   {
     timestamps: true
