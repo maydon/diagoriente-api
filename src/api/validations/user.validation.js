@@ -39,6 +39,19 @@ module.exports = {
       institution: Joi.string().max(70)
     }
   },
+  // PATCH /v1/users/advisors
+
+  updateAdvisor: {
+    body: {
+      password: Joi.string()
+        .min(6)
+        .max(30),
+      pseudo: Joi.string().max(30),
+      firstName: Joi.string().max(30),
+      lastName: Joi.string().max(30),
+      institution: Joi.string().max(70)
+    }
+  },
 
   // PUT /v1/users/me/:id
   aprouvedUser: {

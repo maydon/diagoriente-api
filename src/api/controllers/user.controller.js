@@ -186,3 +186,35 @@ exports.addAdvisor = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * patch advisor
+ * @public
+ */
+
+exports.updateAdvisor = async (req, res, next) => {
+  try {
+    const { body } = req;
+    const { user: advisor } = req.locals;
+
+    if (body.password) {
+      advisor.password = await hashPassword(body.password);
+    }
+
+    const advisorProp = {
+      profile: {
+        pseudo: body.pseudo || advisor.pseudo || null,
+        firstName: body.firstName || advisor.firstName || null,
+        lastName: body.lastName || advisor.lastName || null,
+        institution: body.institution || advisor.institution || null
+      }
+    };
+
+    const user = Object.assign(advisor, advisorProp);
+
+    const savedUser = user.save();
+    res.json(savedUser.transform());
+  } catch (e) {
+    next(User.checkDuplicateEmail(e));
+  }
+};
