@@ -245,7 +245,11 @@ userSchema.statics = {
    * @returns {Promise<User[]>}
    */
   list({ page = 1, perPage = 30, role }) {
-    return this.find({ role: 'user' })
+    const reg = new RegExp(role, 'i');
+
+    const querySearch = { role: reg };
+
+    return this.find({ ...querySearch })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

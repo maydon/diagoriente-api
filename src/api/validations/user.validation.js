@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const User = require('../models/user.model');
 
 module.exports = {
   // GET /v1/users
@@ -7,7 +8,10 @@ module.exports = {
       page: Joi.number().min(1),
       perPage: Joi.number()
         .min(1)
-        .max(100)
+        .max(100),
+      role: Joi.string()
+        .valid(User.roles)
+        .default('user')
     }
   },
 

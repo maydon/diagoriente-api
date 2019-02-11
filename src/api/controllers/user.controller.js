@@ -88,11 +88,15 @@ exports.update = (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   try {
-    const users = await User.list(req.query);
+    const { role } = req.query;
+
+    const reg = new RegExp(role, 'i');
+
+    const users = await User.list({ ...req.query, role });
 
     const transformedUsers = users.map((user) => user.transform());
 
-    const querySearch = { role: 'user' };
+    const querySearch = { role: reg };
 
     const responstPagination = await pagination(
       transformedUsers,
@@ -151,7 +155,7 @@ exports.aprouvedUser = async (req, res, next) => {
 };
 
 /**
- * approuve user
+ * add advisor
  * @public
  */
 exports.addAdvisor = async (req, res, next) => {

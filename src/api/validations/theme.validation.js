@@ -1,6 +1,5 @@
 const Joi = require('joi');
 const Theme = require('../models/theme.model');
-const Activity = require('../models/activity.model');
 Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {

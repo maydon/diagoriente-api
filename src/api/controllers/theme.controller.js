@@ -33,7 +33,6 @@ exports.get = (req, res) => res.json(req.locals.theme.transform());
 exports.create = async (req, res, next) => {
   try {
     const { title, description } = req.body;
-    console.log('normalize', normalize([title]));
     req.body.search = normalize([title, description]);
     const newTheme = omit(req.body, 'resources');
     const theme = new Theme(newTheme);
@@ -118,8 +117,6 @@ exports.list = async (req, res, next) => {
    * populate if path = /all
    */
   const population = path !== '/';
-
-  console.log('population test', population, path);
 
   try {
     const themes = await Theme.list({ ...req.query, role, population });
