@@ -23,6 +23,14 @@ module.exports = {
     }
   },
 
+  removeSecteur: {
+    params: {
+      themeId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
+  },
+
   // POST /v1/themes
   create: {
     body: {

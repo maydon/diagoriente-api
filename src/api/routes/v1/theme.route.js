@@ -7,6 +7,7 @@ const {
   create,
   update,
   list,
+  removeSecteur,
   secteurChildLidt
 } = require('../../validations/theme.validation');
 
@@ -208,7 +209,7 @@ router
 router
   .route('/secteur/:themeId')
   /**
-   * @api {post} v1/secteur/:themeId  secteur child
+   * @api {post} v1/secteur/:secteur  secteur child
    * @apiDescription get secteur childs themes
    * @apiVersion 1.0.0
    * @apiName SecteurChild
@@ -228,6 +229,24 @@ router
     authorize(LOGGED_USER),
     validate(secteurChildLidt),
     controller.secteurChildList
-  );
+  )
+  /**
+   * @api {patch} v1/secteur/:themeId Delete secteur
+   * @apiDescription Delete a secteur
+   * @apiVersion 1.0.0
+   * @apiName DeleteSecteur
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   *
+   * @apiHeader {String} Authorization   access token
+   *
+   * @apiParam  {String}      id id secteur
+   *
+   * @apiSuccess (No Content 204)  Successfully deleted
+   *
+   * @apiError (Forbidden 403)   Forbidden  Only admins can delete the data
+   */
+  .delete(authorize(ADMIN), validate(removeSecteur), controller.removeSecteur);
 
 module.exports = router;

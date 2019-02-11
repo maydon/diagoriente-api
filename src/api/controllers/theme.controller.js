@@ -168,3 +168,29 @@ exports.secteurChildList = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Delete Secteur and
+ * set ro null all
+ * themes contains
+ * secteur id
+ * @public
+ */
+exports.removeSecteur = async (req, res, next) => {
+  const { theme: secteur } = req.locals;
+
+  try {
+    const updateChilds = await Theme.updateMany(
+      { parentId: secteur._id },
+      { $set: { parentId: null } }
+    );
+
+    const removeSector = await secteur.remove();
+
+    await Promise.all([removeSector, updateChilds]);
+
+    res.status(httpStatus.NO_CONTENT).end();
+  } catch (error) {
+    next(error);
+  }
+};
