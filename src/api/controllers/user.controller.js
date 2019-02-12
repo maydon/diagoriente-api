@@ -212,7 +212,7 @@ exports.updateAdvisor = async (req, res, next) => {
 
     const user = Object.assign(advisor, advisorProp);
 
-    const savedUser = user.save();
+    const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (e) {
     next(User.checkDuplicateEmail(e));
