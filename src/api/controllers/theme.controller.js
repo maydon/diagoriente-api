@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const Theme = require('../models/theme.model');
 const { pagination } = require('../utils/Pagination');
 const { normalize } = require('../utils/Normalize');
-const { omit } = require('lodash');
+const { omit, map, difference } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 const { serverUrl } = require('../../config/vars');
 
@@ -166,6 +166,87 @@ exports.secteurChildList = async (req, res, next) => {
     res.json(responstPagination);
   } catch (error) {
     next(error);
+  }
+};
+
+/**
+ * create secteur
+ * @public
+ */
+
+exports.createSecteur = async (req, res, next) => {
+  try {
+    const { title, description, secteurChilds } = req.body;
+
+    req.body.type = 'secteur';
+    req.body.search = normalize([title, description]);
+    req.body.activities = null;
+    req.body.parentId = null;
+
+    const newSecteur = omit(req.body, 'resources');
+    const secteur = new Theme(newSecteur);
+
+    const updateChilds = await Theme.updateMany(
+      { _id: { $in: secteurChilds } },
+      { $set: { parentId: secteur._id } }
+    );
+
+    const savedSecteur = await secteur.save();
+    await Promise.all([updateChilds, savedSecteur]);
+
+    res.status(httpStatus.CREATED);
+    res.json(savedSecteur.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * update secteur
+ * @public
+ */
+
+exports.updateSecteur = async (req, res, next) => {
+  try {
+    const { title, description, secteurChilds } = req.body;
+    const { theme: secteur } = req.locals;
+
+    secteur.search = normalize([title, description]);
+
+    // we should set to null unavailable id theme
+    const recentUpdatedChilds = map(
+      await Theme.find({ parentId: secteur._id }),
+      (item) => item._id.toString()
+    );
+
+    const addParentId = difference(secteurChilds, recentUpdatedChilds);
+    const removeParentId = difference(recentUpdatedChilds, secteurChilds);
+
+    const setRecentsChilds = await Theme.updateMany(
+      { _id: { $in: removeParentId } },
+      { $set: { parentId: null } }
+    );
+
+    const updateChilds = await Theme.updateMany(
+      { _id: { $in: addParentId } },
+      { $set: { parentId: secteur._id } }
+    );
+
+    const newSecteur = omit(req.body, [
+      'resources',
+      'type',
+      'activities',
+      'parentId'
+    ]);
+
+    const updatedSecteur = Object.assign(secteur, newSecteur);
+
+    const savedSecteur = await updatedSecteur.save();
+    await Promise.all([setRecentsChilds, updateChilds, savedSecteur]);
+
+    res.json(savedSecteur.transform());
+  } catch (e) {
+    next(e);
   }
 };
 

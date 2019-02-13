@@ -15,6 +15,38 @@ module.exports = {
     }
   },
 
+  createSecteur: {
+    title: Joi.string()
+      .min(3)
+      .max(250)
+      .required(),
+    description: Joi.string()
+      .min(3)
+      .required(),
+    type: Joi.string()
+      .valid(Theme.types)
+      .required(),
+    secteurChilds: Joi.array()
+      .items(Joi.objectId())
+      .unique()
+  },
+
+  updateSecteur: {
+    title: Joi.string()
+      .min(3)
+      .max(250)
+      .required(),
+    description: Joi.string()
+      .min(3)
+      .required(),
+    type: Joi.string()
+      .valid(Theme.types)
+      .required(),
+    secteurChilds: Joi.array()
+      .items(Joi.objectId())
+      .unique()
+  },
+
   secteurChildLidt: {
     params: {
       themeId: Joi.string()

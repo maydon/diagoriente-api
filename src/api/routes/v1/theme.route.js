@@ -7,6 +7,8 @@ const {
   create,
   update,
   list,
+  createSecteur,
+  updateSecteur,
   removeSecteur,
   secteurChildLidt
 } = require('../../validations/theme.validation');
@@ -153,8 +155,8 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiSuccess {String}  id         Themes's id
-   * @apiSuccess {String}  title       Themes's name
-   * @apiSuccess {String}  description      Themes's email
+   * @apiSuccess {String}  title       Themes's title
+   * @apiSuccess {String}  description      Themes's description
    * @apiSuccess {String}  type       Themes's type
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Date}    createdAt  Timestamp
@@ -207,9 +209,33 @@ router
   .post(authorize(), uploadIcon.single('icon'), controller.upload);
 
 router
+  .route('/secteur')
+  /**
+   * @api {post} v1/secteur  create secteur
+   * @apiDescription create secteur
+   * @apiVersion 1.0.0
+   * @apiName CreateSecteur
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiSuccess {String}  title            secteur's title
+   * @apiSuccess {String}  description      secteur's description
+   * @apiSuccess {boolean} verified         secteur's role
+   * @apiParam  {Object[]}   secteurChilds     childs secteur id
+   *
+   *
+   * @apiSuccess {Object[]}    secteur  list secteur themes
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
+   */
+  .post(authorize(ADMIN), validate(createSecteur), controller.createSecteur);
+
+router
   .route('/secteur/:themeId')
   /**
-   * @api {post} v1/secteur/:secteur  secteur child
+   * @api {get} v1/secteur/:secteur  secteur child
    * @apiDescription get secteur childs themes
    * @apiVersion 1.0.0
    * @apiName SecteurChild
@@ -218,7 +244,7 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}   secteyrId     secteur id
+   * @apiParam  {String}   secteurId     secteur id
    *
    *
    * @apiSuccess {Object[]}    secteur  list secteur themes
@@ -230,6 +256,27 @@ router
     validate(secteurChildLidt),
     controller.secteurChildList
   )
+  /**
+   * @api {patch} v1/secteur/:secteur  secteur child
+   * @apiDescription get secteur childs themes
+   * @apiVersion 1.0.0
+   * @apiName SecteurChild
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiSuccess {String}  title            secteur's title
+   * @apiSuccess {String}  description      secteur's description
+   * @apiSuccess {boolean} verified         secteur's role
+   * @apiParam  {Object[]}   secteurChilds     childs secteur id
+   *
+   *
+   * @apiSuccess {Object[]}    secteur  list secteur themes
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
+   */
+  .patch(authorize(ADMIN), validate(updateSecteur), controller.updateSecteur)
   /**
    * @api {patch} v1/secteur/:themeId Delete secteur
    * @apiDescription Delete a secteur
