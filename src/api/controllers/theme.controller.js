@@ -151,6 +151,8 @@ exports.list = async (req, res, next) => {
  */
 exports.secteurChildList = async (req, res, next) => {
   try {
+    const { theme: secteur } = req.locals;
+
     const { themeId: parentId } = req.params;
 
     const secteurs = await Theme.listSecteur({ parentId });
@@ -162,6 +164,8 @@ exports.secteurChildList = async (req, res, next) => {
       Theme,
       null
     );
+
+    responstPagination.secteur = secteur.transform();
 
     res.json(responstPagination);
   } catch (error) {
