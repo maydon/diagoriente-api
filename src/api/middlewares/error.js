@@ -30,7 +30,7 @@ exports.handler = handler;
  */
 exports.converter = (err, req, res, next) => {
   let convertedError = err;
-
+  console.log(err instanceof APIError);
   if (err instanceof expressValidation.ValidationError) {
     convertedError = new APIError({
       message: 'Error de Validation',

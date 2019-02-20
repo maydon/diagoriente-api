@@ -49,7 +49,7 @@ exports.update = async (req, res, next) => {
   const { activity } = req.locals;
   try {
     const { title } = req.body;
-    req.body.search = normalize([title, description]);
+    req.body.search = normalize([title]);
     const newActivity = omit(req.body, '_id');
     const updatedActivity = Object.assign(activity, newActivity);
     const savedActitvity = await updatedActivity.save();
