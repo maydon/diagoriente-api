@@ -160,6 +160,7 @@ themeSchema.statics = {
   list({ page = 1, perPage = 30, search, type, role, population }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
+    const reg2 = { $in: ['professional', 'personal'] };
     const verified = role === 'admin' ? {} : { verified: true };
 
     const populateProp = population
@@ -171,7 +172,7 @@ themeSchema.statics = {
 
     return this.find({
       $or: [{ title: reg }, { description: reg }, { search: reg }],
-      type: reg1,
+      type: type ? reg1 : reg2,
       ...verified
     })
       .populate(populateProp)
