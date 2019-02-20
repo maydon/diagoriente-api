@@ -26,6 +26,8 @@ const storage = multer.diskStorage({
 
 const uploadIcon = multer({ storage });
 
+const uploadTheme = multer({ encoding: 'binary' });
+
 /**
  * Load user when API with userId route parameter is hit
  */
@@ -207,6 +209,27 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
    */
   .post(authorize(), uploadIcon.single('icon'), controller.upload);
+
+router
+  .route('/import')
+  /**
+   * @api {post} v1/themes/import Theme import resources
+   * @apiDescription theme import new docs
+   * @apiVersion 1.0.0
+   * @apiName ThemeUpload
+   * @apiGroup Theme
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}   theme     Theme file
+   *
+   *
+   * @apiSuccess {Date}    createdAt  Timestamp
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated Users can access the data
+   */
+  .post(authorize(ADMIN), uploadTheme.single('theme'), controller.uploadTheme);
 
 router
   .route('/secteur')

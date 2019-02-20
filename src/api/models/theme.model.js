@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Activity = require('./activity.model');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
 
@@ -105,6 +106,47 @@ themeSchema.statics = {
       });
     } catch (error) {
       throw error;
+    }
+  },
+
+  /**
+   * import themes doc.
+   *
+   * @returns {Promise<Post[]>}
+   */
+
+  async importThemes(data) {
+    try {
+      const promisesActivities = data.map((item) =>
+        Activity.insertMany(item.activity)
+      );
+      const allPromisesActivities = await Promise.all(promisesActivities);
+
+      const promisesThemes = data.map((item, index) => {
+        const themeToIsert = item;
+        themeToIsert.activities = allPromisesActivities[index].map(
+          (x) => x._id
+        );
+        return this.insertMany(themeToIsert);
+      });
+      const allPromisesThemes = await Promise.all(promisesThemes);
+
+      const importedThemes = {
+        statuts: 'Themes file imported succesfully',
+        themesNumber: allPromisesThemes.length
+      };
+
+      if (allPromisesThemes) {
+        return importedThemes;
+      }
+
+      throw new APIError({
+        message: 'Import theme error',
+        status: httpStatus.NOT_ACCEPTABLE
+      });
+    } catch (e) {
+      console.log(e);
+      throw e;
     }
   },
 

@@ -17,22 +17,17 @@ module.exports = {
       nom: Joi.string()
         .min(1)
         .max(30)
-        .required(),
-      rank: Joi.number()
-        .min(1)
-        .max(1000)
+        .required()
     }
   },
+
   // post /v1/interest
   create: {
     body: {
       nom: Joi.string()
         .min(1)
         .max(30)
-        .required(),
-      rank: Joi.number()
-        .min(1)
-        .max(1000)
+        .required()
     }
   }
 };

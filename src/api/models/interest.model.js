@@ -64,6 +64,40 @@ interestSchema.statics = {
       throw error;
     }
   },
+
+  /**
+   * list of
+   * interest
+   * @returns {Promise<Post[]>}
+   */
+  listRank() {
+    return this.find({}).select('rank');
+  },
+
+  /**
+   * key value format
+   * interest
+   */
+  objectListRank(list) {
+    return list.reduce((acc, obj) => {
+      const key = obj.rank;
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key] = obj._id;
+      return acc;
+    }, {});
+  },
+
+  /**
+   * find interrest
+   * highest rank
+   *
+   * @returns {Promise<Post[]>}
+   */
+  highestRank(list) {
+    return Math.max.apply(null, list.map((e) => Number(e.rank)));
+  },
   /**
    * List posts in descending order of 'createdAt' timestamp.
    *

@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const Theme = require('../models/theme.model');
+const Interest = require('../models/interest.model');
 const { pagination } = require('../utils/Pagination');
+const { importFormater } = require('../utils/Import');
 const { normalize } = require('../utils/Normalize');
 const { omit, map, difference } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -275,6 +277,35 @@ exports.removeSecteur = async (req, res, next) => {
     await Promise.all([removeSector, updateChilds]);
 
     res.status(httpStatus.NO_CONTENT).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * import new
+ * theme file
+ *
+ * @public
+ */
+
+exports.uploadTheme = async (req, res, next) => {
+  const { file } = req;
+
+  try {
+    const fileContent = file.buffer.toString('utf8').trim();
+    const interrestRankList = await Interest.listRank();
+    const interrestRankObject = await Interest.objectListRank(
+      interrestRankList
+    );
+
+    const formatedContent = importFormater(
+      fileContent.split('\r\n'),
+      interrestRankObject
+    );
+    const importedThemes = await Theme.importThemes(formatedContent);
+    console.log('importedThemes', importedThemes);
+    res.json(importedThemes);
   } catch (error) {
     next(error);
   }

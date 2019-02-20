@@ -33,7 +33,7 @@ exports.update = async (req, res, next) => {
   const { interest } = req.locals;
 
   try {
-    const newInterest = omit(req.body, '_id');
+    const newInterest = omit(req.body, ['_id', 'rank']);
     const updatedInterest = Object.assign(interest, newInterest);
     const savedInterest = await updatedInterest.save();
     res.json(savedInterest.transform());
@@ -74,6 +74,9 @@ exports.list = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
     const interest = new Interest(req.body);
+    const listRank = await Interest.listRank();
+    const highestRank = Interest.highestRank(listRank);
+    interest.rank = highestRank + 1;
     const savedInterest = await interest.save();
     res.status(httpStatus.CREATED);
     res.json(savedInterest.transform());
