@@ -1,23 +1,26 @@
-const path = require('path');
+const path = require("path");
 
 // import .env variables
-require('dotenv-safe').load({
-  path: path.join(__dirname, '../../.env'),
-  sample: path.join(__dirname, '../../.env.example')
+require("dotenv-safe").load({
+  path: path.join(__dirname, "../../.env"),
+  sample: path.join(__dirname, "../../.env.example")
 });
 
-let ext = '';
-if (process.env.NODE_ENV === 'production') ext = '_PROD';
-else if (process.env.NODE_ENV === 'test') ext = '_TESTS';
-
 module.exports = {
-  serverUrl: process.env[`SERVER_URL${ext}`],
+  serverUrl:
+    process.env.NODE_ENV === "test"
+      ? process.env.SERVER_URL_TESTS
+      : process.env.SERVER_URL,
   env: process.env.NODE_ENV,
-  port: process.env[`PORT${ext}`],
+  port:
+    process.env.NODE_ENV === "test" ? process.env.PORT_TESTS : process.env.PORT,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpirationInterval: process.env.JWT_EXPIRATION_MINUTES,
   mongo: {
-    uri: process.env[`MONGO_URI${ext}`]
+    uri:
+      process.env.NODE_ENV === "test"
+        ? process.env.MONGO_URI_TESTS
+        : process.env.MONGO_URI
   },
-  logs: process.env.NODE_ENV === 'production' ? 'combined' : 'dev'
+  logs: process.env.NODE_ENV === "production" ? "combined" : "dev"
 };
