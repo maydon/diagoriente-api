@@ -13,7 +13,7 @@ module.exports = {
     }
   },
 
-  // POST /v1/themes
+  // POST /v1/skills
   create: {
     body: {
       parcourId: Joi.objectId().required(),
@@ -31,7 +31,31 @@ module.exports = {
       })
     }
   },
-  // patch /v1/themes
+
+  createMulti: {
+    body: {
+      parcourId: Joi.objectId().required(),
+
+      skills: Joi.array().items(
+        Joi.object({
+          type: Joi.string()
+            .valid(Theme.types)
+            .required(),
+          theme: Joi.objectId(),
+          activities: Joi.array().items(Joi.objectId()),
+          competences: Joi.array().items({
+            _id: Joi.objectId().required(),
+            value: Joi.number()
+              .integer()
+              .min(1)
+              .max(4)
+          })
+        })
+      )
+    }
+  },
+
+  // patch /v1/skills
   update: {
     body: {
       type: Joi.string().valid(Theme.types),

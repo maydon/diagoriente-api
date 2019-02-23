@@ -96,6 +96,20 @@ parcourSchema.statics = {
 
     return Object.values(competencesCartInitialized);
   },
+
+  /**
+   * 
+   * throw error
+   * undefined parcour
+   *
+ 
+   */
+  parcourDosentExist(id) {
+    throw new APIError({
+      message: `Parcour id : ${id} dosent exist`,
+      status: httpStatus.NOT_FOUND
+    });
+  },
   /**
    * List parcours in descending order of 'createdAt' timestamp.
    *

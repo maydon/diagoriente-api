@@ -2,7 +2,12 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/skill.controller');
 const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
-const { create, update, list } = require('../../validations/skill.validation');
+const {
+  create,
+  createMulti,
+  update,
+  list
+} = require('../../validations/skill.validation');
 
 const router = express.Router();
 
@@ -58,6 +63,35 @@ router
    * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
     */
   .post(authorize(LOGGED_USER), validate(create), controller.create);
+
+router
+  .route('/multi')
+  /**
+   * @api {post} v1/skills Create multi Skill
+   * @apiDescription Create a new Skills
+   * @apiVersion 1.0.0
+   * @apiName CreateMultiSkill
+   * @apiGroup Skill
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * 
+   * @apiParam  {String}            parcourId     parcour's id
+   * @apiParam  {String}            type     skill's type ['professional', 'personal']
+   * @apiParam  {Boolean}           theme    theme's id
+   * @apiParam  {Object[]}          activities    selected activities's ids
+   * @apiParam  {Object[]}          competences    selected competences's ids {id : competenceId,value : [1,2,3,4]}
+
+   *
+   * @apiSuccess (Created 201) {String}  id         Skill's id
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
+   * @apiError (Unauthorized 401)  Unauthorized     Only authenticated users can create the data
+    */
+  .post(authorize(LOGGED_USER), validate(createMulti), controller.createMulti);
 
 router
   .route('/:skillId')

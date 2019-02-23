@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Skill = require('../models/skill.model');
 const Parcour = require('../models/parcour.model');
-const { omit, remove } = require('lodash');
+const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -54,6 +54,38 @@ exports.create = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Create new skills
+ * @public
+ */
+
+exports.createMulti = async (req, res, next) => {
+  try {
+    const { skills, parcourId } = req.body;
+
+    const parcour = await Parcour.findById(parcourId);
+
+    if (!parcour) {
+      Parcour.parcourDosentExist(parcourId);
+    }
+
+    const insertManySkills = await Skill.insertMany(skills);
+    const newSkillsTab = insertManySkills.map((item) => item._id);
+    parcour.skills = newSkillsTab;
+    await parcour.save();
+    const transformedSkills = insertManySkills.map((item) => item.transform());
+    const formatResponse = {
+      parcourId,
+      skills: transformedSkills
+    };
+    res.status(httpStatus.CREATED);
+    res.json(formatResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
 /**
  * Update  skill
  * @public
