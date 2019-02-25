@@ -26,7 +26,7 @@ module.exports = {
         _id: Joi.objectId().required(),
         value: Joi.number()
           .integer()
-          .min(1)
+          .min(0)
           .max(4)
       })
     }
@@ -47,7 +47,7 @@ module.exports = {
             _id: Joi.objectId().required(),
             value: Joi.number()
               .integer()
-              .min(1)
+              .min(0)
               .max(4)
           })
         })
