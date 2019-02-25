@@ -63,6 +63,8 @@ module.exports = {
         .min(6)
         .max(30)
         .required(),
+      firstName: Joi.string().max(30),
+      lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25)
     }
   }
