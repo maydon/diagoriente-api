@@ -90,7 +90,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can update the data
    */
-  .patch(
+  .delete(
     authorize([ADMIN, ADVISOR]),
     validate(updateAdvisor),
     controller.updateAdvisor
@@ -119,7 +119,7 @@ router
    */
   .get(authorize(ADMIN), controller.get)
   /**
-   * @api {patch} v1/users/:id Delete User
+   * @api {delete} v1/users/:id Delete User
    * @apiDescription Delete a user
    * @apiVersion 1.0.0
    * @apiName deleteUser
@@ -137,7 +137,7 @@ router
    */
   .delete(authorize(ADMIN), controller.remove)
   /**
-   * @api {get} v1/users/:id Approuve user
+   * @api {put} v1/users/:id Approuve user
    * @apiDescription Add profil object to user
    * @apiVersion 1.0.0
    * @apiName ApprouveUser
