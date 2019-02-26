@@ -94,6 +94,8 @@ exports.create = async (req, res, next) => {
       res.status(httpStatus.CREATED);
     } else {
       parcourResponse = await Parcour.get(user.parcours[0]);
+      parcourResponse.advisorId = req.body.advisorId;
+      await parcourResponse.save();
       res.status(httpStatus.OK);
     }
 
