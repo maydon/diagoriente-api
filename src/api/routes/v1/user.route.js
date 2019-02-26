@@ -90,7 +90,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can update the data
    */
-  .delete(
+  .patch(
     authorize([ADMIN, ADVISOR]),
     validate(updateAdvisor),
     controller.updateAdvisor
