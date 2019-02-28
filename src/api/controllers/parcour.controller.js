@@ -106,7 +106,7 @@ exports.create = async (req, res, next) => {
 exports.update = async (req, res, next) => {
   const { parcour } = req.locals;
   try {
-    const newParcour = omit(req.body, '_id');
+    const newParcour = omit(req.body, ['_id', 'userId', 'advisorId']);
     const updatedParcour = Object.assign(parcour, newParcour);
     const savedParcour = await updatedParcour.save();
     res.json(savedParcour.transform());
