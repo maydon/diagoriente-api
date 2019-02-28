@@ -80,23 +80,18 @@ exports.create = async (req, res, next) => {
   const { user } = req;
   try {
     let parcourResponse = null;
-    if (user.parcours.length === 0) {
-      const parcour = new Parcour({ userId: user._id, ...req.body });
-      parcourResponse = await parcour.save();
 
-      await User.findOneAndUpdate(
-        { _id: user._id },
-        {
-          $push: { parcours: parcourResponse._id }
-        }
-      );
+    const userParcour = await Parcour.findOne({ userId: user._id });
 
-      res.status(httpStatus.CREATED);
-    } else {
-      parcourResponse = await Parcour.get(user.parcours[0]);
-      parcourResponse.advisorId = req.body.advisorId;
-      await parcourResponse.save();
+    if (userParcour) {
+      parcourResponse = userParcour;
+
       res.status(httpStatus.OK);
+    } else {
+      const parcour = new Parcour({ userId: user._id, ...req.body });
+
+      parcourResponse = await parcour.save();
+      res.status(httpStatus.CREATED);
     }
 
     res.json(parcourResponse.transform());

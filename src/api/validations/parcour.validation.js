@@ -15,7 +15,6 @@ module.exports = {
   create: {
     body: {
       advisorId: Joi.objectId(),
-      userId: Joi.objectId().required(),
       skills: Joi.array()
         .items(Joi.objectId())
         .unique(),
