@@ -143,6 +143,9 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   const { role, _id } = req.user;
+
+  console.log('role', role);
+
   try {
     const parcours = await Parcour.list({
       ...req.query,
@@ -151,10 +154,13 @@ exports.list = async (req, res, next) => {
     });
     const transformedParcours = parcours.map((parcour) => parcour.transform());
 
-    let userId = role === 'admin' ? {} : { userId: _id };
-    userId = role === 'advisor' ? { advisorId: _id } : { userId: _id };
+    const RolesSearch = {
+      admin: {},
+      advisor: { advisorId: _id },
+      user: { userId: _id }
+    };
 
-    const querySearch = { ...userId };
+    const querySearch = { ...RolesSearch[role] };
 
     const responstPagination = await pagination(
       transformedParcours,

@@ -118,9 +118,14 @@ parcourSchema.statics = {
    * @returns {Promise<Post[]>}
    */
   list({ page = 1, perPage = 30, role, _id }) {
-    let userId = role === 'admin' ? {} : { userId: _id };
-    userId = role === 'advisor' ? { advisorId: _id } : { userId: _id };
-    return this.find({ ...userId })
+    const RolesSearch = {
+      admin: {},
+      advisor: { advisorId: _id },
+      user: { userId: _id }
+    };
+
+    const querySearch = { ...RolesSearch[role] };
+    return this.find({ ...querySearch })
       .populate('userId', 'uniqId email platform profile')
       .populate('advisorId', 'email profile')
       .sort({ createdAt: -1 })
