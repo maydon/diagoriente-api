@@ -117,7 +117,7 @@ router
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .get(authorize(ADMIN), controller.get)
+  .get(authorize([ADMIN, ADVISOR]), controller.get)
   /**
    * @api {delete} v1/users/:id Delete User
    * @apiDescription Delete a user
