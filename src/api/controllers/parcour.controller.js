@@ -150,7 +150,10 @@ exports.list = async (req, res, next) => {
       _id
     });
     const transformedParcours = parcours.map((parcour) => parcour.transform());
-    const userId = role === 'admin' ? {} : { userId: _id };
+
+    let userId = role === 'admin' ? {} : { userId: _id };
+    userId = role === 'advisor' ? { advisorId: _id } : { userId: _id };
+
     const querySearch = { ...userId };
 
     const responstPagination = await pagination(

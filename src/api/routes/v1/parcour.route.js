@@ -1,7 +1,12 @@
 const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/parcour.controller');
-const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
+const {
+  authorize,
+  ADVISOR,
+  LOGGED_USER,
+  ADMIN
+} = require('../../middlewares/auth');
 const {
   list,
   get,
@@ -34,7 +39,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize(LOGGED_USER), validate(list), controller.list)
+  .get(authorize([LOGGED_USER, ADVISOR]), validate(list), controller.list)
   /**
    * @api {get} v1/parcours Create parcours
    * @apiDescription Create a new of parcours
