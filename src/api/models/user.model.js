@@ -257,6 +257,17 @@ userSchema.statics = {
   },
 
   /**
+   * incorect existing
+   * password
+   */
+  errorpassword() {
+    throw new APIError({
+      message: 'new password dosent match the old one ',
+      status: httpStatus.CONFLICT
+    });
+  },
+
+  /**
    * Return new validation error
    * if error is a mongoose duplicate key error
    *

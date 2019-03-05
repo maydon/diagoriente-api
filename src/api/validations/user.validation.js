@@ -43,6 +43,9 @@ module.exports = {
 
   updateAdvisor: {
     body: {
+      OldPassword: Joi.string()
+        .min(6)
+        .max(30),
       password: Joi.string()
         .min(6)
         .max(30),

@@ -196,9 +196,15 @@ exports.updateAdvisor = async (req, res, next) => {
   try {
     const { body } = req;
     const { user: advisor } = req.locals;
-
     if (body.password) {
-      advisor.password = await hashPassword(body.password);
+      const oldHashedPassword = await hashPassword(body.OldPassword);
+      const newHashedPassword = await hashPassword(body.password);
+      const existingHashedPassword = await hashPassword(advisor.password);
+
+      if (existingHashedPassword !== oldHashedPassword) {
+        this.errorpassword();
+      }
+      advisor.password = await hashPassword(newHashedPassword);
     }
 
     const advisorProp = {
