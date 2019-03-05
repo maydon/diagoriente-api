@@ -190,7 +190,11 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (user && (await user.passwordMatches(password))) {
+      if (
+        user &&
+        user.role === 'admin' &&
+        (await user.passwordMatches(password))
+      ) {
         return { user, accessToken: user.token() };
       }
       err.message = 'Incorrect email or password';
@@ -201,7 +205,7 @@ userSchema.statics = {
         return { user, accessToken: user.token() };
       }
     } else {
-      err.message = 'Incorrect userId or refreshToken';
+      err.message = 'Incorrect admin email or refreshToken';
     }
     throw new APIError(err);
   },
