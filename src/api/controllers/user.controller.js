@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
+const bcrypt = require('bcryptjs');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
@@ -197,16 +198,17 @@ exports.updateAdvisor = async (req, res, next) => {
     const { body } = req;
     const { user: advisor } = req.locals;
     if (body.password) {
-      const oldHashedPassword = await hashPassword(body.OldPassword);
-      const newHashedPassword = await hashPassword(body.password);
+      const oldHashedPassword = body.OldPassword;
       const existingHashedPassword = advisor.password;
-
-      if (existingHashedPassword !== oldHashedPassword) {
-        // console.log('oldHashedPassword', oldHashedPassword);
-        //console.log('existingHashedPassword', existingHashedPassword);
-
+      const comparePasswords = await bcrypt.compare(
+        oldHashedPassword,
+        existingHashedPassword
+      );
+      if (comparePasswords) {
         User.errorPassword();
       }
+      const newHashedPassword = await hashPassword(body.password);
+
       advisor.password = await hashPassword(newHashedPassword);
     }
 
