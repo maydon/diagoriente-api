@@ -199,10 +199,13 @@ exports.updateAdvisor = async (req, res, next) => {
     if (body.password) {
       const oldHashedPassword = await hashPassword(body.OldPassword);
       const newHashedPassword = await hashPassword(body.password);
-      const existingHashedPassword = await hashPassword(advisor.password);
+      const existingHashedPassword = advisor.password;
 
       if (existingHashedPassword !== oldHashedPassword) {
-        this.errorpassword();
+        // console.log('oldHashedPassword', oldHashedPassword);
+        //console.log('existingHashedPassword', existingHashedPassword);
+
+        User.errorPassword();
       }
       advisor.password = await hashPassword(newHashedPassword);
     }
@@ -221,6 +224,6 @@ exports.updateAdvisor = async (req, res, next) => {
     const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (e) {
-    next(User.checkDuplicateEmail(e));
+    next(e);
   }
 };

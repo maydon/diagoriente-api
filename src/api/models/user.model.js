@@ -260,7 +260,7 @@ userSchema.statics = {
    * incorect existing
    * password
    */
-  errorpassword() {
+  errorPassword() {
     throw new APIError({
       message: 'new password dosent match the old one ',
       status: httpStatus.CONFLICT
