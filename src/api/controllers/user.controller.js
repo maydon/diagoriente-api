@@ -200,16 +200,17 @@ exports.updateAdvisor = async (req, res, next) => {
     if (body.password) {
       const oldHashedPassword = body.OldPassword;
       const existingHashedPassword = advisor.password;
+
       const comparePasswords = await bcrypt.compare(
         oldHashedPassword,
         existingHashedPassword
       );
-      if (comparePasswords) {
+
+      if (!comparePasswords) {
         User.errorPassword();
       }
-      const newHashedPassword = await hashPassword(body.password);
 
-      advisor.password = await hashPassword(newHashedPassword);
+      advisor.password = await hashPassword(body.password);
     }
 
     const advisorProp = {
