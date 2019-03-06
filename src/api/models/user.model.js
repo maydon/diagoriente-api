@@ -225,7 +225,11 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (advisor && (await advisor.passwordMatches(password))) {
+      if (
+        advisor &&
+        advisor.role === 'advisor' &&
+        (await advisor.passwordMatches(password))
+      ) {
         return { advisor, accessToken: advisor.token() };
       }
       err.message = 'Incorrect email or password';
