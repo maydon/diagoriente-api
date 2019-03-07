@@ -70,6 +70,7 @@
     "cors": "^2.8.3",
     "cross-env": "^5.0.1",
     "dotenv-safe": "^6.0.0",
+    "ejs": "^2.6.1",
     "express": "^4.15.2",
     "express-validation": "^1.0.2",
     "fawn": "^2.1.5",

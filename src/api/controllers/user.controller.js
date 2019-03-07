@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { omit } = require('lodash');
 const bcrypt = require('bcryptjs');
+const { mailer } = require('../middlewares/mailer');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
@@ -148,6 +149,8 @@ exports.aprouvedUser = async (req, res, next) => {
       await updateParcour.save();
     }
 
+    // send mail to new approuved user
+    await mailer(user, 'signIn');
     const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (e) {
