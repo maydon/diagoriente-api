@@ -34,9 +34,13 @@ exports.mailer = async (to, data) => {
     }
   });
 
+  const { profile, email, _id } = data;
+
+  const name = profile.lastName || '' + profile.firstName || '';
+
   const html = await ejs.renderFile(
     path.join(__dirname, '../templates/accountValidation/index.ejs'),
-    { name: data.profile.lastName, email: data.email, id: data._id.toString() }
+    { name, email, id: _id.toString() }
   );
 
   // setup email data with unicode symbols
