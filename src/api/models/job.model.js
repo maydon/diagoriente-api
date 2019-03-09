@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const { omitBy, isNil } = require('lodash');
 const APIError = require('../utils/APIError');
 
 /**
@@ -20,8 +19,18 @@ const jobSchema = new mongoose.Schema(
       type: String,
       maxlength: 120
     },
-    interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }],
-    activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
+    interests: [
+      {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Interest' },
+        weight: { type: Number, min: 0, max: 1 }
+      }
+    ],
+    competences: [
+      {
+        _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Competence' },
+        weight: { type: Number, min: 0, max: 1 }
+      }
+    ],
     formations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }]
   },
   {
@@ -40,12 +49,32 @@ jobSchema.method({
       'title',
       'description',
       'interests',
-      'activities',
+      'competences',
       'formations'
     ];
 
     fields.forEach((field) => {
-      transformed[field] = this[field];
+      if (field === 'interests') {
+        transformed[field] = this[field].map((item) => {
+          return {
+            _id: item._id._id,
+            rank: item._id.rank,
+            nom: item.nom,
+            weight: item.weight
+          };
+        });
+      } else if (field === 'competences') {
+        transformed[field] = this[field].map((item) => {
+          return {
+            _id: item._id._id,
+            rank: item._id.rank,
+            title: item.title,
+            weight: item.weight
+          };
+        });
+      } else {
+        transformed[field] = this[field];
+      }
     });
 
     return transformed;
@@ -64,7 +93,10 @@ jobSchema.statics = {
       let job;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        job = await this.findById(id).exec();
+        job = await this.findById(id)
+          .populate('interests._id')
+          .populate('competences._id', '_id title rank')
+          .exec();
       }
       if (job) return job;
 
@@ -88,6 +120,8 @@ jobSchema.statics = {
     return this.find({
       $or: [{ title: reg }, { description: reg }]
     })
+      .populate('interests._id')
+      .populate('competences._id', '_id title rank')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

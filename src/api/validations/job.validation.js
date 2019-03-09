@@ -23,12 +23,20 @@ module.exports = {
         .min(3)
         .max(120)
         .required(),
-      interests: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
-      activities: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
+      interests: Joi.array().items({
+        _id: Joi.objectId().required(),
+        weight: Joi.number()
+          .min(0)
+          .max(1)
+          .required()
+      }),
+      competences: Joi.array().items({
+        _id: Joi.objectId().required(),
+        weight: Joi.number()
+          .min(0)
+          .max(1)
+          .required()
+      }),
       formations: Joi.array()
         .items(Joi.objectId())
         .unique()
@@ -46,12 +54,20 @@ module.exports = {
         .min(3)
         .max(120)
         .required(),
-      interests: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
-      activities: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
+      interests: Joi.array().items({
+        _id: Joi.objectId().required(),
+        weight: Joi.number()
+          .min(0)
+          .max(1)
+          .required()
+      }),
+      competences: Joi.array().items({
+        _id: Joi.objectId().required(),
+        weight: Joi.number()
+          .min(0)
+          .max(1)
+          .required()
+      }),
       formations: Joi.array()
         .items(Joi.objectId())
         .unique()

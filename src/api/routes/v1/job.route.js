@@ -77,7 +77,7 @@ router
    *
    * @apiError (Not Found 404)    NotFound     Job does not exist
    */
-  .get(authorize(LOGGED_USER), validate(update), controller.get)
+  .get(authorize(LOGGED_USER), controller.get)
   /**
    * @api {get} v1/jobs/:id Get Theme
    * @apiDescription Get job information
@@ -96,7 +96,7 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .patch(authorize(ADMIN), controller.update)
+  .patch(authorize([LOGGED_USER]), validate(update), controller.update)
   /**
    * @api {patch} v1/jobs/:id Delete Theme
    * @apiDescription Delete a job
