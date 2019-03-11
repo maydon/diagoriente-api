@@ -144,8 +144,6 @@ exports.remove = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   const { role, _id } = req.user;
 
-  console.log('role', role);
-
   try {
     const parcours = await Parcour.list({
       ...req.query,

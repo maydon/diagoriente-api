@@ -19,6 +19,10 @@ const jobSchema = new mongoose.Schema(
       type: String,
       maxlength: 120
     },
+    search: {
+      type: String,
+      maxlength: 140
+    },
     interests: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Interest' },
