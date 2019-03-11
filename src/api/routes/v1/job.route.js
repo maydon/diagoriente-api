@@ -61,7 +61,7 @@ router
 router
   .route('/:jobId')
   /**
-   * @api {get} v1/jobs/:id Get Job
+   * @api {get} v1/jobs/:id Get Job by Id
    * @apiDescription Get job information
    * @apiVersion 1.0.0
    * @apiName GetJob
@@ -79,7 +79,7 @@ router
    */
   .get(authorize(LOGGED_USER), controller.get)
   /**
-   * @api {get} v1/jobs/:id Get Job
+   * @api {patch} v1/jobs/:id update Job
    * @apiDescription Get job information
    * @apiVersion 1.0.0
    * @apiName UpdateJob
@@ -99,7 +99,7 @@ router
    */
   .patch(authorize(ADMIN), validate(update), controller.update)
   /**
-   * @api {patch} v1/jobs/:id Delete Job
+   * @api {delete} v1/jobs/:id Delete Job
    * @apiDescription Delete a job
    * @apiVersion 1.0.0
    * @apiName DeleteJob
