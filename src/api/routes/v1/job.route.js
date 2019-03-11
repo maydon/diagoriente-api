@@ -79,7 +79,7 @@ router
    */
   .get(authorize(LOGGED_USER), controller.get)
   /**
-   * @api {get} v1/jobs/:id Get Theme
+   * @api {get} v1/jobs/:id Get Job
    * @apiDescription Get job information
    * @apiVersion 1.0.0
    * @apiName UpdateJob
@@ -99,7 +99,7 @@ router
    */
   .patch(authorize(ADMIN), validate(update), controller.update)
   /**
-   * @api {patch} v1/jobs/:id Delete Theme
+   * @api {patch} v1/jobs/:id Delete Job
    * @apiDescription Delete a job
    * @apiVersion 1.0.0
    * @apiName DeleteJob
