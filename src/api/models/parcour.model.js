@@ -128,7 +128,7 @@ parcourSchema.statics = {
     return this.find({ ...querySearch })
       .populate('userId', 'uniqId email platform profile')
       .populate('advisorId', 'email profile')
-      .sort({ createdAt: -1 })
+      .sort({ updatedAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
