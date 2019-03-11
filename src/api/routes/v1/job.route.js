@@ -86,7 +86,7 @@ router
    * @api {get} v1/jobs/:id Get Theme
    * @apiDescription Get job information
    * @apiVersion 1.0.0
-   * @apiName GetJob
+   * @apiName UpdateJob
    * @apiGroup Job
    * @apiPermission admin
    *
