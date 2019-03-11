@@ -45,11 +45,15 @@ router
    *
    * @apiParam  {String}             title     Job's title
    * @apiParam  {String{..120}}     description  Job's description
-     *
+   *
    * @apiSuccess (Created 201) {String}  id         Job's id
    * @apiSuccess (Created 201) {String}  title       Job's title
    * @apiSuccess (Created 201) {String}  description      Job's description
-  
+   * @apiSuccess (Created 201) {Object[]}  interests      Job's interests [{id,weight}]
+   * @apiSuccess (Created 201) {Object[]}  competences      Job's competences [{id,weight}]
+   * @apiSuccess (Created 201) {Object[]}  formations      Job's formations
+   *
+   *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
    * @apiError (Bad Request 400)   ValidationError  Some parameters may contain invalid values
@@ -88,15 +92,17 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiSuccess {String}  id         Job's id
-   * @apiSuccess {String}  title       Job's name
-   * @apiSuccess {String}  description      Job's email
-   * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiSuccess (Created 201) {String}  id         Job's id
+   * @apiSuccess (Created 201) {String}  title       Job's title
+   * @apiSuccess (Created 201) {String}  description      Job's description
+   * @apiSuccess (Created 201) {Object[]}  interests      Job's interests [{id,weight}]
+   * @apiSuccess (Created 201) {Object[]}  competences      Job's competences [{id,weight}]
+   * @apiSuccess (Created 201) {Object[]}  formations      Job's formations
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
    */
-  .patch(authorize([LOGGED_USER]), validate(update), controller.update)
+  .patch(authorize(ADMIN), validate(update), controller.update)
   /**
    * @api {patch} v1/jobs/:id Delete Theme
    * @apiDescription Delete a job
