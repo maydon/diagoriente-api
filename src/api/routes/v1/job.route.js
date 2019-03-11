@@ -45,13 +45,9 @@ router
    *
    * @apiParam  {String}             title     Job's title
    * @apiParam  {String{..120}}     description  Job's description
-   *
-   * @apiSuccess (Created 201) {String}  id         Job's id
-   * @apiSuccess (Created 201) {String}  title       Job's title
-   * @apiSuccess (Created 201) {String}  description      Job's description
-   * @apiSuccess (Created 201) {Object[]}  interests      Job's interests [{id,weight}]
-   * @apiSuccess (Created 201) {Object[]}  competences      Job's competences [{id,weight}]
-   * @apiSuccess (Created 201) {Object[]}  formations      Job's formations
+   * @apiParam  {Object[]}  interests      Job's interests [{id,weight}]
+   * @apiParam  {Object[]}  competences      Job's competences [{id,weight}]
+   * @apiParam  {Object[]}  formations      Job's formations
    *
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
@@ -92,12 +88,11 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiSuccess (Created 201) {String}  id         Job's id
-   * @apiSuccess (Created 201) {String}  title       Job's title
-   * @apiSuccess (Created 201) {String}  description      Job's description
-   * @apiSuccess (Created 201) {Object[]}  interests      Job's interests [{id,weight}]
-   * @apiSuccess (Created 201) {Object[]}  competences      Job's competences [{id,weight}]
-   * @apiSuccess (Created 201) {Object[]}  formations      Job's formations
+   * @apiParam  {String}             title     Job's title
+   * @apiParam  {String{..120}}     description  Job's description
+   * @apiParam  {Object[]}  interests      Job's interests [{id,weight}]
+   * @apiParam  {Object[]}  competences      Job's competences [{id,weight}]
+   * @apiParam  {Object[]}  formations      Job's formations
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
