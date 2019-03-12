@@ -4,6 +4,7 @@ const Parcour = require('../models/parcour.model');
 const Skill = require('../models/skill.model');
 const User = require('../models/user.model');
 const Competence = require('../models/competence.model');
+const { addGlobals } = require('../middlewares/addGlobals');
 const { reduceId } = require('../utils/reduceId');
 const { omit, flatten } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -29,44 +30,8 @@ exports.load = async (req, res, next, id) => {
 exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
-
-    const skills = await Skill.find({
-      _id: { $in: parcour.skills }
-    })
-      .populate('theme', 'title description type')
-      .populate({
-        path: 'activities',
-        model: 'Activity',
-        populate: {
-          path: 'interests',
-          model: 'Interest',
-          select: 'rank nom'
-        }
-      });
-
-    const staticCompentences = await Competence.find({}).select('_id');
-    let globalInterest = [];
-
-    const formatSkills = skills.map((item) => {
-      const interests = item.activities.map((activity) => activity.interests);
-
-      globalInterest = globalInterest.concat(flatten(interests));
-      const competencesList = Parcour.AddGlobalCompetence({
-        skills: [item],
-        competencesCart: staticCompentences
-      });
-      item.competences = competencesList;
-      return item;
-    });
-
-    parcour.globalInterest = reduceId(globalInterest, '_id');
-    parcour.skills = formatSkills;
-    parcour.globalCopmetences = Parcour.AddGlobalCompetence({
-      skills: parcour.skills,
-      competencesCart: staticCompentences
-    });
-
-    return res.json(parcour.transform());
+    const globalParcour = await addGlobals(parcour);
+    return res.json(globalParcour.transform());
   } catch (error) {
     next(error);
   }

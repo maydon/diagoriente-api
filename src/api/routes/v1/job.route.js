@@ -2,7 +2,12 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/job.controller');
 const { authorize, LOGGED_USER, ADMIN } = require('../../middlewares/auth');
-const { create, update, list } = require('../../validations/job.validation');
+const {
+  create,
+  update,
+  list,
+  myJob
+} = require('../../validations/job.validation');
 
 const router = express.Router();
 
@@ -10,6 +15,30 @@ const router = express.Router();
  * Load user when API with userId route parameter is hit
  */
 router.param('jobId', controller.load);
+
+router
+  .route('/myJobs')
+  /**
+   * @api {get} v1/jobs/myJobs List MyJobs
+   * @apiDescription Get a list of recommancded jobs
+   * @apiVersion 1.0.0
+   * @apiName MyJobs
+   * @apiGroup Job
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  job's per page
+   * @apiParam  {String}      search  search param
+   * @apiParam  {String}          id     Parcour's id
+   *
+   * @apiSuccess {Object[]}   List of jobs.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize(LOGGED_USER), validate(myJob), controller.myJob);
 
 router
   .route('/')

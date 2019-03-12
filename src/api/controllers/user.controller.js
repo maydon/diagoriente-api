@@ -198,21 +198,21 @@ exports.addAdvisor = async (req, res, next) => {
 
 exports.updateAdvisor = async (req, res, next) => {
   try {
-    const { body } = req;
+    const { body, user } = req;
     const { user: advisor } = req.locals;
     if (body.password) {
       const oldHashedPassword = body.OldPassword;
       const existingHashedPassword = advisor.password;
 
-      const comparePasswords = await bcrypt.compare(
-        oldHashedPassword,
-        existingHashedPassword
-      );
-
-      if (!comparePasswords) {
-        User.errorPassword();
+      if (user.role === 'advisor') {
+        const comparePasswords = await bcrypt.compare(
+          oldHashedPassword,
+          existingHashedPassword
+        );
+        if (!comparePasswords) {
+          User.errorPassword();
+        }
       }
-
       advisor.password = await hashPassword(body.password);
     }
 
@@ -225,9 +225,9 @@ exports.updateAdvisor = async (req, res, next) => {
       }
     };
 
-    const user = Object.assign(advisor, advisorProp);
+    const newUser = Object.assign(advisor, advisorProp);
 
-    const savedUser = await user.save();
+    const savedUser = await newUser.save();
     res.json(savedUser.transform());
   } catch (e) {
     next(e);

@@ -45,9 +45,9 @@ exports.mailer = async (to, data) => {
 
   // setup email data with unicode symbols
   const mailOptions = {
-    from: '"Diagoreinte Beta" <beta.gov.consulting@gmail.com>', // sender address
+    from: '"DiagOriente Beta" <beta.gov.consulting@gmail.com>', // sender address
     to, // list of receivers
-    subject: 'Diagoreinte Beta inscription ✔', // Subject line
+    subject: 'DiagOriente Beta inscription ✔', // Subject line
     html, // html body
     attachments: [
       {

@@ -12,6 +12,18 @@ module.exports = {
     }
   },
 
+  // GET /v1/jobs/myJobs
+  myJob: {
+    query: {
+      page: Joi.number().min(1),
+      perPage: Joi.number()
+        .min(1)
+        .max(100),
+      search: Joi.string().empty(''),
+      parcourId: Joi.objectId().required()
+    }
+  },
+
   // POST /v1/themes
   create: {
     body: {

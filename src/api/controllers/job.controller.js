@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const Job = require('../models/job.model');
+const Parcour = require('../models/parcour.model');
 const { pagination } = require('../utils/Pagination');
+const { addGlobals } = require('../middlewares/addGlobals');
 const { normalize } = require('../utils/Normalize');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -91,10 +93,43 @@ exports.list = async (req, res, next) => {
       transformedJobd,
       req.query,
       Job,
-      {} //suery search params
+      {} //query search params
     );
 
     res.json(responsePagination);
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get myJobs recomandation
+ * @public
+ */
+
+exports.myJob = async (req, res, next) => {
+  try {
+    const { parcourId } = req.query;
+
+    const parcour = await Parcour.findById(parcourId);
+    if (!parcour) {
+      Parcour.parcourDosentExist(parcourId);
+    }
+
+    const globalParcour = await addGlobals(parcour);
+
+    const globalInterest = globalParcour.globalInterest.map((item) => item._id);
+
+    /* suspectJobs contain jobs list that's */
+    /* contain least one interest form selected parcour */
+
+    const suspectJobs = await Job.find({
+      'interests._id': { $in: globalInterest }
+    });
+
+    console.log('suspectJobs', suspectJobs);
+
+    //return res.json(globalParcour.transform());
   } catch (error) {
     next(error);
   }
