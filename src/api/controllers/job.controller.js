@@ -3,6 +3,7 @@ const Job = require('../models/job.model');
 const Parcour = require('../models/parcour.model');
 const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
+const { matchingAlgo } = require('../middlewares/matchingAlgo');
 const { normalize } = require('../utils/Normalize');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -127,7 +128,7 @@ exports.myJob = async (req, res, next) => {
       'interests._id': { $in: globalInterest }
     });
 
-    console.log('suspectJobs', suspectJobs);
+    const myJobs = matchingAlgo(suspectJobs, parcour);
 
     //return res.json(globalParcour.transform());
   } catch (error) {

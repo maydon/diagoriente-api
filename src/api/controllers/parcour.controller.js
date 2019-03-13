@@ -1,12 +1,9 @@
 const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
-const Skill = require('../models/skill.model');
 const User = require('../models/user.model');
-const Competence = require('../models/competence.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const { reduceId } = require('../utils/reduceId');
-const { omit, flatten } = require('lodash');
+const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**

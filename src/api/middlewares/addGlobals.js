@@ -28,9 +28,11 @@ const addGlobals = async (entry) => {
   let globalInterest = [];
 
   const formatSkills = skills.map((item) => {
+    /* push individual intreests into globalInterests */
     const interests = item.activities.map((activity) => activity.interests);
-
     globalInterest = globalInterest.concat(flatten(interests));
+    /* push individual intreests into globalInterests */
+
     const competencesList = Parcour.AddGlobalCompetence({
       skills: [item],
       competencesCart: staticCompentences

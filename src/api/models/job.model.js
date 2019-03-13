@@ -63,7 +63,7 @@ jobSchema.method({
           return {
             _id: item._id._id,
             rank: item._id.rank,
-            nom: item.nom,
+            nom: item._id.nom,
             weight: item.weight
           };
         });
@@ -72,7 +72,7 @@ jobSchema.method({
           return {
             _id: item._id._id,
             rank: item._id.rank,
-            title: item.title,
+            title: item._id.title,
             weight: item.weight
           };
         });

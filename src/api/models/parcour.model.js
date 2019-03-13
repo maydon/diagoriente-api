@@ -82,16 +82,28 @@ parcourSchema.statics = {
 
     competencesCart.map((item) => {
       const keyItem = item._id;
-      competencesCartInitialized[keyItem] = { _id: keyItem, value: 0 };
+      competencesCartInitialized[keyItem] = {
+        _id: keyItem,
+        value: 0,
+        count: 0
+      };
     });
 
     const competences = flatten(skills.map((item) => item.competences));
-
     competences.forEach((item) => {
       const refItem = competencesCartInitialized[item._id];
-      if (refItem.value < item.value) {
-        competencesCartInitialized[item._id] = item;
+
+      /* increment count if competence is duplicated with positive velue */
+      if (item.value > 0) {
+        refItem.count += 1;
       }
+      /* increment count if competence is duplicated with positive velue */
+
+      /* pick max value competences */
+      if (refItem.value < item.value) {
+        competencesCartInitialized[item._id].value = item.value;
+      }
+      /* pick max value competences */
     });
 
     return Object.values(competencesCartInitialized);
