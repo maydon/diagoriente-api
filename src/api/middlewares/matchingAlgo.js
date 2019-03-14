@@ -1,10 +1,13 @@
 const { flatten } = require('lodash');
 
 const addJpInts = (interests) => {
+  console.log('interests', interests);
   return [];
 };
 
 const addJpComps = (copmetences) => {
+  console.log('copmetences', copmetences);
+
   return [];
 };
 

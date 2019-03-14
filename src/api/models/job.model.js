@@ -60,21 +60,25 @@ jobSchema.method({
     fields.forEach((field) => {
       if (field === 'interests') {
         transformed[field] = this[field].map((item) => {
-          return {
-            _id: item._id._id,
-            rank: item._id.rank,
-            nom: item._id.nom,
-            weight: item.weight
-          };
+          if (item._id) {
+            return {
+              _id: item._id._id,
+              rank: item._id.rank,
+              nom: item._id.nom,
+              weight: item.weight
+            };
+          }
         });
       } else if (field === 'competences') {
         transformed[field] = this[field].map((item) => {
-          return {
-            _id: item._id._id,
-            rank: item._id.rank,
-            title: item._id.title,
-            weight: item.weight
-          };
+          if (item._id) {
+            return {
+              _id: item._id._id,
+              rank: item._id.rank,
+              title: item._id.title,
+              weight: item.weight
+            };
+          }
         });
       } else {
         transformed[field] = this[field];
