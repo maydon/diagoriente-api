@@ -29,11 +29,11 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(20)
+        .max(250)
         .required(),
       description: Joi.string()
         .min(3)
-        .max(120)
+        .max(250)
         .required(),
       interests: Joi.array().items({
         _id: Joi.objectId().required(),
@@ -60,11 +60,11 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(20)
+        .max(250)
         .required(),
       description: Joi.string()
         .min(3)
-        .max(120)
+        .max(250)
         .required(),
       interests: Joi.array().items({
         _id: Joi.objectId().required(),

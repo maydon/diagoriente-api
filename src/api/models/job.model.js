@@ -11,17 +11,17 @@ const jobSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 20,
+      maxlength: 250,
       trim: true,
       required: true
     },
     description: {
       type: String,
-      maxlength: 120
+      maxlength: 250
     },
     search: {
       type: String,
-      maxlength: 140
+      maxlength: 500
     },
     interests: [
       {
