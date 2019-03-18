@@ -50,6 +50,7 @@ jobSchema.method({
     const transformed = {};
     const fields = [
       '_id',
+      'rank',
       'title',
       'description',
       'interests',

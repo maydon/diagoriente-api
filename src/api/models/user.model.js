@@ -297,7 +297,7 @@ userSchema.statics = {
   }
 };
 
-/**
+/** 5c8f56f69bf39b6e1b6a9e19
  * @typedef User
  */
 module.exports = mongoose.model('User', userSchema);

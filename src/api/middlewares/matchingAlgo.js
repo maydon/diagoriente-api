@@ -72,6 +72,8 @@ const sorteJobsByHigerRank = (job, JpInts, JpComps) => {
  * @public
  */
 const matchingAlgo = (jobs, parcour) => {
+  /* here we should calculate jobs olgo */
+
   const jobsliste = [];
   const { globalInterest, globalCopmetences } = parcour;
   const JpInts = addJpInts(globalInterest);
@@ -92,8 +94,6 @@ const matchingAlgo = (jobs, parcour) => {
   console.log('sortedJobs', sortedJobs);
 
   return sortedJobs;
-
-  /* here we should calculate jobs olgo */
 };
 
 exports.matchingAlgo = matchingAlgo;

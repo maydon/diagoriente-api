@@ -130,11 +130,7 @@ exports.myJob = async (req, res, next) => {
 
     const myJobs = matchingAlgo(suspectJobs, parcour);
 
-    console.log('myJobs', typeof myJobs);
-
-    const transformedmyJobs = myJobs.map((job) => job.transform());
-
-    return res.json(transformedmyJobs);
+    return res.json(myJobs);
   } catch (error) {
     next(error);
   }

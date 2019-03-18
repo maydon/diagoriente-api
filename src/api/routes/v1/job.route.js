@@ -20,7 +20,7 @@ router
   .route('/myJobs')
   /**
    * @api {get} v1/jobs/myJobs List MyJobs
-   * @apiDescription Get a list of recommancded jobs
+   * @apiDescription Get a list of recommanded jobs
    * @apiVersion 1.0.0
    * @apiName MyJobs
    * @apiGroup Job
@@ -31,7 +31,7 @@ router
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  job's per page
    * @apiParam  {String}      search  search param
-   * @apiParam  {String}          id     Parcour's id
+   * @apiParam  {String}        id     Parcour's id
    *
    * @apiSuccess {Object[]}   List of jobs.
    *
