@@ -64,7 +64,7 @@ const sorteJobsByHigerRank = (job, JpInts, JpComps) => {
     }
   });
 
-  return jobRank;
+  return Number(jobRank.toFixed(3));
 };
 
 /**
@@ -90,8 +90,6 @@ const matchingAlgo = (jobs, parcour) => {
   const sortedJobs = jobsliste.sort((a, b) => {
     return b.jobRank - a.jobRank;
   });
-
-  console.log('sortedJobs', sortedJobs);
 
   return sortedJobs;
 };
