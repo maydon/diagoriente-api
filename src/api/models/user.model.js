@@ -157,17 +157,28 @@ userSchema.statics = {
    * @returns {Promise<User, APIError>}
    */
   async findAndGenerateToken(options) {
-    const { uniqId } = options;
-    if (!uniqId) {
+    const { uniqId, email, password } = options;
+    if (!uniqId && !email) {
       throw new APIError({
-        message: 'An uniqId is required to generate a token'
+        message: 'An uniqId or email is required to generate a token'
       });
     }
-    let user = await this.findOne({ uniqId });
-    if (!user) {
-      user = await this.create(options);
+    let user = null;
+    if (email) {
+      user = await this.findOne({ email });
+      if (user && (await user.passwordMatches(password))) {
+        return { user, accessToken: user.token() };
+      }
+      throw new APIError({
+        message: 'Incorrect email or password'
+      });
+    } else {
+      user = await this.findOne({ uniqId });
+      if (!user) {
+        user = await this.create(options);
+      }
+      return { user, accessToken: user.token() };
     }
-    return { user, accessToken: user.token() };
   },
 
   /**
