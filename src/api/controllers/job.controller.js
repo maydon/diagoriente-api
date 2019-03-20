@@ -128,6 +128,11 @@ exports.myJob = async (req, res, next) => {
       'interests._id': { $in: globalInterest }
     });
 
+    /*
+    .populate('interests._id', '_id nom')
+    .populate('competences._id', '_id title');
+    */
+
     const myJobs = matchingAlgo(suspectJobs, parcour);
 
     return res.json(myJobs);

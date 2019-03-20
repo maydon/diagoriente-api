@@ -16,7 +16,7 @@ module.exports = {
     body: {
       nom: Joi.string()
         .min(1)
-        .max(30)
+        .max(300)
         .required()
     }
   },
@@ -26,7 +26,7 @@ module.exports = {
     body: {
       nom: Joi.string()
         .min(1)
-        .max(30)
+        .max(300)
         .required()
     }
   }
