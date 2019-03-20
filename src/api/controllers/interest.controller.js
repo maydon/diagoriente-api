@@ -75,7 +75,10 @@ exports.create = async (req, res, next) => {
   try {
     const interest = new Interest(req.body);
     const listRank = await Interest.listRank();
-    const highestRank = Interest.highestRank(listRank);
+    let highestRank = 0;
+    if (listRank.length > 0) {
+      highestRank = Interest.highestRank(listRank);
+    }
     interest.rank = highestRank + 1;
     const savedInterest = await interest.save();
     res.status(httpStatus.CREATED);
