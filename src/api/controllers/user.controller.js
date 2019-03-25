@@ -150,7 +150,7 @@ exports.aprouvedUser = async (req, res, next) => {
     }
 
     // send mail to new approuved user
-    await mailer(email, user);
+    //await mailer(email, user);
     const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (e) {
