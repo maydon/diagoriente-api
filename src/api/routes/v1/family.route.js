@@ -66,11 +66,9 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiSuccess {String}  nom       Interest's name
-   * @apiSuccess {Object[]}  interests      Interest's liste
-   * @apiSuccess {String}  rank      Interest's email
+   * @apiSuccess {String}  id       families's id
+   * @apiSuccess {Object[]}  photos      family resources
    *
-   * @apiSuccess {Object[]}   List of intersts.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
