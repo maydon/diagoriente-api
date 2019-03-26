@@ -15,6 +15,19 @@ const familySchema = new mongoose.Schema(
       trim: true,
       required: true
     },
+    resources: [
+      {
+        name: {
+          type: String
+        },
+        mimetype: {
+          type: String
+        },
+        base64: {
+          type: String
+        }
+      }
+    ],
     interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }]
   },
   {
@@ -28,7 +41,7 @@ const familySchema = new mongoose.Schema(
 familySchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'nom', 'interests'];
+    const fields = ['_id', 'nom', 'interests', 'resources'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];

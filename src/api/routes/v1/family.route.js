@@ -1,5 +1,6 @@
 const express = require('express');
 const validate = require('express-validation');
+const multer = require('multer');
 const controller = require('../../controllers/family.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 const { list, update, create } = require('../../validations/family.validation');
@@ -7,6 +8,8 @@ const { list, update, create } = require('../../validations/family.validation');
 const router = express.Router();
 
 router.param('familyId', controller.load);
+
+const uploadFamily = multer({ encoding: 'binary' });
 
 router
   .route('/')
@@ -50,6 +53,29 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .post(authorize(ADMIN), validate(create), controller.create);
+
+router
+  .route('/uploads/:familyId')
+  /**
+   * @api {post} v1/families/uploads/:familyId Upload family resources
+   * @apiDescription Upload Family resources
+   * @apiVersion 1.0.0
+   * @apiName UploadFamilyResources
+   * @apiGroup Family
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiSuccess {String}  nom       Interest's name
+   * @apiSuccess {Object[]}  interests      Interest's liste
+   * @apiSuccess {String}  rank      Interest's email
+   *
+   * @apiSuccess {Object[]}   List of intersts.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .post(authorize(ADMIN), uploadFamily.array('photos', 3), controller.upload);
 
 router
   .route('/:familyId')

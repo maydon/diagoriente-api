@@ -81,6 +81,26 @@ exports.create = async (req, res, next) => {
 };
 
 /**
+ * Upload family resources
+ * @public
+ */
+exports.upload = async (req, res, next) => {
+  const { family } = req.locals;
+  const { files } = req;
+
+  const resources = files.map((item) => {
+    return {
+      name: item.originalname,
+      mimetype: item.mimetype,
+      base64: new Buffer(item.buffer, 'binary').toString('base64')
+    };
+  });
+  family.resources = resources;
+  const savedFamily = await family.save();
+  res.json(savedFamily.transform());
+};
+
+/**
  * Delete interest
  * @public
  */
