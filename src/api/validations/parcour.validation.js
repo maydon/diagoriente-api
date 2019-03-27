@@ -31,6 +31,19 @@ module.exports = {
     }
   },
 
+  addFamilies: {
+    params: {
+      parcourId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    },
+    body: {
+      families: Joi.array()
+        .items(Joi.objectId())
+        .unique()
+    }
+  },
+
   deleteParcour: {
     params: {
       parcourId: Joi.string()

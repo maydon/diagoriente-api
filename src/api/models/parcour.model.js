@@ -16,7 +16,8 @@ const parcourSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }]
+    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
+    families: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }]
   },
   {
     timestamps: true
@@ -35,6 +36,7 @@ parcourSchema.method({
       'userId',
       'completed',
       'skills',
+      'families',
       'globalCopmetences',
       'globalInterest',
       'createdAt',

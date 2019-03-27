@@ -11,7 +11,7 @@ const familySchema = new mongoose.Schema(
   {
     nom: {
       type: String,
-      maxlength: 30,
+      maxlength: 200,
       trim: true,
       required: true
     },

@@ -66,6 +66,32 @@ router
   .post(authorize(LOGGED_USER), validate(create), controller.create);
 
 router
+  .route('/families/:parcourId')
+  /**
+   * @api {get} v1/parcours Add families
+   * @apiDescription Add families to parcours
+   * @apiVersion 1.0.0
+   * @apiName AddFamiliesParcours
+   * @apiGroup Parcour
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {String}            parcourId     Parcours  id
+   * @apiParam  {Object[]}          families    add families ds
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiSuccess {Object[]}   Parcour object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .post(authorize(LOGGED_USER), validate(create), controller.create);
+
+router
   .route('/:parcourId')
   /**
    * @api {get} v1/parcours List Parcours

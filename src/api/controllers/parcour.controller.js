@@ -3,7 +3,7 @@ const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const { omit } = require('lodash');
+const { omit, pick } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -69,6 +69,23 @@ exports.update = async (req, res, next) => {
   const { parcour } = req.locals;
   try {
     const newParcour = omit(req.body, ['_id', 'userId', 'advisorId']);
+    const updatedParcour = Object.assign(parcour, newParcour);
+    const savedParcour = await updatedParcour.save();
+    res.json(savedParcour.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * add families to Parcour
+ * @public
+ */
+
+exports.addFamilies = async (req, res, next) => {
+  const { parcour } = req.locals;
+  try {
+    const newParcour = pick(req.body, ['families']);
     const updatedParcour = Object.assign(parcour, newParcour);
     const savedParcour = await updatedParcour.save();
     res.json(savedParcour.transform());
