@@ -88,6 +88,8 @@ exports.upload = async (req, res, next) => {
   const { family } = req.locals;
   const { files } = req;
 
+  console.log(files);
+
   const resources = files.map((item) => {
     return {
       name: item.originalname,

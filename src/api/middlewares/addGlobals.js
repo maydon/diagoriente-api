@@ -13,7 +13,7 @@ const addGlobals = async (entry) => {
   const skills = await Skill.find({
     _id: { $in: parcour.skills }
   })
-    .populate('theme', 'title description type')
+    .populate('theme', 'title description type resources')
     .populate({
       path: 'activities',
       model: 'Activity',
