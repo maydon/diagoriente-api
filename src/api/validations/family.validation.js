@@ -15,8 +15,7 @@ module.exports = {
   update: {
     body: {
       nom: Joi.string()
-        .min(1)
-        .max(200)
+        .max(250)
         .required(),
       interests: Joi.array()
         .items(Joi.objectId())
@@ -28,8 +27,7 @@ module.exports = {
   create: {
     body: {
       nom: Joi.string()
-        .min(1)
-        .max(200)
+        .max(250)
         .required(),
       interests: Joi.array()
         .items(Joi.objectId())

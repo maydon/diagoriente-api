@@ -16,8 +16,7 @@ module.exports = {
   create: {
     body: {
       title: Joi.string()
-        .min(3)
-        .max(20)
+        .max(50)
         .required(),
       rank: Joi.string().required()
     }
@@ -27,8 +26,7 @@ module.exports = {
   update: {
     body: {
       title: Joi.string()
-        .min(3)
-        .max(20)
+        .max(50)
         .required(),
       rank: Joi.string().required()
     }
