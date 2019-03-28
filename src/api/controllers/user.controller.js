@@ -140,6 +140,10 @@ exports.aprouvedUser = async (req, res, next) => {
       firstName,
       lastName
     };
+
+    // throw error if user alrady exist
+    await User.checkDuplicateEmail(email, next);
+
     const parcour = await Parcour.find({ userId: user._id });
     user.email = email;
     user.password = await hashPassword(password);
