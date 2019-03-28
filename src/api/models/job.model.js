@@ -29,6 +29,10 @@ const jobSchema = new mongoose.Schema(
         ref: 'Theme'
       }
     ],
+    accessibility: {
+      type: String,
+      maxlength: 50
+    },
     interests: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Interest' },
@@ -60,6 +64,7 @@ jobSchema.method({
       'title',
       'description',
       'secteur',
+      'accessibility',
       'interests',
       'competences',
       'formations'
