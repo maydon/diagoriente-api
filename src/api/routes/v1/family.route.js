@@ -3,7 +3,12 @@ const validate = require('express-validation');
 const multer = require('multer');
 const controller = require('../../controllers/family.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const { list, update, create } = require('../../validations/family.validation');
+const {
+  list,
+  update,
+  create,
+  removeResources
+} = require('../../validations/family.validation');
 
 const router = express.Router();
 
@@ -55,10 +60,10 @@ router
   .post(authorize(ADMIN), validate(create), controller.create);
 
 router
-  .route('/uploads/:familyId')
+  .route('/addUploads/:familyId')
   /**
-   * @api {post} v1/families/uploads/:familyId Upload family resources
-   * @apiDescription Upload Family resources
+   * @api {post} v1/families/addUploads/:familyId Upload family resources
+   * @apiDescription Upload Family resources (add)
    * @apiVersion 1.0.0
    * @apiName UploadFamilyResources
    * @apiGroup Family
@@ -73,7 +78,36 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(authorize(ADMIN), uploadFamily.array('photos', 3), controller.upload);
+  .post(
+    authorize(ADMIN),
+    uploadFamily.array('photos', 3),
+    controller.addResources
+  );
+
+router
+  .route('/removeUploads/:familyId')
+  /**
+   * @api {post} v1/families/removeUploads/:familyId Upload family resources
+   * @apiDescription remove Family resources (remove)
+   * @apiVersion 1.0.0
+   * @apiName UploadFamilyResources
+   * @apiGroup Family
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiSuccess {String}  id       families's id
+   * @apiSuccess {String}  resource      family resources id to delete
+   *
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .post(
+    authorize(ADMIN),
+    validate(removeResources),
+    controller.removeResources
+  );
 
 router
   .route('/:familyId')

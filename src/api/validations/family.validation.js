@@ -23,6 +23,12 @@ module.exports = {
     }
   },
 
+  removeResources: {
+    body: {
+      resource: Joi.objectId()
+    }
+  },
+
   // post /v1/interest
   create: {
     body: {

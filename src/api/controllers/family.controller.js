@@ -84,11 +84,9 @@ exports.create = async (req, res, next) => {
  * Upload family resources
  * @public
  */
-exports.upload = async (req, res, next) => {
+exports.addResources = async (req, res, next) => {
   const { family } = req.locals;
   const { files } = req;
-
-  console.log(files);
 
   const resources = files.map((item) => {
     return {
@@ -97,9 +95,35 @@ exports.upload = async (req, res, next) => {
       base64: new Buffer(item.buffer, 'binary').toString('base64')
     };
   });
-  family.resources = resources;
-  const savedFamily = await family.save();
-  res.json(savedFamily.transform());
+
+  await Family.update(
+    { _id: family._id },
+    { $push: { resources: { $each: resources } } }
+  );
+
+  const savedFamily = await Family.get(family._id);
+  res.json(savedFamily.transform(savedFamily));
+};
+
+/**
+ * Upload family resources
+ * @public
+ */
+exports.removeResources = async (req, res, next) => {
+  const { family } = req.locals;
+  console.log(family.resources);
+  const { resource } = req.body;
+
+  try {
+    await Family.updateOne(
+      { _id: family._id },
+      { $pull: { resources: { _id: resource } } }
+    );
+    const savedFamily = await Family.get(family._id);
+    res.json(savedFamily.transform(savedFamily));
+  } catch (e) {
+    next(e);
+  }
 };
 
 /**
