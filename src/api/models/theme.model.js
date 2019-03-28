@@ -24,7 +24,8 @@ const themeSchema = new mongoose.Schema(
       required: true
     },
     description: {
-      type: String
+      type: String,
+      maxlength: 300
     },
     type: {
       type: String,

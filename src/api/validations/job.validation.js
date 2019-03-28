@@ -35,6 +35,9 @@ module.exports = {
         .min(3)
         .max(250)
         .required(),
+      secteur: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
       interests: Joi.array().items({
         _id: Joi.objectId().required(),
         weight: Joi.number()
@@ -66,6 +69,9 @@ module.exports = {
         .min(3)
         .max(250)
         .required(),
+      secteur: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
       interests: Joi.array().items({
         _id: Joi.objectId().required(),
         weight: Joi.number()

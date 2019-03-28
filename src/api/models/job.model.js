@@ -23,6 +23,12 @@ const jobSchema = new mongoose.Schema(
       type: String,
       maxlength: 500
     },
+    secteur: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Theme'
+      }
+    ],
     interests: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Interest' },
@@ -53,6 +59,7 @@ jobSchema.method({
       'rank',
       'title',
       'description',
+      'secteur',
       'interests',
       'competences',
       'formations'
@@ -105,6 +112,7 @@ jobSchema.statics = {
         job = await this.findById(id)
           .populate('interests._id')
           .populate('competences._id', '_id title rank')
+          .populate('secteur', '_id type title description')
           .exec();
       }
       if (job) return job;
@@ -131,6 +139,7 @@ jobSchema.statics = {
     })
       .populate('interests._id')
       .populate('competences._id', '_id title rank')
+      .populate('secteur', '_id type title description')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

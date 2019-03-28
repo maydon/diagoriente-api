@@ -21,7 +21,7 @@ module.exports = {
       .max(250)
       .required(),
     description: Joi.string()
-      .min(3)
+      .max(300)
       .required(),
     type: Joi.string()
       .valid(Theme.types)
@@ -33,11 +33,10 @@ module.exports = {
 
   updateSecteur: {
     title: Joi.string()
-      .min(3)
       .max(250)
       .required(),
     description: Joi.string()
-      .min(3)
+      .max(300)
       .required(),
     type: Joi.string()
       .valid(Theme.types)
@@ -68,11 +67,10 @@ module.exports = {
     body: {
       parentId: Joi.objectId().allow(null),
       title: Joi.string()
-        .min(3)
         .max(250)
         .required(),
       description: Joi.string()
-        .min(3)
+        .max(300)
         .required(),
       type: Joi.string()
         .valid(Theme.types)
@@ -85,10 +83,9 @@ module.exports = {
     body: {
       parentId: Joi.objectId().allow(null),
       title: Joi.string()
-        .min(3)
         .max(250)
         .required(),
-      description: Joi.string().min(3),
+      description: Joi.string().max(300),
       type: Joi.string()
         .valid(Theme.types)
         .required(),
