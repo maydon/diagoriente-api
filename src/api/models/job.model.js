@@ -11,13 +11,13 @@ const jobSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      maxlength: 250,
+      maxlength: 500,
       trim: true,
       required: true
     },
     description: {
       type: String,
-      maxlength: 250
+      maxlength: 1000
     },
     search: {
       type: String,
