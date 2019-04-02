@@ -57,8 +57,7 @@ exports.replace = async (req, res, next) => {
   try {
     const { user } = req.locals;
     const newUser = new User(req.body);
-    const ommitRole = user.role !== 'admin' ? 'role' : '';
-    const newUserObject = omit(newUser.toObject(), '_id', ommitRole);
+    const newUserObject = omit(newUser.toObject(), ['_id', 'role']);
 
     await user.update(newUserObject, { override: true, upsert: true });
     const savedUser = await User.findById(user._id);
@@ -73,15 +72,45 @@ exports.replace = async (req, res, next) => {
  * Update existing user
  * @public
  */
-exports.update = (req, res, next) => {
-  const ommitRole = req.locals.user.role !== 'admin' ? 'role' : '';
-  const updatedUser = omit(req.body, ommitRole);
-  const user = Object.assign(req.locals.user, updatedUser);
+exports.update = async (req, res, next) => {
+  try {
+    const { user } = req.locals;
+    const { body, user: localUser } = req;
 
-  user
-    .save()
-    .then((savedUser) => res.json(savedUser.transform()))
-    .catch((e) => next(User.checkDuplicateEmail(e)));
+    if (user._id.toString() !== localUser._id.toString) {
+      User.forbidenUser();
+    }
+    // note : local user contain password hash
+    if (body.password && localUser.password) {
+      const oldHashedPassword = body.OldPassword;
+      const existingHashedPassword = user.password;
+
+      if (user.role === 'user') {
+        const comparePasswords = await bcrypt.compare(
+          oldHashedPassword,
+          existingHashedPassword
+        );
+        if (!comparePasswords) {
+          User.errorPassword();
+        }
+      }
+      body.password = await hashPassword(body.password);
+    }
+
+    const userProp = {
+      profile: {
+        pseudo: body.pseudo || user.pseudo || null,
+        firstName: body.firstName || user.firstName || null,
+        lastName: body.lastName || user.lastName || null
+      }
+    };
+    const newUser = Object.assign(user, userProp);
+
+    const savedUser = await newUser.save();
+    res.json(savedUser.transform());
+  } catch (e) {
+    next(e);
+  }
 };
 
 /**

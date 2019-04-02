@@ -9,6 +9,7 @@ const {
 } = require('../../middlewares/auth');
 const {
   list,
+  update,
   addAdvisor,
   aprouvedUser,
   updateAdvisor
@@ -67,6 +68,30 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
   .post(authorize(ADMIN), validate(addAdvisor), controller.addAdvisor);
+
+router
+  .route('/:userId')
+  /**
+   * @api {patch} v1/users/:userId patch  user
+   * @apiDescription patch  user
+   * @apiVersion 1.0.0
+   * @apiName UpdateUser
+   * @apiGroup User
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         OldPassword    user OldPassword
+   * @apiParam  {String}         password    user password
+   * @apiParam  {String}         pseudo    user platform
+   * @apiParam  {String}       firstName    user firstName
+   * @apiParam  {String}       lastName    user lastName
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can update the data
+   */
+  .patch(authorize(LOGGED_USER), validate(update), controller.update);
 
 router
   .route('/advisors/:userId')

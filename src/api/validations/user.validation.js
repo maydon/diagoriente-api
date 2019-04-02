@@ -21,6 +21,17 @@ module.exports = {
       userId: Joi.string()
         .regex(/^[a-fA-F0-9]{24}$/)
         .required()
+    },
+    body: {
+      OldPassword: Joi.string()
+        .min(6)
+        .max(30),
+      password: Joi.string()
+        .min(6)
+        .max(30),
+      pseudo: Joi.string().max(30),
+      firstName: Joi.string().max(30),
+      lastName: Joi.string().max(30)
     }
   },
 

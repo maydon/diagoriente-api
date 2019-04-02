@@ -286,6 +286,13 @@ userSchema.statics = {
     });
   },
 
+  forbidenUser() {
+    throw new APIError({
+      message: 'id user and token dosent match ',
+      status: httpStatus.CONFLICT
+    });
+  },
+
   /**
    * Return new validation error
    * if error is a mongoose duplicate key error
