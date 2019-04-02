@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Job = require('../models/job.model');
+const Favorite = require('../models/favorite.model');
 const Parcour = require('../models/parcour.model');
 const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
@@ -133,7 +134,9 @@ exports.myJob = async (req, res, next) => {
     .populate('competences._id', '_id title');
     */
 
-    const myJobs = matchingAlgo(suspectJobs, parcour);
+    const favoriteJobList = await Favorite.find({ parcour: parcourId });
+
+    const myJobs = matchingAlgo(suspectJobs, parcour, favoriteJobList);
 
     return res.json(myJobs);
   } catch (error) {
