@@ -13,7 +13,6 @@ module.exports = {
   // patch /v1/interest/:id
   update: {
     body: {
-      user: Joi.objectId().required(),
       parcour: Joi.objectId().required(),
       job: Joi.objectId().required(),
       interested: Joi.boolean()
@@ -23,7 +22,6 @@ module.exports = {
   // post /v1/interest
   create: {
     body: {
-      user: Joi.objectId().required(),
       parcour: Joi.objectId().required(),
       job: Joi.objectId().required(),
       interested: Joi.boolean()

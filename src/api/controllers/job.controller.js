@@ -32,12 +32,15 @@ exports.get = async (req, res, next) => {
     const { user } = req;
     const { job } = req.locals;
 
+    console.log('user', user);
+
     const favoriteJob = await Favorite.findOne({
       user: user._id,
       job: job._id
     });
 
     job.interested = null;
+    console.log('favoriteJob', favoriteJob);
 
     if (favoriteJob) {
       job.interested = favoriteJob.interested;

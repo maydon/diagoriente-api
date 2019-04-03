@@ -74,8 +74,9 @@ exports.list = async (req, res, next) => {
  */
 exports.create = async (req, res, next) => {
   try {
+    const { user } = req;
     await Favorite.update(
-      { job: req.body.job, parcour: req.body.parcour, user: req.body.user },
+      { job: req.body.job, parcour: req.body.parcour, user: user._id },
       { $set: { interested: req.body.interested } },
       { upsert: true }
     );
@@ -83,7 +84,7 @@ exports.create = async (req, res, next) => {
     const newFavorite = await Favorite.findOne({
       job: req.body.job,
       parcour: req.body.parcour,
-      user: req.body.user
+      user: user._id
     });
 
     res.status(httpStatus.CREATED);
