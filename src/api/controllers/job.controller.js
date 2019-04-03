@@ -132,6 +132,7 @@ exports.list = async (req, res, next) => {
 exports.myJob = async (req, res, next) => {
   try {
     const { parcourId } = req.query;
+    const { user } = req;
 
     const parcour = await Parcour.findById(parcourId);
     if (!parcour) {
@@ -154,7 +155,10 @@ exports.myJob = async (req, res, next) => {
     .populate('competences._id', '_id title');
     */
 
-    const favoriteJobList = await Favorite.find({ parcour: parcourId });
+    const favoriteJobList = await Favorite.find({
+      parcour: parcourId,
+      user: user._id
+    });
 
     const myJobs = matchingAlgo(suspectJobs, parcour, favoriteJobList);
 
