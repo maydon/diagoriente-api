@@ -27,7 +27,27 @@ exports.load = async (req, res, next, id) => {
  * Get theme
  * @public
  */
-exports.get = (req, res) => res.json(req.locals.job.transform());
+exports.get = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { job } = req.locals;
+
+    const favoriteJob = await Favorite.findOne({
+      user: user._id,
+      job: job._id
+    });
+
+    job.interested = null;
+
+    if (favoriteJob) {
+      job.interested = favoriteJob.interested;
+    }
+
+    res.json(job.transform());
+  } catch (error) {
+    next(error);
+  }
+};
 
 /**
  * Create new theme

@@ -61,6 +61,7 @@ jobSchema.method({
     const fields = [
       '_id',
       'rank',
+      'interested',
       'title',
       'description',
       'secteur',
