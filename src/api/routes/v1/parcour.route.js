@@ -11,6 +11,7 @@ const {
   list,
   get,
   create,
+  addFamilies,
   deleteParcour
 } = require('../../validations/parcour.validation');
 
@@ -80,7 +81,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}            parcourId     Parcours  id
-   * @apiParam  {Object[]}          families    add families ds
+   * @apiParam  {Object[]}          families    add families ids
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -89,7 +90,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(authorize(LOGGED_USER), validate(create), controller.create);
+  .post(authorize(LOGGED_USER), validate(addFamilies), controller.addFamilies);
 
 router
   .route('/:parcourId')

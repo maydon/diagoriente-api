@@ -77,7 +77,7 @@ exports.update = async (req, res, next) => {
     const { user } = req.locals;
     const { body, user: localUser } = req;
 
-    if (user._id.toString() !== localUser._id.toString) {
+    if (user._id.toString() !== localUser._id.toString()) {
       User.forbidenUser();
     }
     // note : local user contain password hash
