@@ -70,7 +70,7 @@ router
   .post(authorize(ADMIN), validate(addAdvisor), controller.addAdvisor);
 
 router
-  .route('/:userId')
+  .route('/updateMe/:userId')
   /**
    * @api {patch} v1/users/:userId patch  user
    * @apiDescription patch  user
