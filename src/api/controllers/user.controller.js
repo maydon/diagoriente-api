@@ -171,7 +171,7 @@ exports.aprouvedUser = async (req, res, next) => {
     };
 
     // throw error if user alrady exist
-    await User.checkDuplicateEmail(email, next);
+    //await User.checkDuplicateEmail(email, next);
 
     const parcour = await Parcour.find({ userId: user._id });
     user.email = email;
