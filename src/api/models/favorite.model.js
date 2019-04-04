@@ -12,7 +12,7 @@ const favoriteSchema = new mongoose.Schema(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     parcour: { type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' },
     job: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
-    interested: { type: Boolean, default: false }
+    interested: { type: Boolean }
   },
   {
     timestamps: true

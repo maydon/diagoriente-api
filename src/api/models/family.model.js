@@ -90,6 +90,7 @@ familySchema.statics = {
       $or: [{ nom: reg }, { rank: reg }]
     })
       .populate('interests', '_id nom rank')
+      .select('-resources')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

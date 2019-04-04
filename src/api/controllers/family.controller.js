@@ -1,5 +1,5 @@
 const Family = require('../models/family.model');
-const { omit } = require('lodash');
+const { omit, pick, random } = require('lodash');
 const { pagination } = require('../utils/Pagination');
 const httpStatus = require('http-status');
 
@@ -9,7 +9,12 @@ const { handler: errorHandler } = require('../middlewares/error');
  * Get interest
  * @public
  */
-exports.get = (req, res) => res.json(req.locals.family.transform());
+exports.get = (req, res) => {
+  const { family } = req.locals;
+  const randomResources = random(family.resources.length - 1);
+  family.resources = family.resources[randomResources];
+  res.json(family.transform());
+};
 
 /**
  * Load interst and append to req.

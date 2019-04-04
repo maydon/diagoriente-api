@@ -32,15 +32,12 @@ exports.get = async (req, res, next) => {
     const { user } = req;
     const { job } = req.locals;
 
-    console.log('user', user);
-
     const favoriteJob = await Favorite.findOne({
       user: user._id,
       job: job._id
     });
 
     job.interested = null;
-    console.log('favoriteJob', favoriteJob);
 
     if (favoriteJob) {
       job.interested = favoriteJob.interested;
@@ -157,7 +154,7 @@ exports.myJob = async (req, res, next) => {
     .populate('interests._id', '_id nom')
     .populate('competences._id', '_id title');
     */
-
+    console.log({ parcour: parcourId, user: user._id });
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user._id
