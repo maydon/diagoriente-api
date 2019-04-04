@@ -50,9 +50,11 @@ exports.list = async (req, res, next) => {
   try {
     const { role, _id } = req.user;
 
+    console.log('role', role, _id);
+
     const search = role === 'user' ? { user: _id } : { user: null };
 
-    const favorites = await Favorite.list({ ...req.query, _id: search.user });
+    const favorites = await Favorite.list({ ...req.query, _id });
     const transformedFamilies = favorites.map((fav) => fav.transform());
     const querySearch = { ...search };
     const responstPagination = await pagination(
