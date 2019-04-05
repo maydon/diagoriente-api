@@ -94,7 +94,7 @@ exports.update = async (req, res, next) => {
           User.errorPassword();
         }
       }
-      body.password = await hashPassword(body.password);
+      user.password = await hashPassword(body.password);
     }
 
     const userProp = {
