@@ -170,7 +170,8 @@ userSchema.statics = {
         return { user, accessToken: user.token() };
       }
       throw new APIError({
-        message: 'Incorrect email or password'
+        message: 'Incorrect email or password',
+        status: httpStatus.UNAUTHORIZED
       });
     } else {
       user = await this.findOne({ uniqId });
