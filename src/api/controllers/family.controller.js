@@ -11,8 +11,15 @@ const { handler: errorHandler } = require('../middlewares/error');
  */
 exports.get = (req, res) => {
   const { family } = req.locals;
-  const randomResources = random(family.resources.length - 1);
-  family.resources = family.resources[randomResources];
+  const { user } = req;
+
+  /* select only one image if user is with role user */
+
+  if (user.role === 'user') {
+    const randomResources = random(family.resources.length - 1);
+    family.resources = family.resources[randomResources];
+  }
+
   res.json(family.transform());
 };
 
