@@ -12,7 +12,9 @@ const {
   update,
   addAdvisor,
   aprouvedUser,
-  updateAdvisor
+  updateAdvisor,
+  renewPassword,
+  updatePassword
 } = require('../../validations/user.validation');
 
 const router = express.Router();
@@ -68,6 +70,46 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
   .post(authorize(ADMIN), validate(addAdvisor), controller.addAdvisor);
+
+router
+  .route('/renewPassword')
+  /**
+   * @api {post} v1/users/renewPassword renew password
+   * @apiDescription send link renew password
+   * @apiVersion 1.0.0
+   * @apiName renewPassword
+   * @apiGroup User
+   * @apiPermission user/advisor
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         email    advisor email
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(validate(renewPassword), controller.renewPassword);
+
+router
+  .route('/updatePassword')
+  /**
+   * @api {post} v1/users/renewPassword renew password
+   * @apiDescription send link renew password
+   * @apiVersion 1.0.0
+   * @apiName updatePassword
+   * @apiGroup User
+   * @apiPermission user/advisor
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         password    user password
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(validate(updatePassword), controller.updatePassword);
 
 router
   .route('/updateMe/:userId')

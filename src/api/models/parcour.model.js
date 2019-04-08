@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-const {flatten} = require('lodash');
+const { flatten } = require('lodash');
 const APIError = require('../utils/APIError');
 
 /**
@@ -10,17 +10,17 @@ const APIError = require('../utils/APIError');
 
 const parcourSchema = new mongoose.Schema(
   {
-    advisorId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    advisorId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     completed: {
       type: Boolean,
-      default: false,
+      default: false
     },
-    skills: [{type: mongoose.Schema.Types.ObjectId, ref: 'Skill'}],
-    families: [{type: mongoose.Schema.Types.ObjectId, ref: 'Family'}],
+    skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
+    families: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }]
   },
   {
-    timestamps: true,
+    timestamps: true
   }
 );
 
@@ -41,15 +41,15 @@ parcourSchema.method({
       'globalCopmetences',
       'globalInterest',
       'createdAt',
-      'updatedAt',
+      'updatedAt'
     ];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       transformed[field] = this[field];
     });
 
     return transformed;
-  },
+  }
 });
 
 parcourSchema.statics = {
@@ -67,14 +67,14 @@ parcourSchema.statics = {
           .populate({
             path: 'families',
             select: '-resources',
-            populate: {path: 'interests', select: '_id nom rank'},
+            populate: { path: 'interests', select: '_id nom rank' }
           })
           .exec();
       }
       if (parcour) return parcour;
       throw new APIError({
         message: 'Parcour does not exist',
-        status: httpStatus.NOT_FOUND,
+        status: httpStatus.NOT_FOUND
       });
     } catch (error) {
       throw error;
@@ -86,20 +86,20 @@ parcourSchema.statics = {
    * competences to parcour and
    * insialize list of competences
    */
-  AddGlobalCompetence({skills, competencesCart}) {
+  AddGlobalCompetence({ skills, competencesCart }) {
     const competencesCartInitialized = {};
 
-    competencesCart.map(item => {
+    competencesCart.map((item) => {
       const keyItem = item._id;
       competencesCartInitialized[keyItem] = {
         _id: keyItem,
         value: 0,
-        count: 0,
+        count: 0
       };
     });
 
-    const competences = flatten(skills.map(item => item.competences));
-    competences.forEach(item => {
+    const competences = flatten(skills.map((item) => item.competences));
+    competences.forEach((item) => {
       const refItem = competencesCartInitialized[item._id];
 
       /* increment count if competence is duplicated with positive velue */
@@ -128,7 +128,7 @@ parcourSchema.statics = {
   parcourDosentExist(id) {
     throw new APIError({
       message: `Parcour id : ${id} dosent exist`,
-      status: httpStatus.NOT_FOUND,
+      status: httpStatus.NOT_FOUND
     });
   },
   /**
@@ -138,22 +138,22 @@ parcourSchema.statics = {
    * @param {number} limit - Limit number of parcours to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({page = 1, perPage = 30, role, _id}) {
+  list({ page = 1, perPage = 30, role, _id }) {
     const RolesSearch = {
       admin: {},
-      advisor: {advisorId: _id},
-      user: {userId: _id},
+      advisor: { advisorId: _id },
+      user: { userId: _id }
     };
 
-    const querySearch = {...RolesSearch[role]};
-    return this.find({...querySearch})
+    const querySearch = { ...RolesSearch[role] };
+    return this.find({ ...querySearch })
       .populate('userId', 'uniqId email platform profile')
       .populate('advisorId', 'email profile')
-      .sort({updatedAt: -1})
+      .sort({ updatedAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
-  },
+  }
 };
 
 /**

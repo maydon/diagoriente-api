@@ -15,6 +15,21 @@ module.exports = {
     }
   },
 
+  renewPassword: {
+    body: {
+      email: Joi.string()
+        .email()
+        .required()
+    }
+  },
+
+  updatePassword: {
+    body: {
+      password: Joi.string().required(),
+      token: Joi.string().required()
+    }
+  },
+
   // PATCH /v1/users/:userId
   update: {
     params: {

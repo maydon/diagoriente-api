@@ -112,6 +112,17 @@ userSchema.method({
     return jwt.encode(playload, jwtSecret);
   },
 
+  tokenUserPassword(expirationInterval) {
+    const playload = {
+      exp: moment()
+        .add(expirationInterval, 'minutes')
+        .unix(),
+      iat: moment().unix(),
+      sub: this._id
+    };
+    return jwt.encode(playload, jwtSecret);
+  },
+
   async passwordMatches(password) {
     return bcrypt.compare(password, this.password);
   }
@@ -179,6 +190,38 @@ userSchema.statics = {
         user = await this.create(options);
       }
       return { user, accessToken: user.token() };
+    }
+  },
+
+  /**
+   * renew passwrod and generate new renew password token
+   *
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<User, APIError>}
+   */
+  async generateTokenUserPassword(email) {
+    const user = await this.findOne({ email });
+    if (!user) {
+      throw new APIError({
+        message:
+          'user with valid email is required to generate a renewPasswordtoken',
+        status: httpStatus.UNAUTHORIZED
+      });
+    }
+    // Generate renewPasswordToken min token with 60 min validity
+    return { token: user.tokenUserPassword(60) };
+  },
+
+  async decodeTokenUserPassword(token) {
+    try {
+      const decode = jwt.decode(token, jwtSecret);
+      const user = await this.findOne({ _id: decode.sub });
+      return user;
+    } catch (error) {
+      console.log(error);
+      throw new APIError({
+        message: error.message
+      });
     }
   },
 
