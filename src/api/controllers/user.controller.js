@@ -196,24 +196,6 @@ exports.renewPassword = async (req, res, next) => {
     const { email } = req.body;
 
     const token = await User.generateTokenUserPassword(email);
-    console.log('renewPassword', token);
-    const response = {
-      email,
-      ...token
-    };
-
-    res.json(response);
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.renewPassword = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-
-    const token = await User.generateTokenUserPassword(email);
-    console.log('renewPassword', token);
     const response = {
       email,
       ...token
@@ -227,14 +209,17 @@ exports.renewPassword = async (req, res, next) => {
 
 exports.updatePassword = async (req, res, next) => {
   try {
-    const { token, password } = req.body;
+    const { password } = req.body;
+    const { token } = req.query;
+
+    console.log('token', token);
 
     const user = await User.decodeTokenUserPassword(token);
     if (user) {
       user.password = await hashPassword(password);
     }
 
-    const savedUser = await user.save();
+    //const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (error) {
     next(error);

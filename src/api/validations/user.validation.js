@@ -24,9 +24,11 @@ module.exports = {
   },
 
   updatePassword: {
-    body: {
-      password: Joi.string().required(),
+    query: {
       token: Joi.string().required()
+    },
+    body: {
+      password: Joi.string().required()
     }
   },
 

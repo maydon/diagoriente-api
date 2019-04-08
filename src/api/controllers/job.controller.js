@@ -154,10 +154,9 @@ exports.myJob = async (req, res, next) => {
     .populate('interests._id', '_id nom')
     .populate('competences._id', '_id title');
     */
-    console.log({ parcour: parcourId, user: user._id });
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
-      user: user._id
+      user: user.role === 'user' ? user._id : parcour.userId
     });
 
     const myJobs = matchingAlgo(suspectJobs, parcour, favoriteJobList);
