@@ -69,7 +69,7 @@ router
 router
   .route('/families/:parcourId')
   /**
-   * @api {get} v1/parcours Add families
+   * @api {get} v1/parcours/families/:parcourId Add families
    * @apiDescription Add families to parcours
    * @apiVersion 1.0.0
    * @apiName AddFamiliesParcours
