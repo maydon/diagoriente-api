@@ -219,7 +219,7 @@ exports.updatePassword = async (req, res, next) => {
       user.password = await hashPassword(password);
     }
 
-    //const savedUser = await user.save();
+    const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (error) {
     next(error);
