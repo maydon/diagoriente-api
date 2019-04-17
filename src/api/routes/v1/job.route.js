@@ -37,6 +37,8 @@ router
    * @apiParam  {Number{1-100}}      [perPage=1]  job's per page
    * @apiParam  {String}      search  search param
    * @apiParam  {String}        id     Parcour's id
+   * @apiParam  {String}        algoType     one of 'interest', 'family', 'interest_family'
+
    *
    * @apiSuccess {Object[]}   List of jobs.
    *
