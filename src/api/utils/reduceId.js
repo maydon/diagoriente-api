@@ -23,3 +23,18 @@ exports.reduceCompetences = (objectArray, property) => {
 
   return Object.values(reduced);
 };
+
+exports.reduceJobs = (objectArray, property) => {
+  const reduced = objectArray.reduce((acc, obj) => {
+    const key = obj[property];
+    if (!acc[key]) {
+      acc[key] = obj;
+    } else {
+      const jobRank = acc[key].jobRank + obj.jobRank;
+      acc[key] = { ...obj, jobRank };
+    }
+    return acc;
+  }, {});
+
+  return Object.values(reduced);
+};

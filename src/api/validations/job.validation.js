@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Job = require('../models/job.model');
 
 module.exports = {
   // GET /v1/themes
@@ -20,7 +21,10 @@ module.exports = {
         .min(1)
         .max(100),
       search: Joi.string().empty(''),
-      parcourId: Joi.objectId().required()
+      parcourId: Joi.objectId().required(),
+      algoType: Joi.string()
+        .valid(Job.ALGO_TYPE)
+        .default('interest')
     }
   },
 

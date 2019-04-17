@@ -8,7 +8,7 @@ const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
 const { matchingAlgo } = require('../middlewares/matchingAlgo');
 const { normalize } = require('../utils/Normalize');
-const { omit } = require('lodash');
+const { omit, uniq } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -133,108 +133,62 @@ exports.list = async (req, res, next) => {
 
 exports.myJob = async (req, res, next) => {
   try {
-    const { parcourId } = req.query;
+    const { parcourId, algoType } = req.query;
     const { user } = req;
-
     const parcour = await Parcour.findById(parcourId);
     if (!parcour) {
       Parcour.parcourDosentExist(parcourId);
     }
 
-    const globalParcour = await addGlobals(parcour);
-
-    const globalInterest = globalParcour.globalInterest.map((item) => item._id);
-
-    /* suspectJobs contain jobs list that's */
-    /* contain at least one interest form selected parcour */
-
-    const suspectJobs = await Job.find({
-      'interests._id': { $in: globalInterest }
-    });
-
-    /*
-    .populate('interests._id', '_id nom')
-    .populate('competences._id', '_id title');
-    */
-
-    const favoriteJobList = await Favorite.find({
-      parcour: parcourId,
-      user: user.role === 'user' ? user._id : parcour.userId
-    });
-
-    const myJobs = matchingAlgo(suspectJobs, parcour, favoriteJobList);
-
-    return res.json(myJobs);
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.myJobsByFamilies = async (req, res, next) => {
-  try {
-    const { parcourId } = req.query;
-    const { user } = req;
-
-    const parcour = await Parcour.findById(parcourId);
-    if (!parcour) {
-      Parcour.parcourDosentExist(parcourId);
-    }
-
+    /* add globals interests and competences to parcour */
     const globalParcour = await addGlobals(parcour);
     const familiesRank = await FamiliesRank.find({});
 
     const { families } = globalParcour;
 
-    const listFamiliesInterests = await Family.find({
-      _id: {
-        $in: families
-      }
-    })
-      .select('_id nom interests')
-      .populate({
-        path: 'interests',
-        populate: { path: 'interests' },
-        select: '_id nom'
-      })
-      .exec();
-
-    const listFamiliesInterestsWithRank = listFamiliesInterests.map(
-      (item, index) => {
-        console.log(item, index);
-        return {
-          _id: item._id,
-          interests: item.interests,
-          pExpInt: familiesRank[index].pExpInt
-        };
-      }
-    );
-
-    console.log('listFamiliesInterestsWithRank', listFamiliesInterestsWithRank);
-
-    const globalInterest = listFamiliesInterestsWithRank.interests.map(
-      (item) => item._id
-    );
-
-    console.log('globalInterest', globalInterest);
-
-    /* suspectJobs contain jobs list that's */
-    /* contain at least one interest form selected parcour */
-
-    const suspectJobs = await Job.find({
-      'interests._id': { $in: globalInterest }
+    const listFamiliesInterests = await Family.listFamiliesInterests(families);
+    const formatFamilies = listFamiliesInterests.map((item, index) => {
+      return {
+        _id: item._id,
+        interests: item.interests[0].id,
+        pExpInt: familiesRank[index].pExpInt
+      };
     });
 
-    /*
-    .populate('interests._id', '_id nom')
-    .populate('competences._id', '_id title');
-    */
+    const listInterestByFamilies = formatFamilies.map(
+      // pick only the firt item interest in family
+      (item) => item.interests
+    );
 
+    const listInterest = globalParcour.globalInterest.map((item) => item._id);
+    /* suspectJobs contain jobs list that's */
+    /* contain at least one interest form selected parcour */
+    let suspectJobsSearchParam = null;
+    if (algoType === Job.ALGO_TYPE[0]) {
+      suspectJobsSearchParam = listInterest;
+    } else if (algoType === Job.ALGO_TYPE[1]) {
+      suspectJobsSearchParam = listInterestByFamilies;
+    } else {
+      suspectJobsSearchParam = uniq(
+        listInterest.concat(listInterestByFamilies)
+      );
+    }
+
+    const suspectJobs = await Job.find({
+      'interests._id': { $in: suspectJobsSearchParam }
+    });
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId
     });
 
-    const myJobs = matchingAlgo(suspectJobs, parcour, favoriteJobList);
+    const myJobs = matchingAlgo(
+      suspectJobs,
+      parcour,
+      formatFamilies,
+      favoriteJobList,
+      algoType
+    );
 
     return res.json(myJobs);
   } catch (error) {

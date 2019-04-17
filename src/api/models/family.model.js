@@ -77,6 +77,21 @@ familySchema.statics = {
     }
   },
 
+  listFamiliesInterests(families) {
+    return this.find({
+      _id: {
+        $in: families
+      }
+    })
+      .select('_id nom interests')
+      .populate({
+        path: 'interests',
+        populate: { path: 'interests' },
+        select: '_id nom'
+      })
+      .exec();
+  },
+
   /**
    * List posts in descending order of 'createdAt' timestamp.
    *

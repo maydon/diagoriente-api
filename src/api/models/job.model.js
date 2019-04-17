@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
 
+const ALGO_TYPE = ['interest', 'family', 'interest_family'];
+
 /**
  * Job Schema
  * @private
@@ -104,6 +106,7 @@ jobSchema.method({
 });
 
 jobSchema.statics = {
+  ALGO_TYPE,
   /**
    * Get job
    *
