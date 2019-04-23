@@ -1,10 +1,11 @@
 const httpStatus = require('http-status');
-const { omit } = require('lodash');
+const { omit, random } = require('lodash');
 const bcrypt = require('bcryptjs');
 const { mailer } = require('../middlewares/mailer');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
+const Question = require('../models/question.model');
 const { hashPassword } = require('../utils/Bcrypt');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -207,12 +208,66 @@ exports.renewPassword = async (req, res, next) => {
   }
 };
 
+exports.renewPasswordBySecretQuestion = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    const { question } = user;
+
+    if (!user && !question) {
+      /* user question exist */
+      await User.questionDosentExist();
+    }
+
+    const token = await User.generateTokenUserPassword(email);
+    const randomQuestion = random(0, question.lenght - 1);
+    const questionTitle = await Question.get(question[randomQuestion]._id);
+    const response = {
+      email,
+      question: {
+        _id: question[randomQuestion]._id,
+        title: questionTitle.title
+      },
+      ...token
+    };
+
+    res.json(response);
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updatePasswordBySecretQuestion = async (req, res, next) => {
+  try {
+    const { question, email, token, password } = req.body;
+    const user = await User.decodeTokenUserPassword(token);
+    const { question: storedQuestion } = user;
+
+    if (user && user.email === email) {
+      const storedQuestionById = storedQuestion.filter(
+        (item) => item._id === question._id
+      );
+
+      console.log('dif res', storedQuestionById);
+
+      if (storedQuestionById[0].response === question.response) {
+        user.password = await hashPassword(password);
+      } else {
+        await User.questionDosentExist();
+      }
+    }
+    const savedUser = await user.save();
+    res.json(savedUser.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.updatePassword = async (req, res, next) => {
   try {
     const { password } = req.body;
     const { token } = req.query;
-
-    console.log('token', token);
 
     const user = await User.decodeTokenUserPassword(token);
     if (user) {
@@ -223,6 +278,48 @@ exports.updatePassword = async (req, res, next) => {
     res.json(savedUser.transform());
   } catch (error) {
     next(error);
+  }
+};
+
+/**
+ * register new user
+ * @public
+ */
+exports.addUser = async (req, res, next) => {
+  try {
+    const {
+      email,
+      pseudo,
+      password,
+      firstName,
+      lastName,
+      question,
+      uniqId,
+      platform
+    } = req.body;
+
+    // throw error if email alrady exist
+    await User.checkDuplicateEmail(email, next);
+
+    const userProp = {
+      uniqId,
+      role: 'user',
+      platform,
+      email,
+      question,
+      password: await hashPassword(password),
+      profile: {
+        pseudo,
+        firstName,
+        lastName
+      }
+    };
+
+    const newUser = new User(userProp);
+    const savedUser = await newUser.save();
+    res.json(savedUser.transform());
+  } catch (e) {
+    next(e);
   }
 };
 

@@ -6,7 +6,8 @@ module.exports = {
   login: {
     body: {
       uniqId: Joi.string(),
-      platform: Joi.string().valid(User.platform)
+      platform: Joi.string().valid(User.platform),
+      email: Joi.string().email()
     }
   },
   // POST /v1/auth/admin
