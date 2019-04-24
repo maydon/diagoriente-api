@@ -1,0 +1,1 @@
+define({  "name": "trouvetavoie-apidoc",  "version": "1.2.2",  "description": "Express trouvetavoie RESTful APIs",  "sampleUrl": false,  "defaultVersion": "0.0.0",  "apidoc": "0.3.0",  "generator": {    "name": "apidoc",    "time": "2019-04-08T10:53:16.129Z",    "url": "http://apidocjs.com",    "version": "0.17.7"  }});

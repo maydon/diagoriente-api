@@ -1,0 +1,103 @@
+<!-- views/pages/index.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      .header {
+      }
+
+      .container {
+        width: 600px;
+        margin: auto;
+      }
+
+      .body {
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #9698f9;
+        padding-top: 10px;
+      }
+
+      p {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        color: black;
+      }
+
+      p.f {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+      }
+
+      .gras {
+        font-weight: 700;
+      }
+      .logos {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-left: 90px;
+      }
+
+      .logo {
+        height: 50px;
+        width: 150px;
+      }
+
+      .logo1 {
+        margin-top: 10px;
+        height: 40px;
+        width: 70px;
+      }
+
+      .logo2 {
+        height: 40px;
+        width: 120px;
+        margin-left: 10px;
+        margin-right: 10px;
+      }
+
+      .logo3 {
+        height: 40px;
+        width: 40px;
+      }
+    </style>
+  </head>
+  <body class="container">
+    <header class="header">
+      <img class="logo" src="cid:unique@groupe2" alt="App logo" />
+    </header>
+
+    <main>
+      <div class="body">
+        <p>Chère/Cher <span class="gras"><%=name%></span>,</p>
+        <p>
+          Le compte avec identifiant <span class="gras"><%=id%></span> a été
+          validée par l'adesse (<span class="gras"><%=email%></span>) avec
+          succès.
+        </p>
+        <p>Cordialement,</p>
+        <p>L’assistance DiagOriente</p>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <p class="f">DINSIC - Service du 1er Minister - Beta.gouv</p>
+
+      <div class="logos">
+        <img class="logo1" src="cid:unique@groupe1" alt="App logo" />
+
+        <img class="logo2" src="cid:unique@gpi2" alt="App logo" />
+
+        <img class="logo3" src="cid:unique@orangex2" alt="App logo" />
+      </div>
+    </footer>
+  </body>
+</html>
