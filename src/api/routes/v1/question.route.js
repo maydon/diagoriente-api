@@ -21,7 +21,7 @@ router
    * @apiHeader {String} Authorization  access token
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiParam  {Number{1-100}}      [perPage=1]  questions's per page
    *
    * @apiSuccess {Object[]}   List of Questions.
    *
@@ -30,7 +30,7 @@ router
    */
   .get(authorize(LOGGED_USER), validate(list), controller.list)
   /**
-   * @api {post} v1/families Create or update Questions
+   * @api {post} v1/questions Create or update Questions
    * @apiDescription Create a new Questions
    * @apiVersion 1.0.0
    * @apiName CreateQuestions
@@ -52,11 +52,11 @@ router
 router
   .route('/:questionId')
   /**
-   * @api {patch} v1/themes/:id Delete Question
+   * @api {delete} v1/questions/:id Delete Question
    * @apiDescription Delete a Question
    * @apiVersion 1.0.0
    * @apiName DeleteQuestion
-   * @apiGroup Question
+   * @apiGroup Questions
    * @apiPermission admin
    *
    *
