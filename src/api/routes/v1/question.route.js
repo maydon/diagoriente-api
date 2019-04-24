@@ -39,7 +39,9 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiSuccess {Object[]}  Questions      Questions object
+   * @apiParam  {String}      title question title (body)
+   *
+   * @apiSuccess {Object}  Questions      Questions object
    *
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
@@ -60,7 +62,7 @@ router
    *
    * @apiHeader {String} Authorization   access token
    *
-   * @apiParam  {String}      id id Question
+   * @apiParam  {String}      id id Question (query)
    *
    * @apiSuccess (No Content 204)  Successfully deleted
    *

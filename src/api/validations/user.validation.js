@@ -116,7 +116,7 @@ module.exports = {
       lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25),
       question: {
-        _id: Joi.string(),
+        _id: Joi.string().required(),
         response: Joi.string()
           .max(60)
           .required()

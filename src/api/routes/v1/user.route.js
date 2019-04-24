@@ -91,7 +91,7 @@ router
    * @apiParam  {String}       firstName    user firstName
    * @apiParam  {String}       lastName    user firstName
    * @apiParam  {String}       institution    user institution
-   * @apiParam  {String}       question    user renew password question
+   * @apiParam  {Object}       question    { _id (question) , response }
    *
    * @apiSuccess {Object[]}   user object.
    *
@@ -122,7 +122,7 @@ router
 router
   .route('/updatePassword')
   /**
-   * @api {post} v1/users/renewPassword renew password
+   * @api {post} v1/users/updatePassword renew password
    * @apiDescription send link renew password
    * @apiVersion 1.0.0
    * @apiName updatePassword
@@ -142,10 +142,10 @@ router
 router
   .route('/renewPasswordBySecretQuestion')
   /**
-   * @api {post} v1/users/renewPassword renew password
+   * @api {post} v1/users/renewPasswordBySecretQuestion renew password
    * @apiDescription send link renew password
    * @apiVersion 1.0.0
-   * @apiName renewPassword
+   * @apiName renewPasswordBySecretQuestion
    * @apiGroup User
    * @apiPermission user/advisor
    *
@@ -165,16 +165,19 @@ router
 router
   .route('/updatePasswordBySecretQuestion')
   /**
-   * @api {post} v1/users/renewPassword renew password
+   * @api {post} v1/users/updatePasswordBySecretQuestion renew password
    * @apiDescription send link renew password
    * @apiVersion 1.0.0
-   * @apiName updatePassword
+   * @apiName updatePasswordBySecretQuestion
    * @apiGroup User
    * @apiPermission user/advisor
    *
    * @apiHeader {String} Authorization  access token
    *
+   * @apiParam  {String}         email    user email
    * @apiParam  {String}         password    user password
+   * @apiParam  {String}         token    renew password token
+   * @apiParam  {Object}         question   { _id (question) , response }
    *
    * @apiSuccess {Object[]}   user object.
    *
