@@ -49,6 +49,16 @@ const userSchema = new mongoose.Schema(
       type: String,
       trim: true
     },
+    question: [
+      {
+        _id: { type: String },
+        response: {
+          type: String,
+          trim: true,
+          max: 60
+        }
+      }
+    ],
     profile: {
       pseudo: {
         type: String,
@@ -91,6 +101,7 @@ userSchema.method({
       'platform',
       'parcours',
       'profile',
+      'question',
       'createdAt'
     ];
 
@@ -334,6 +345,12 @@ userSchema.statics = {
     throw new APIError({
       message: 'id user and token dosent match ',
       status: httpStatus.CONFLICT
+    });
+  },
+
+  questionDosentExist() {
+    throw new APIError({
+      message: 'user missing security question'
     });
   },
 

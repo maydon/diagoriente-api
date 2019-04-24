@@ -14,6 +14,7 @@ const skillRoutes = require('./skill.route');
 const parcourRoutes = require('./parcour.route');
 const favoriteRoutes = require('./favorite.route');
 const mailerRoutes = require('./mailer.route');
+const questionsRoutes = require('./question.route');
 
 const router = express.Router();
 
@@ -43,6 +44,8 @@ router.use('/competences', competenceRoutes);
 router.use('/skills', skillRoutes);
 router.use('/parcours', parcourRoutes);
 router.use('/favorites', favoriteRoutes);
+router.use('/questions', questionsRoutes);
+
 router.use('/mailer', mailerRoutes);
 
 module.exports = router;

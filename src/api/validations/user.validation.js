@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const User = require('../models/user.model');
+Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {
   // GET /v1/users
@@ -97,6 +98,57 @@ module.exports = {
       firstName: Joi.string().max(30),
       lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25)
+    }
+  },
+
+  // Register new uset
+  addUser: {
+    body: {
+      uniqId: Joi.string().required(),
+      email: Joi.string()
+        .email()
+        .required(),
+      password: Joi.string()
+        .min(6)
+        .max(30)
+        .required(),
+      firstName: Joi.string().max(30),
+      lastName: Joi.string().max(30),
+      pseudo: Joi.string().max(25),
+      question: {
+        _id: Joi.string(),
+        response: Joi.string()
+          .max(60)
+          .required()
+      }
+    }
+  },
+
+  renewPasswordBySecretQuestion: {
+    body: {
+      email: Joi.string()
+        .email()
+        .required()
+    }
+  },
+  updatePasswordBySecretQuestion: {
+    body: {
+      password: Joi.string()
+        .min(6)
+        .required(),
+      token: Joi.string()
+        .min(10)
+        .required(),
+      // question response
+      question: {
+        _id: Joi.objectId().required(),
+        response: Joi.string()
+          .min(1)
+          .required()
+      },
+      email: Joi.string()
+        .email()
+        .required()
     }
   }
 };

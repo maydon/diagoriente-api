@@ -10,11 +10,14 @@ const {
 const {
   list,
   update,
+  addUser,
   addAdvisor,
   aprouvedUser,
   updateAdvisor,
   renewPassword,
-  updatePassword
+  updatePassword,
+  renewPasswordBySecretQuestion,
+  updatePasswordBySecretQuestion
 } = require('../../validations/user.validation');
 
 const router = express.Router();
@@ -72,6 +75,31 @@ router
   .post(authorize(ADMIN), validate(addAdvisor), controller.addAdvisor);
 
 router
+  .route('/addUser')
+  /**
+   * @api {post} v1/users/advisors add  user
+   * @apiDescription add new user
+   * @apiVersion 1.0.0
+   * @apiName AddUser
+   * @apiGroup User
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         email    user email
+   * @apiParam  {String}         password    user password
+   * @apiParam  {String}       firstName    user firstName
+   * @apiParam  {String}       lastName    user firstName
+   * @apiParam  {String}       institution    user institution
+   * @apiParam  {String}       question    user renew password question
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(authorize(LOGGED_USER), validate(addUser), controller.addUser);
+
+router
   .route('/renewPassword')
   /**
    * @api {post} v1/users/renewPassword renew password
@@ -110,6 +138,52 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
   .post(validate(updatePassword), controller.updatePassword);
+
+router
+  .route('/renewPasswordBySecretQuestion')
+  /**
+   * @api {post} v1/users/renewPassword renew password
+   * @apiDescription send link renew password
+   * @apiVersion 1.0.0
+   * @apiName renewPassword
+   * @apiGroup User
+   * @apiPermission user/advisor
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         email    advisor email
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(
+    validate(renewPasswordBySecretQuestion),
+    controller.renewPasswordBySecretQuestion
+  );
+
+router
+  .route('/updatePasswordBySecretQuestion')
+  /**
+   * @api {post} v1/users/renewPassword renew password
+   * @apiDescription send link renew password
+   * @apiVersion 1.0.0
+   * @apiName updatePassword
+   * @apiGroup User
+   * @apiPermission user/advisor
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         password    user password
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
+   */
+  .post(
+    validate(updatePasswordBySecretQuestion),
+    controller.updatePasswordBySecretQuestion
+  );
 
 router
   .route('/updateMe/:userId')
