@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/question.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const { list, create } = require('../../validations/question.validation');
+const { get, list, create } = require('../../validations/question.validation');
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.param('questionId', controller.load);
 router
   .route('/')
   /**
-   * @api {get} v1/questions List family rank
+   * @api {get} v1/questions List Question rank
    * @apiDescription Get a list of renew password questions
    * @apiVersion 1.0.0
    * @apiName ListQuestions
@@ -51,6 +51,23 @@ router
 
 router
   .route('/:questionId')
+  /**
+   * @api {get} v1/questions/:questionId get Question byID
+   * @apiDescription Get a questions byID
+   * @apiVersion 1.0.0
+   * @apiName GetQuestions
+   * @apiGroup Questions
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   *
+   * @apiSuccess {Object}    Questions Object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize(LOGGED_USER), controller.get)
   /**
    * @api {delete} v1/questions/:id Delete Question
    * @apiDescription Delete a Question

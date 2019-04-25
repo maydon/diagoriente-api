@@ -16,6 +16,12 @@ exports.load = async (req, res, next, id) => {
   }
 };
 
+/**
+ * Get question
+ * @public
+ */
+exports.get = (req, res) => res.json(req.locals.question.transform());
+
 exports.create = async (req, res, next) => {
   try {
     const question = new Question(req.body);
