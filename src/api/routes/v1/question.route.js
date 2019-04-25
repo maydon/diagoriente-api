@@ -2,7 +2,11 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/question.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const { get, list, create } = require('../../validations/question.validation');
+const {
+  update,
+  list,
+  create
+} = require('../../validations/question.validation');
 
 const router = express.Router();
 
@@ -30,7 +34,7 @@ router
    */
   .get(authorize(LOGGED_USER), validate(list), controller.list)
   /**
-   * @api {post} v1/questions Create or update Questions
+   * @api {post} v1/questions Create Questions
    * @apiDescription Create a new Questions
    * @apiVersion 1.0.0
    * @apiName CreateQuestions
@@ -68,6 +72,27 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize(LOGGED_USER), controller.get)
+  /**
+   * @api {post} v1/questions   update Questions
+   * @apiDescription Create a new Questions
+   * @apiVersion 1.0.0
+   * @apiName UpdateQuestions
+   * @apiGroup Questions
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   
+   * @apiParam  {String}      id id Question (query)
+
+   * @apiParam  {String}      title question title (body)
+   *
+   * @apiSuccess {Object}  Questions      Questions object
+   *
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .post(authorize(ADMIN), validate(create), controller.update)
   /**
    * @api {delete} v1/questions/:id Delete Question
    * @apiDescription Delete a Question
