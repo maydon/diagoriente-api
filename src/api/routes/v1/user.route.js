@@ -77,7 +77,7 @@ router
 router
   .route('/addUser')
   /**
-   * @api {post} v1/users/advisors add  user
+   * @api {post} v1/users/addUser add user
    * @apiDescription add new user
    * @apiVersion 1.0.0
    * @apiName AddUser
@@ -86,8 +86,8 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {String}         email    user email
-   * @apiParam  {String}         password    user password
+   * @apiParam  {String}        email    user email
+   * @apiParam  {String}       password    user password
    * @apiParam  {String}       firstName    user firstName
    * @apiParam  {String}       lastName    user firstName
    * @apiParam  {String}       institution    user institution
