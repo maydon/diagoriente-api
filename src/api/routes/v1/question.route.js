@@ -32,7 +32,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize(LOGGED_USER), validate(list), controller.list)
+  .get(validate(list), controller.list)
   /**
    * @api {post} v1/questions Create Questions
    * @apiDescription Create a new Questions
