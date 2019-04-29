@@ -97,7 +97,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
-  .post(authorize(LOGGED_USER), validate(addUser), controller.addUser);
+  .post(validate(addUser), controller.addUser);
 
 router
   .route('/renewPassword')
