@@ -104,7 +104,7 @@ module.exports = {
   // Register new uset
   addUser: {
     body: {
-      uniqId: Joi.string().required(),
+      uniqId: Joi.string(),
       email: Joi.string()
         .email()
         .required(),
