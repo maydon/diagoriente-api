@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const Question = require('../models/question.model');
+const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -16,6 +17,12 @@ exports.load = async (req, res, next, id) => {
   }
 };
 
+/**
+ * Get question
+ * @public
+ */
+exports.get = (req, res) => res.json(req.locals.question.transform());
+
 exports.create = async (req, res, next) => {
   try {
     const question = new Question(req.body);
@@ -27,8 +34,26 @@ exports.create = async (req, res, next) => {
     next(error);
   }
 };
+
 /**
- * List interest
+ * Update  question
+ * @public
+ */
+exports.update = async (req, res, next) => {
+  const { question } = req.locals;
+
+  try {
+    const newQuestion = omit(req.body, ['_id']);
+    const updated = Object.assign(question, newQuestion);
+    const saved = await updated.save();
+    res.json(saved.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * List questions
  * @public
  */
 
