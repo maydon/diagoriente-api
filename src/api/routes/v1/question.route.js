@@ -2,11 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/question.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
-const {
-  update,
-  list,
-  create
-} = require('../../validations/question.validation');
+const { list, create } = require('../../validations/question.validation');
 
 const router = express.Router();
 
