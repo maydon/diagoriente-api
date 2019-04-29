@@ -115,6 +115,7 @@ module.exports = {
       firstName: Joi.string().max(30),
       lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25),
+      institution:Joi.string().max(70),
       question: {
         _id: Joi.string().required(),
         response: Joi.string()

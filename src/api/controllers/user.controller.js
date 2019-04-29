@@ -1,13 +1,13 @@
 const httpStatus = require('http-status');
 const { omit, random } = require('lodash');
 const bcrypt = require('bcryptjs');
-const { mailer } = require('../middlewares/mailer');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
 const Question = require('../models/question.model');
 const { hashPassword } = require('../utils/Bcrypt');
 const { handler: errorHandler } = require('../middlewares/error');
+const { generateUniqueId } = require('../utils/uniqueId');
 
 /**
  * Load user and append to req.
@@ -163,7 +163,13 @@ exports.remove = (req, res, next) => {
 exports.aprouvedUser = async (req, res, next) => {
   try {
     const { user } = req.locals;
-    const { email, pseudo, password, firstName, lastName } = req.body;
+    const {
+      email,
+      pseudo,
+      password,
+      firstName,
+      lastName
+    } = req.body;
 
     user.profile = {
       pseudo,
@@ -172,7 +178,7 @@ exports.aprouvedUser = async (req, res, next) => {
     };
 
     // throw error if user alrady exist
-    //await User.checkDuplicateEmail(email, next);
+    // await User.checkDuplicateEmail(email, next);
 
     const parcour = await Parcour.find({ userId: user._id });
     user.email = email;
@@ -184,7 +190,7 @@ exports.aprouvedUser = async (req, res, next) => {
     }
 
     // send mail to new approuved user
-    //await mailer(email, user);
+    // await mailer(email, user);
     const savedUser = await user.save();
     res.json(savedUser.transform());
   } catch (e) {
@@ -240,7 +246,12 @@ exports.renewPasswordBySecretQuestion = async (req, res, next) => {
 
 exports.updatePasswordBySecretQuestion = async (req, res, next) => {
   try {
-    const { question, email, token, password } = req.body;
+    const {
+      question,
+      email,
+      token,
+      password
+    } = req.body;
     const user = await User.decodeTokenUserPassword(token);
     const { question: storedQuestion } = user;
 
@@ -286,6 +297,9 @@ exports.updatePassword = async (req, res, next) => {
  * @public
  */
 exports.addUser = async (req, res, next) => {
+  const payload = generateUniqueId();
+  const { uniqId } = payload;
+  const { platform } = payload;
   try {
     const {
       email,
@@ -294,8 +308,7 @@ exports.addUser = async (req, res, next) => {
       firstName,
       lastName,
       question,
-      uniqId,
-      platform
+      institution
     } = req.body;
 
     // throw error if email alrady exist
@@ -303,15 +316,16 @@ exports.addUser = async (req, res, next) => {
 
     const userProp = {
       uniqId,
-      role: 'user',
       platform,
+      role: 'user',
       email,
       question,
       password: await hashPassword(password),
       profile: {
         pseudo,
         firstName,
-        lastName
+        lastName,
+        institution
       }
     };
 

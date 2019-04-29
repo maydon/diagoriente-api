@@ -29,8 +29,7 @@ const userSchema = new mongoose.Schema(
     },
     platform: {
       type: String,
-      enum: platform,
-      required: true
+      enum: platform
     },
     uniqId: {
       type: String,
