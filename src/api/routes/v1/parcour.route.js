@@ -113,6 +113,30 @@ router
    */
   .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get)
   /**
+   * @api {post} v1/parcours/:parcourId' List Parcours
+   * @apiDescription update parcour
+   * @apiVersion 1.0.0
+   * @apiName UpdateParcours
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}            userId     Parcours  userId
+   * @apiParam  {Boolean}          completed    parcour completed or not
+   * @apiParam  {Object[]}          skills    skill's ids associated to parcour
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiSuccess {Object[]}   Parcour object.
+   *
+   * @apiSuccess {Object[]} parcour  parcour full object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .post(authorize([LOGGED_USER, ADVISOR]), validate(create), controller.update)
+  /**
    * @api {get} v1/parcours Delete Parcours
    * @apiDescription Delete Parcour
    * @apiVersion 1.0.0
