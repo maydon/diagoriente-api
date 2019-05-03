@@ -93,6 +93,7 @@ parcourSchema.statics = {
       const keyItem = item._id;
       competencesCartInitialized[keyItem] = {
         _id: keyItem,
+        title: item.title,
         value: 0,
         count: 0
       };
