@@ -11,6 +11,7 @@ const {
   list,
   get,
   create,
+  update,
   addFamilies,
   deleteParcour
 } = require('../../validations/parcour.validation');
@@ -135,7 +136,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(authorize([LOGGED_USER, ADVISOR]), validate(create), controller.update)
+  .post(authorize([LOGGED_USER, ADVISOR]), validate(update), controller.update)
   /**
    * @api {get} v1/parcours Delete Parcours
    * @apiDescription Delete Parcour

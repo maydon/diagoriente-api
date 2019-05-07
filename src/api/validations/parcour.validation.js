@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const Theme = require('../models/theme.model');
 
 module.exports = {
   // GET /v1/parcours
@@ -20,6 +21,26 @@ module.exports = {
         .unique(),
       completed: Joi.boolean()
     }
+  },
+  update: { 
+
+    body: {
+      skills: Joi.array().items(Joi.object({
+
+        type: Joi.string().valid(Theme.types),
+        theme: Joi.objectId(),
+        activities: Joi.array().items(Joi.objectId()),
+        competences: Joi.array().items({
+          _id: Joi.objectId().required(),
+          value: Joi.number()
+            .integer()
+            .min(1)
+            .max(4)
+        })
+      }) )
+
+    }
+
   },
 
   // get /v1/parcours/:id
