@@ -6,7 +6,9 @@ const Skill = require('../models/skill.model');
 
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const { omit, pick, differenceBy } = require('lodash');
+const {
+  omit, pick, differenceBy, isEqual
+} = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -46,7 +48,10 @@ exports.create = async (req, res, next) => {
   try {
     let parcourResponse = null;
 
-    const userParcour = await Parcour.findOne({ userId: user._id });
+    const userParcour = await Parcour.findOne({ userId: user._id }).populate({
+      path: 'skills',
+      populate: { path: 'theme activities' }
+    });
 
     if (userParcour) {
       parcourResponse = userParcour;
@@ -58,7 +63,6 @@ exports.create = async (req, res, next) => {
       parcourResponse = await parcour.save();
       res.status(httpStatus.CREATED);
     }
-
     res.json(parcourResponse.transform());
   } catch (error) {
     next(error);
@@ -95,13 +99,13 @@ exports.update = async (req, res, next) => {
 
     const updatePromise = skillsToUpdate.map((sk) => {
       const skill = parcourSkills.find(({ theme }) => sk.theme === theme);
-      return skill.update({ competences: sk.competences, activities: sk.activities });
+      return skill.updateOne({ competences: sk.competences, activities: sk.activities });
     });
 
     const deletePromise = skillsToDelete.map((skill) => skill.remove());
 
     const result = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
-    await currentParcours.update({ skill: result.map(({ _id }) => _id) });
+    await currentParcours.updateOne({ skill: result.map(({ _id }) => _id) });
 
     res.json({ ...currentParcours._doc, skills: result });
   } catch (error) {
