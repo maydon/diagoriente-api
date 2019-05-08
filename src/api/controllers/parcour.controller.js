@@ -2,12 +2,11 @@
 const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
-const skill = require('../models/skill.model');
- 
+const Skill = require('../models/skill.model');
 
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const { omit, pick } = require('lodash');
+const { omit, pick, differenceBy } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -71,47 +70,40 @@ exports.create = async (req, res, next) => {
  */
 exports.update = async (req, res, next) => {
   const { parcour } = req.locals;
- 
-   
 
   try {
-   // const newParcour = omit(req.body, ['_id', 'userId', 'advisorId']);
-      const { skills } = req.body;
-      
-    
-   const parcourWithThemes = await Parcour.findById(parcour._id).populate(
-     'skills',
-     'theme'
-   );
-    
-   if( parcourWithThemes.skills.length > 0 ){
+    const { skills } = req.body;
 
-   
-              parcourWithThemes.skills.forEach((item) => {
+    const [parcourSkills, currentParcours] = await Promise.all([
+      Skill.find({ parcourId: parcour._id }),
+      Parcour.findById(parcour._id).populate('skills', 'theme')
+    ]);
+    const skillsToAdd = skills.filter(({ theme }) => !parcourSkills.find((sk) => sk.theme === theme));
 
-                    
-                      
-              });
+    const skillsToUpdate = skills.filter(({ theme }) =>
+      parcourSkills.find((row) => row.theme === theme));
+    const skillsToDelete = differenceBy(
+      skills,
+      [...skillsToAdd, ...skillsToUpdate],
+      ({ theme }) => theme
+    ).map(({ theme }) => parcourSkills.find((skill) => skill.theme === theme));
 
-      }else{
+    const addPromise = skillsToAdd.map((sk) => {
+      const skill = new Skill({ ...sk, parcourId: parcour._id });
+      return skill.save();
+    });
 
-              //console.log(' skills ',skills);
-    
-         // const  newSkills = Object.assign(parcourWithThemes.skills, skills); 
-         const insertManySkills = await skill.insertMany(skills);
-         const newSkillsTab = insertManySkills.map((item) => item._id);
-         parcourWithThemes.skills = newSkillsTab;
-         await parcour.save();
-            
+    const updatePromise = skillsToUpdate.map((sk) => {
+      const skill = parcourSkills.find(({ theme }) => sk.theme === theme);
+      return skill.update({ competences: sk.competences, activities: sk.activities });
+    });
 
-      }
-       
-   //  const updatedParcour = Object.assign(parcour, newParcour);
-     
+    const deletePromise = skillsToDelete.map((skill) => skill.remove());
 
-   // const savedParcour = await updatedParcour.save();
-   //res.end();
-   res.json(skills );
+    const result = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
+    await currentParcours.update({ skill: result.map(({ _id }) => _id) });
+
+    res.json({ ...currentParcours._doc, skills: result });
   } catch (error) {
     next(error);
   }
