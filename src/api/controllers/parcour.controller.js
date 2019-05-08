@@ -6,9 +6,7 @@ const Skill = require('../models/skill.model');
 
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const {
-  omit, pick, differenceBy, isEqual
-} = require('lodash');
+const { pick, differenceBy } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -50,7 +48,8 @@ exports.create = async (req, res, next) => {
 
     const userParcour = await Parcour.findOne({ userId: user._id }).populate({
       path: 'skills',
-      populate: { path: 'theme activities' }
+      select: '-createdAt -updatedAt -__v',
+      populate: { path: 'theme activities', select: '-createdAt -updatedAt -__v' }
     });
 
     if (userParcour) {
@@ -78,10 +77,7 @@ exports.update = async (req, res, next) => {
   try {
     const { skills } = req.body;
 
-    const [parcourSkills, currentParcours] = await Promise.all([
-      Skill.find({ parcourId: parcour._id }),
-      Parcour.findById(parcour._id).populate('skills', 'theme')
-    ]);
+    const parcourSkills = await Skill.find({ parcourId: parcour._id });
     const skillsToAdd = skills.filter(({ theme }) => !parcourSkills.find((sk) => sk.theme === theme));
 
     const skillsToUpdate = skills.filter(({ theme }) =>
@@ -105,9 +101,16 @@ exports.update = async (req, res, next) => {
     const deletePromise = skillsToDelete.map((skill) => skill.remove());
 
     const result = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
-    await currentParcours.updateOne({ skill: result.map(({ _id }) => _id) });
+    const currentParcours = await Parcour.findOneAndUpdate(
+      { _id: parcour._id },
+      { skills: result.map(({ _id }) => _id) }
+    ).populate({
+      path: 'skills',
+      select: '-createdAt -updatedAt -__v',
+      populate: { path: 'theme activities', select: '-createdAt -updatedAt -__v' }
+    });
 
-    res.json({ ...currentParcours._doc, skills: result });
+    res.json(currentParcours.transform());
   } catch (error) {
     next(error);
   }
