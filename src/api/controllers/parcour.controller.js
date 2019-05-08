@@ -99,11 +99,12 @@ exports.update = async (req, res, next) => {
     });
 
     const deletePromise = skillsToDelete.map((skill) => skill.remove());
-
+    console.log({ skillsToUpdate, skillsToAdd, skillsToDelete });
     const result = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
     const currentParcours = await Parcour.findOneAndUpdate(
       { _id: parcour._id },
-      { skills: result.map(({ _id }) => _id) }
+      { skills: result.map(({ _id }) => _id) },
+      { new: true }
     ).populate({
       path: 'skills',
       select: '-createdAt -updatedAt -__v',
