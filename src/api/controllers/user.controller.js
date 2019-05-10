@@ -262,8 +262,7 @@ exports.updatePasswordBySecretQuestion = async (req, res, next) => {
 
 exports.updatePassword = async (req, res, next) => {
   try {
-    const { password } = req.body;
-    const { token } = req.query;
+    const { password, token } = req.body;
 
     const user = await User.decodeTokenUserPassword(token);
     if (user) {
