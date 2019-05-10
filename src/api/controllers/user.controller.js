@@ -87,10 +87,7 @@ exports.update = async (req, res, next) => {
       const existingHashedPassword = user.password;
 
       if (user.role === 'user') {
-        const comparePasswords = await bcrypt.compare(
-          oldHashedPassword,
-          existingHashedPassword
-        );
+        const comparePasswords = await bcrypt.compare(oldHashedPassword, existingHashedPassword);
         if (!comparePasswords) {
           User.errorPassword();
         }
@@ -130,12 +127,7 @@ exports.list = async (req, res, next) => {
 
     const querySearch = { role: reg };
 
-    const responstPagination = await pagination(
-      transformedUsers,
-      req.query,
-      User,
-      querySearch
-    );
+    const responstPagination = await pagination(transformedUsers, req.query, User, querySearch);
 
     res.json(responstPagination);
   } catch (error) {
@@ -164,11 +156,7 @@ exports.aprouvedUser = async (req, res, next) => {
   try {
     const { user } = req.locals;
     const {
-      email,
-      pseudo,
-      password,
-      firstName,
-      lastName
+      email, pseudo, password, firstName, lastName
     } = req.body;
 
     user.profile = {
@@ -216,25 +204,27 @@ exports.renewPassword = async (req, res, next) => {
 
 exports.renewPasswordBySecretQuestion = async (req, res, next) => {
   try {
-    const { email } = req.body;
-
+    const { email, question } = req.body;
     const user = await User.findOne({ email });
-    const { question } = user;
+    const userQuestion = user.question;
+
+    if (!question) {
+      /* user question exist */
+      await User.questionDosentExist();
+    }
 
     if (!user && !question) {
       /* user question exist */
       await User.questionDosentExist();
     }
+    if (userQuestion[0].response !== question.response) {
+      /* user question exist */
+      await User.questionDosentExist();
+    }
 
     const token = await User.generateTokenUserPassword(email);
-    const randomQuestion = random(0, question.lenght - 1);
-    const questionTitle = await Question.get(question[randomQuestion]._id);
     const response = {
       email,
-      question: {
-        _id: question[randomQuestion]._id,
-        title: questionTitle.title
-      },
       ...token
     };
 
@@ -247,18 +237,13 @@ exports.renewPasswordBySecretQuestion = async (req, res, next) => {
 exports.updatePasswordBySecretQuestion = async (req, res, next) => {
   try {
     const {
-      question,
-      email,
-      token,
-      password
+      question, email, token, password
     } = req.body;
     const user = await User.decodeTokenUserPassword(token);
     const { question: storedQuestion } = user;
 
     if (user && user.email === email) {
-      const storedQuestionById = storedQuestion.filter(
-        (item) => item._id === question._id
-      );
+      const storedQuestionById = storedQuestion.filter((item) => item._id === question._id);
 
       console.log('dif res', storedQuestionById);
 
@@ -302,13 +287,7 @@ exports.addUser = async (req, res, next) => {
   const { platform } = payload;
   try {
     const {
-      email,
-      pseudo,
-      password,
-      firstName,
-      lastName,
-      question,
-      institution
+      email, pseudo, password, firstName, lastName, question, institution
     } = req.body;
 
     // throw error if email alrady exist
@@ -384,10 +363,7 @@ exports.updateAdvisor = async (req, res, next) => {
       const existingHashedPassword = advisor.password;
 
       if (user.role === 'advisor') {
-        const comparePasswords = await bcrypt.compare(
-          oldHashedPassword,
-          existingHashedPassword
-        );
+        const comparePasswords = await bcrypt.compare(oldHashedPassword, existingHashedPassword);
         if (!comparePasswords) {
           User.errorPassword();
         }

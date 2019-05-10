@@ -151,7 +151,8 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {String}         email    advisor email
+   * @apiParam  {String}         email    user-email
+   * @apiParam  {Object}         question   user secret question
    *
    * @apiSuccess {Object[]}   user object.
    *

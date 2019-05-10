@@ -115,7 +115,7 @@ module.exports = {
       firstName: Joi.string().max(30),
       lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25),
-      institution:Joi.string().max(70),
+      institution: Joi.string().max(70),
       question: {
         _id: Joi.string().required(),
         response: Joi.string()
@@ -129,7 +129,13 @@ module.exports = {
     body: {
       email: Joi.string()
         .email()
-        .required()
+        .required(),
+      question: {
+        _id: Joi.objectId().required(),
+        response: Joi.string()
+          .min(1)
+          .required()
+      }
     }
   },
   updatePasswordBySecretQuestion: {
