@@ -1,6 +1,8 @@
 const User = require('../models/user.model');
 const RefreshToken = require('../models/refreshToken.model');
 const moment = require('moment-timezone');
+const httpStatus = require('http-status');
+const APIError = require('../utils/APIError');
 const { jwtExpirationInterval } = require('../../config/vars');
 
 /**
@@ -26,6 +28,12 @@ function generateTokenResponse(user, accessToken) {
 exports.login = async (req, res, next) => {
   try {
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
+    if (user.role) {
+      throw new APIError({
+        message: 'Incorrect email or password',
+        status: httpStatus.UNAUTHORIZED
+      });
+    }
     const token = generateTokenResponse(user, accessToken);
     const userTransformed = user.transform();
     return res.json({ token, user: userTransformed });
