@@ -28,7 +28,7 @@ function generateTokenResponse(user, accessToken) {
 exports.login = async (req, res, next) => {
   try {
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
-    if (user.role) {
+    if (user.role === 'advisor') {
       throw new APIError({
         message: 'Incorrect email or password',
         status: httpStatus.UNAUTHORIZED
