@@ -22,11 +22,10 @@ module.exports = {
       completed: Joi.boolean()
     }
   },
-  update: { 
-
+  update: {
     body: {
+      played: Joi.boolean(),
       skills: Joi.array().items(Joi.object({
-
         type: Joi.string().valid(Theme.types),
         theme: Joi.objectId(),
         activities: Joi.array().items(Joi.objectId()),
@@ -37,10 +36,8 @@ module.exports = {
             .min(1)
             .max(4)
         })
-      }) )
-
+      }))
     }
-
   },
 
   // get /v1/parcours/:id

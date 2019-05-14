@@ -17,7 +17,8 @@ const parcourSchema = new mongoose.Schema(
       default: false
     },
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
-    families: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }]
+    families: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }],
+    played: 'boolean'
   },
   {
     timestamps: true
@@ -41,7 +42,8 @@ parcourSchema.method({
       'globalCopmetences',
       'globalInterest',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
+      'played'
     ];
 
     fields.forEach((field) => {
@@ -139,9 +141,7 @@ parcourSchema.statics = {
    * @returns {Promise<Post[]>}
    */
   list({
-    page = 1,
-    perPage = 30,
-    role, _id
+    page = 1, perPage = 30, role, _id
   }) {
     const RolesSearch = {
       admin: {},
