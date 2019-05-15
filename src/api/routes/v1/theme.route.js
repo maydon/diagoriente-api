@@ -26,7 +26,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const uploadIcon = multer({ storage });
+const uploadIcon = multer({ storage, limits: { fieldSize: '8MB' } });
 
 const uploadTheme = multer({ encoding: 'binary' });
 
