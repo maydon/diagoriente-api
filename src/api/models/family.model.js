@@ -34,6 +34,7 @@ const familySchema = new mongoose.Schema(
     timestamps: true
   }
 );
+familySchema.index({ createdAt: 1 });
 
 /**
  * Methods

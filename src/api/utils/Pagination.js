@@ -1,5 +1,5 @@
 exports.pagination = async (list, query, model, querySearch) => {
-  const count = await model.count(querySearch);
+  const count = await model.countDocuments(querySearch);
   const perPage = query.perPage ? query.perPage : 30;
   const formated = {
     count,
