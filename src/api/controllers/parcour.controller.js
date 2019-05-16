@@ -45,6 +45,7 @@ exports.create = async (req, res, next) => {
   const { user } = req;
   try {
     let parcourResponse = null;
+    let advisorChange = false;
 
     const userParcour = await Parcour.findOne({ userId: user._id }).populate({
       path: 'skills',
@@ -53,6 +54,10 @@ exports.create = async (req, res, next) => {
     });
 
     if (userParcour) {
+      if (!userParcour.advisorId && req.body.advisorId) {
+        await userParcour.update({ advisorId: req.body.advisorId });
+        advisorChange = true;
+      }
       parcourResponse = userParcour;
 
       res.status(httpStatus.OK);
@@ -62,7 +67,12 @@ exports.create = async (req, res, next) => {
       parcourResponse = await parcour.save();
       res.status(httpStatus.CREATED);
     }
-    res.json(parcourResponse.transform());
+
+    const result = parcourResponse.transform();
+    if (advisorChange) {
+      result.advisorId = req.body.advisorId;
+    }
+    res.json(result);
   } catch (error) {
     next(error);
   }
@@ -107,7 +117,6 @@ exports.update = async (req, res, next) => {
 
     if (played) updateObject.played = played;
     if (skillsResult) updateObject.skills = skillsResult;
-    console.log({ updateObject });
 
     const currentParcours = await Parcour.findOneAndUpdate({ _id: parcour._id }, updateObject, {
       new: true

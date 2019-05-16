@@ -114,12 +114,7 @@ exports.list = async (req, res, next) => {
     const jobs = await Job.list(req.query);
     const transformedJobd = jobs.map((job) => job.transform());
 
-    const responsePagination = await pagination(
-      transformedJobd,
-      req.query,
-      Job,
-      {}
-    );
+    const responsePagination = await pagination(transformedJobd, req.query, Job, {});
 
     res.json(responsePagination);
   } catch (error) {
@@ -148,13 +143,11 @@ exports.myJob = async (req, res, next) => {
     const { families } = globalParcour;
 
     const listFamiliesInterests = await Family.listFamiliesInterests(families);
-    const formatFamilies = listFamiliesInterests.map((item, index) => (
-      {
-        _id: item._id,
-        interests: item.interests[0].id,
-        pExpInt: familiesRank[index].pExpInt
-      }
-    ));
+    const formatFamilies = listFamiliesInterests.map((item, index) => ({
+      _id: item._id,
+      interests: item.interests[0].id,
+      pExpInt: familiesRank[index].pExpInt
+    }));
 
     const listInterestByFamilies = formatFamilies.map(
       // pick only the firt item interest in family
@@ -170,26 +163,18 @@ exports.myJob = async (req, res, next) => {
     } else if (algoType === Job.ALGO_TYPE[1]) {
       suspectJobsSearchParam = listInterestByFamilies;
     } else {
-      suspectJobsSearchParam = uniq(
-        listInterest.concat(listInterestByFamilies)
-      );
+      suspectJobsSearchParam = uniq(listInterest.concat(listInterestByFamilies));
     }
 
     const suspectJobs = await Job.find({
       'interests._id': { $in: suspectJobsSearchParam }
-    });
+    }).populate('secteur');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId
     });
 
-    const myJobs = matchingAlgo(
-      suspectJobs,
-      parcour,
-      formatFamilies,
-      favoriteJobList,
-      algoType
-    );
+    const myJobs = matchingAlgo(suspectJobs, parcour, formatFamilies, favoriteJobList, algoType);
 
     res.json(myJobs);
   } catch (error) {
