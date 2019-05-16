@@ -85,7 +85,7 @@ exports.update = async (req, res, next) => {
   const { parcour } = req.locals;
 
   try {
-    const { skills, played } = req.body;
+    const { skills, played, families } = req.body;
     let skillsResult = null;
     if (skills) {
       const parcourSkills = await Skill.find({ parcourId: parcour._id });
@@ -117,6 +117,7 @@ exports.update = async (req, res, next) => {
 
     if (played) updateObject.played = played;
     if (skillsResult) updateObject.skills = skillsResult;
+    if (families) updateObject.families = families;
 
     const currentParcours = await Parcour.findOneAndUpdate({ _id: parcour._id }, updateObject, {
       new: true

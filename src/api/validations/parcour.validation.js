@@ -25,6 +25,9 @@ module.exports = {
   update: {
     body: {
       played: Joi.boolean(),
+      families: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
       skills: Joi.array().items(Joi.object({
         type: Joi.string().valid(Theme.types),
         theme: Joi.objectId(),
