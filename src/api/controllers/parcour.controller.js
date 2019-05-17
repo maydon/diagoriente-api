@@ -86,7 +86,6 @@ exports.update = async (req, res, next) => {
 
   try {
     const { skills, played, families } = req.body;
-    res.json({ families });
     let skillsResult = null;
     if (skills) {
       const parcourSkills = await Skill.find({ parcourId: parcour._id });
