@@ -16,8 +16,8 @@ exports.get = (req, res) => {
   /* select only one image if user is with role user */
 
   if (user.role === 'user') {
-    const randomResources = random(family.resources.length - 1);
-    family.resources = family.resources[randomResources];
+    //const randomResources = random(family.resources.length - 1);
+   // family.resources = family.resources;
   }
 
   res.json(family.transform());
