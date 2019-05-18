@@ -71,7 +71,11 @@ favoriteSchema.statics = {
   list({ page = 1, perPage = 30, _id }) {
     const search = _id ? { user: _id } : {};
     return this.find(search)
-      .populate('job')
+      .populate({
+        path: 'job',
+        model: 'Job',
+        populate: { path: 'secteur', model: 'Secteur', select: 'title' }
+      })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
