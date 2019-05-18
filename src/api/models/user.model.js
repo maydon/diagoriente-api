@@ -181,7 +181,7 @@ userSchema.statics = {
     const { uniqId, email, password } = options;
     if (!uniqId && !email) {
       throw new APIError({
-        message: 'An uniqId or email is required to generate a token'
+        message: 'Un uniqId ou un email est obligatoire pour générer un token'
       });
     }
     let user = null;
@@ -191,7 +191,7 @@ userSchema.statics = {
         return { user, accessToken: user.token() };
       }
       throw new APIError({
-        message: 'Incorrect email or password',
+        message: 'Email ou mot de passe incorrect',
         status: httpStatus.UNAUTHORIZED
       });
     } else {
@@ -214,7 +214,7 @@ userSchema.statics = {
     if (!user) {
       throw new APIError({
         message:
-          'user with valid email is required to generate a renewPasswordtoken',
+          'un utilisateur avec un email valide est obligatoire pour générer un nouveau token',
         status: httpStatus.UNAUTHORIZED
       });
     }
@@ -246,7 +246,7 @@ userSchema.statics = {
     const { email, password, refreshObject } = options;
     if (!email) {
       throw new APIError({
-        message: 'An email is required to generate a token'
+        message: 'Un email est obligatoire pour générer un token'
       });
     }
     const user = await this.findOne({ email }).exec();
@@ -255,22 +255,18 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        user &&
-        user.role === 'admin' &&
-        (await user.passwordMatches(password))
-      ) {
+      if (user && user.role === 'admin' && (await user.passwordMatches(password))) {
         return { user, accessToken: user.token() };
       }
-      err.message = 'Incorrect email or password';
+      err.message = 'Email ou mot de passe incorrect';
     } else if (refreshObject) {
       if (moment(refreshObject.expires).isBefore()) {
-        err.message = 'Invalid refresh token.';
+        err.message = 'Refresh token invalide';
       } else {
         return { user, accessToken: user.token() };
       }
     } else {
-      err.message = 'Incorrect admin email or refreshToken';
+      err.message = 'Email admin ou refreshToken invalide';
     }
     throw new APIError(err);
   },
@@ -290,22 +286,18 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        advisor &&
-        advisor.role === 'advisor' &&
-        (await advisor.passwordMatches(password))
-      ) {
+      if (advisor && advisor.role === 'advisor' && (await advisor.passwordMatches(password))) {
         return { advisor, accessToken: advisor.token() };
       }
-      err.message = 'Incorrect email or password';
+      err.message = 'Email ou mot de passe incorrect';
     } else if (refreshObject) {
       if (moment(refreshObject.expires).isBefore()) {
-        err.message = 'Invalid refresh token.';
+        err.message = 'Refresh token invalide';
       } else {
         return { advisor, accessToken: advisor.token() };
       }
     } else {
-      err.message = 'Incorrect userId or refreshToken';
+      err.message = 'userId ou refreshToken invalide';
     }
     throw new APIError(err);
   },
@@ -335,21 +327,21 @@ userSchema.statics = {
    */
   errorPassword() {
     throw new APIError({
-      message: 'new password dosent match the old one ',
+      message: "Le nouveau mot de passe ne correspond pas à l'ancien",
       status: httpStatus.CONFLICT
     });
   },
 
   forbidenUser() {
     throw new APIError({
-      message: 'id user and token dosent match ',
+      message: 'id utilisateur et token ne correspondent pas',
       status: httpStatus.CONFLICT
     });
   },
 
   questionDosentExist() {
     throw new APIError({
-      message: 'user missing security question'
+      message: 'Question de sécurité manquante'
     });
   },
 
@@ -365,7 +357,7 @@ userSchema.statics = {
       const user = await this.findOne({ email }).exec();
       if (user) {
         throw new APIError({
-          message: 'email already exists',
+          message: 'email existe déjà',
           status: httpStatus.CONFLICT
         });
       }

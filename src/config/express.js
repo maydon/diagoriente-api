@@ -47,7 +47,7 @@ passport.use('google', strategies.google);
 app.use('/v1', routes);
 
 // if error is not an instanceOf APIError, convert it.
-app.use(error.converter);
+// app.use(error.converter);
 
 // catch 404 and forward to error handler
 app.use(error.notFound);
