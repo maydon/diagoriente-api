@@ -74,7 +74,7 @@ favoriteSchema.statics = {
       .populate({
         path: 'job',
         model: 'Job',
-        populate: { path: 'secteur', model: 'Secteur', select: 'title' }
+        populate: { path: 'secteur', model: 'Secteur', select: ' _id title' }
       })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
