@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 
 module.exports = {
   // GET /v1/interest

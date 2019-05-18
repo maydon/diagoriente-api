@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 const Job = require('../models/job.model');
 
 module.exports = {

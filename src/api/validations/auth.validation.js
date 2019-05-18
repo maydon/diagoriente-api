@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 const User = require('../models/user.model');
 
 module.exports = {

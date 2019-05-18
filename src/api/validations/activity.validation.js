@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 const Activity = require('../models/activity.model');
 
 module.exports = {

@@ -32,7 +32,7 @@ exports.converter = (err, req, res, next) => {
   let convertedError = err;
   if (err instanceof expressValidation.ValidationError) {
     convertedError = new APIError({
-      message: 'Erreur de validation,veuillez renseigner les champs obligatoires.',
+      message: 'Erreur de validation, veuillez renseigner les champs obligatoires.',
       errors: err.errors,
       status: err.status,
       stack: err.stack
