@@ -48,7 +48,7 @@ favoriteSchema.statics = {
 
       if (mongoose.Types.ObjectId.isValid(id)) {
         family = await this.findById(id)
-          .populate('job', '_id title')
+          .populate('job')
           .exec();
       }
       if (family) return family;
