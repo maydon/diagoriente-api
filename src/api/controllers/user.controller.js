@@ -117,15 +117,19 @@ exports.update = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   try {
-    const { role } = req.query;
+    const { role, search } = req.query;
 
     const reg = new RegExp(role, 'i');
+    const reg1 = new RegExp(search, 'i');
 
-    const users = await User.list({ ...req.query, role });
+    const users = await User.list({ ...req.query });
 
     const transformedUsers = users.map((user) => user.transform());
 
-    const querySearch = { role: reg };
+    const querySearch = {
+      role: reg,
+      email: reg1
+    };
 
     const responstPagination = await pagination(transformedUsers, req.query, User, querySearch);
 

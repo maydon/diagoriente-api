@@ -213,8 +213,7 @@ userSchema.statics = {
     const user = await this.findOne({ email });
     if (!user) {
       throw new APIError({
-        message:
-          'user with valid email is required to generate a renewPasswordtoken',
+        message: 'user with valid email is required to generate a renewPasswordtoken',
         status: httpStatus.UNAUTHORIZED
       });
     }
@@ -255,11 +254,7 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        user &&
-        user.role === 'admin' &&
-        (await user.passwordMatches(password))
-      ) {
+      if (user && user.role === 'admin' && (await user.passwordMatches(password))) {
         return { user, accessToken: user.token() };
       }
       err.message = 'Incorrect email or password';
@@ -290,11 +285,7 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        advisor &&
-        advisor.role === 'advisor' &&
-        (await advisor.passwordMatches(password))
-      ) {
+      if (advisor && advisor.role === 'advisor' && (await advisor.passwordMatches(password))) {
         return { advisor, accessToken: advisor.token() };
       }
       err.message = 'Incorrect email or password';
@@ -317,11 +308,16 @@ userSchema.statics = {
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
    */
-  list({ page = 1, perPage = 30, role }) {
+  list({
+    page = 1, perPage = 30, role, search
+  }) {
     const reg = new RegExp(role, 'i');
+    const reg1 = new RegExp(search, 'i');
 
-    const querySearch = { role: reg };
-
+    const querySearch = {
+      role: reg,
+      email: reg1
+    };
     return this.find({ ...querySearch })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
