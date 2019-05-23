@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 const Theme = require('../models/theme.model');
 Joi.objectId = require('joi-objectid')(Joi);
 

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 const User = require('../models/user.model');
 Joi.objectId = require('joi-objectid')(Joi);
 
@@ -25,7 +25,6 @@ module.exports = {
   },
 
   updatePassword: {
-     
     body: {
       password: Joi.string().required(),
       token: Joi.string().required()

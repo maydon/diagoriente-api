@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('../utils/myJoi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 module.exports = {

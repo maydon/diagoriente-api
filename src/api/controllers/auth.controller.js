@@ -30,7 +30,7 @@ exports.login = async (req, res, next) => {
     const { user, accessToken } = await User.findAndGenerateToken(req.body);
     if (user.role !== 'user') {
       throw new APIError({
-        message: 'Incorrect email or password',
+        message: 'Email ou mot de passe incorrect',
         status: httpStatus.UNAUTHORIZED
       });
     }
