@@ -82,8 +82,7 @@ exports.remove = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   try {
     const actitvities = await Activity.list(req.query);
-    const transformedActivity = actitvities.map((actitvity) =>
-      actitvity.transform());
+    const transformedActivity = actitvities.map((actitvity) => actitvity.transform());
     const reg = new RegExp(req.query.search, 'i');
     const reg1 = new RegExp(req.query.type, 'i');
 

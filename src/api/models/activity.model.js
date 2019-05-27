@@ -21,6 +21,11 @@ const activitySchema = new mongoose.Schema(
       enum: types,
       required: true
     },
+    description: {
+      type: String,
+      trim: true,
+      maxlength: 300
+    },
     interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }],
     verified: {
       type: Boolean,
@@ -39,7 +44,7 @@ const activitySchema = new mongoose.Schema(
 activitySchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'title', 'type', 'interests', 'verified'];
+    const fields = ['_id', 'title', 'type', 'interests', 'verified', 'description'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -82,7 +87,9 @@ activitySchema.statics = {
    * @param {number} limit - Limit number of activities to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search, type }) {
+  list({
+    page = 1, perPage = 30, search, type
+  }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
 

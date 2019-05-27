@@ -24,7 +24,8 @@ module.exports = {
       type: Joi.string()
         .valid(Activity.types)
         .required(),
-      verified: Joi.boolean().required()
+      verified: Joi.boolean().required(),
+      description: Joi.string()
     }
   },
 
@@ -36,7 +37,8 @@ module.exports = {
       interests: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      verified: Joi.boolean().required()
+      verified: Joi.boolean().required(),
+      description: Joi.string()
     }
   }
 };
