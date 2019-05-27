@@ -96,7 +96,7 @@ themeSchema.statics = {
 
       if (mongoose.Types.ObjectId.isValid(id)) {
         theme = await this.findById(id)
-          .populate('activities', 'title type verified')
+          .populate('activities', 'title type verified description')
           .exec();
       }
       if (theme) return theme;
