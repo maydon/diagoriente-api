@@ -24,7 +24,8 @@ const activitySchema = new mongoose.Schema(
     description: {
       type: String,
       trim: true,
-      maxlength: 300
+      maxlength: 300,
+      default: null
     },
     interests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Interest' }],
     verified: {
