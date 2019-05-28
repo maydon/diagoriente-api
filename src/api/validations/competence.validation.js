@@ -21,7 +21,7 @@ module.exports = {
       rank: Joi.string().required(),
       niveau: Joi.array()
         .min(4)
-        .items({ title: Joi.string().required(), sub_title: Joi.string().required() }).required()
+        .items({ title: Joi.string().required(), sub_title: Joi.string() }).required()
     }
   },
 
@@ -34,7 +34,7 @@ module.exports = {
       rank: Joi.string().required(),
       niveau: Joi.array()
         .max(4)
-        .items({ title: Joi.string().required(), sub_title: Joi.string().required() })
+        .items({ title: Joi.string().required(), sub_title: Joi.string() })
     }
   }
 };
