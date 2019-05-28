@@ -23,7 +23,7 @@ const competenceSchema = new mongoose.Schema(
       {
         title: {
           type: String,
-          maxlength: 50,
+          maxlength: 150,
           trim: true,
           required: true
         },
