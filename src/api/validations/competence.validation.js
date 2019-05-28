@@ -21,20 +21,29 @@ module.exports = {
       rank: Joi.string().required(),
       niveau: Joi.array()
         .min(4)
-        .items({ title: Joi.string().required(), sub_title: Joi.string().optional().allow('') }).required()
+        .items({
+          title: Joi.string().required(),
+          sub_title: Joi.string()
+            .optional()
+            .allow('')
+        })
+        .required()
     }
   },
 
   // PATCH /v1/competences
   update: {
     body: {
-      title: Joi.string()
-        .max(50)
-        .required(),
-      rank: Joi.string().required(),
+      title: Joi.string().max(50),
+      rank: Joi.string(),
       niveau: Joi.array()
         .max(4)
-        .items({ title: Joi.string().required(), sub_title: Joi.string().optional().allow('') })
+        .items({
+          title: Joi.string().required(),
+          sub_title: Joi.string()
+            .optional()
+            .allow('')
+        })
     }
   }
 };
