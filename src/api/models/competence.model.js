@@ -30,8 +30,7 @@ const competenceSchema = new mongoose.Schema(
         sub_title: {
           type: String,
           maxlength: 250,
-          trim: true,
-          required: true
+          trim: true
         }
       }
     ]
