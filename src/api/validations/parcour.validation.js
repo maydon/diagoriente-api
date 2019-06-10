@@ -36,7 +36,7 @@ module.exports = {
           _id: Joi.objectId().required(),
           value: Joi.number()
             .integer()
-            .min(0)
+            .min(1)
             .max(4)
         })
       }))
