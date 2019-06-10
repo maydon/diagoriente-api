@@ -24,7 +24,7 @@ const addGlobals = async (entry) => {
       }
     });
 
-  const staticCompentences = await Competence.find({}).select('_id title');
+  const staticCompentences = await Competence.find({}).select('_id title niveau');
   let globalInterest = [];
 
   const formatSkills = skills.map((item) => {
