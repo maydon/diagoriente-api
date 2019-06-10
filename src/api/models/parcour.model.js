@@ -105,22 +105,23 @@ parcourSchema.statics = {
     });
 
     const competences = flatten(skills.map((item) => item.competences));
-    competences.forEach((item) => {
-      const refItem = competencesCartInitialized[item._id];
+    competences
+      .filter((item) => competencesCartInitialized[item._id])
+      .forEach((item) => {
+        const refItem = competencesCartInitialized[item._id];
+        /* increment count if competence is duplicated with positive velue */
+        if (item.value > 0) {
+          refItem.count += 1;
+          refItem.niveau = niveaux[item._id][item.value - 1];
+        }
+        /* increment count if competence is duplicated with positive velue */
 
-      /* increment count if competence is duplicated with positive velue */
-      if (item.value > 0) {
-        refItem.count += 1;
-        refItem.niveau = niveaux[item._id][item.value - 1];
-      }
-      /* increment count if competence is duplicated with positive velue */
-
-      /* pick max value competences */
-      if (refItem.value < item.value) {
-        competencesCartInitialized[item._id].value = item.value;
-      }
-      /* pick max value competences */
-    });
+        /* pick max value competences */
+        if (refItem.value < item.value) {
+          competencesCartInitialized[item._id].value = item.value;
+        }
+        /* pick max value competences */
+      });
 
     return Object.values(competencesCartInitialized);
   },
