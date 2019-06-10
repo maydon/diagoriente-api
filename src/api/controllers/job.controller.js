@@ -178,7 +178,15 @@ exports.myJob = async (req, res, next) => {
 
     const myJobs = matchingAlgo(suspectJobs, parcour, formatFamilies, favoriteJobList, algoType);
 
-    res.json(myJobs);
+    res.json(
+      myJobs.map((job) => {
+        const favorite = favoriteJobList.find((fav) => `${fav.job}` === `${job._id}`);
+        return {
+          ...job,
+          favoriteId: favorite ? favorite._id : null
+        };
+      })
+    );
   } catch (error) {
     next(error);
   }
