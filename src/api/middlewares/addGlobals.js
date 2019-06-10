@@ -49,7 +49,7 @@ const addGlobals = async (entry) => {
     skills: parcour.skills,
     competencesCart: staticCompentences
   });
-  console.log('*', parcour, '*%');
+
   return parcour;
 };
 
