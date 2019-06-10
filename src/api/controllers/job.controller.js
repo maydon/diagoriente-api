@@ -41,9 +41,11 @@ exports.get = async (req, res, next) => {
     });
 
     job.interested = null;
+    job.favoriteId = null;
 
     if (favoriteJob) {
       job.interested = favoriteJob.interested;
+      job.favoriteId = favoriteJob._id;
     }
 
     res.json(job.transform());

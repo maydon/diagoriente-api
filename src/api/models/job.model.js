@@ -72,7 +72,8 @@ jobSchema.method({
       'accessibility',
       'interests',
       'competences',
-      'formations'
+      'formations',
+      'favoriteId'
     ];
 
     fields.forEach((field) => {
