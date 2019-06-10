@@ -25,6 +25,7 @@ const addGlobals = async (entry) => {
     });
 
   const staticCompentences = await Competence.find({}).select('_id title niveau');
+
   let globalInterest = [];
 
   const formatSkills = skills.map((item) => {
@@ -48,7 +49,7 @@ const addGlobals = async (entry) => {
     skills: parcour.skills,
     competencesCart: staticCompentences
   });
-
+  console.log('*', parcour, '*%');
   return parcour;
 };
 

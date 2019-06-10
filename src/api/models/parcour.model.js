@@ -90,6 +90,7 @@ parcourSchema.statics = {
    */
   AddGlobalCompetence({ skills, competencesCart }) {
     const competencesCartInitialized = {};
+    const niveaux = {};
 
     competencesCart.forEach((item) => {
       const keyItem = item._id;
@@ -97,8 +98,10 @@ parcourSchema.statics = {
         _id: keyItem,
         title: item.title,
         value: 0,
-        count: 0
+        count: 0,
+        niveau: {}
       };
+      niveaux[keyItem] = item.niveau;
     });
 
     const competences = flatten(skills.map((item) => item.competences));
@@ -108,6 +111,7 @@ parcourSchema.statics = {
       /* increment count if competence is duplicated with positive velue */
       if (item.value > 0) {
         refItem.count += 1;
+        refItem.niveau = niveaux[item._id][item.value - 1];
       }
       /* increment count if competence is duplicated with positive velue */
 
