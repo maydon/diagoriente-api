@@ -12,12 +12,14 @@ const niveauCompetence = new mongoose.Schema({
     type: String,
     maxlength: 150,
     trim: true,
-    required: true
+    required: true,
+    default: ''
   },
   sub_title: {
     type: String,
     maxlength: 250,
-    trim: true
+    trim: true,
+    default: ''
   }
 });
 
