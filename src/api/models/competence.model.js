@@ -7,6 +7,20 @@ const httpStatus = require('http-status');
  * @private
  */
 
+const niveauCompetence = new mongoose.Schema({
+  title: {
+    type: String,
+    maxlength: 150,
+    trim: true,
+    required: true
+  },
+  sub_title: {
+    type: String,
+    maxlength: 250,
+    trim: true
+  }
+});
+
 const competenceSchema = new mongoose.Schema(
   {
     title: {
@@ -19,21 +33,15 @@ const competenceSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    niveau: [
-      {
-        title: {
-          type: String,
-          maxlength: 150,
-          trim: true,
-          required: true
-        },
-        sub_title: {
-          type: String,
-          maxlength: 250,
-          trim: true
-        }
-      }
-    ]
+    niveau: {
+      type: [niveauCompetence],
+      default: [
+        { title: '', sub_title: '' },
+        { title: '', sub_title: '' },
+        { title: '', sub_title: '' },
+        { title: '', sub_title: '' }
+      ]
+    }
   },
   {
     timestamps: true
