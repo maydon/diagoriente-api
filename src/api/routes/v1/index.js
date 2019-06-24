@@ -28,7 +28,7 @@ router.get('/status', (req, res) => res.send('OK'));
  */
 
 router.use('/docs', express.static(path.join(__dirname, '../../../../docs')));
-router.use('/icons', express.static(path.join(__dirname, '../../../uploads')));
+router.use('/icons', express.static(path.join(__dirname, '../../../../uploads')));
 router.use('/assets', express.static(path.join(__dirname, '../../../assets')));
 
 router.use('/auth', authRoutes);
