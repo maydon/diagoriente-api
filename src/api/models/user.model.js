@@ -312,19 +312,18 @@ userSchema.statics = {
   list({
     page = 1, perPage = 30, role, search
   }) {
-    const reg = new RegExp(role, 'i');
     const reg1 = new RegExp(search, 'i');
 
-    const querySearch = {
-      role: reg,
-      email: reg1
-    };
-    return this.find({ ...querySearch })
+    const querySearch = [
+      {email: {$exists:false}},
+      {email: reg1}
+    ];
+    return this.find({ role, $or: querySearch })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
-  },
+   },
 
   /**
    * incorect existing

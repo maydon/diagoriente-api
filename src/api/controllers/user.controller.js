@@ -119,16 +119,17 @@ exports.list = async (req, res, next) => {
   try {
     const { role, search } = req.query;
 
-    const reg = new RegExp(role, 'i');
     const reg1 = new RegExp(search, 'i');
-
+    
     const users = await User.list({ ...req.query });
 
     const transformedUsers = users.map((user) => user.transform());
-
     const querySearch = {
-      role: reg,
-      email: reg1
+      role,
+      $or: [
+        {email: {$exists:false}},
+        {email: reg1}
+      ]
     };
 
     const responstPagination = await pagination(transformedUsers, req.query, User, querySearch);
