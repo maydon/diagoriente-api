@@ -27,7 +27,17 @@ exports.load = async (req, res, next, id) => {
  * Get user
  * @public
  */
-exports.get = (req, res) => res.json(req.locals.user.transform());
+exports.get = async (req, res) => {
+  const parcourPromise = Parcour.find({ userId: req.locals.user.transform()._id })
+    .distinct('_id')
+    .exec();
+  const parcours = await Promise.all(parcourPromise);
+  const newUser = {
+    ...req.locals.user.transform(),
+    parcours
+  };
+  res.json(newUser);
+};
 
 /**
  * Get logged in user info
@@ -119,16 +129,23 @@ exports.list = async (req, res, next) => {
   try {
     const { role, search } = req.query;
 
-    const reg = new RegExp(role, 'i');
     const reg1 = new RegExp(search, 'i');
 
     const users = await User.list({ ...req.query });
 
-    const transformedUsers = users.map((user) => user.transform());
+    const parcourPromise = users.map((user) =>
+      Parcour.find({ userId: user._id })
+        .distinct('_id')
+        .exec());
 
+    const parcours = await Promise.all(parcourPromise);
+    const transformedUsers = users.map((user, index) => ({
+      ...user.transform(),
+      parcours: parcours[index]
+    }));
     const querySearch = {
-      role: reg,
-      email: reg1
+      role,
+      $or: [{ email: { $exists: false } }, { email: reg1 }]
     };
 
     const responstPagination = await pagination(transformedUsers, req.query, User, querySearch);
@@ -248,8 +265,6 @@ exports.updatePasswordBySecretQuestion = async (req, res, next) => {
 
     if (user && user.email === email) {
       const storedQuestionById = storedQuestion.filter((item) => item._id === question._id);
-
-      console.log('dif res', storedQuestionById);
 
       if (storedQuestionById[0].response === question.response) {
         user.password = await hashPassword(password);
