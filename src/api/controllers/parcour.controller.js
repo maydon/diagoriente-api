@@ -158,7 +158,7 @@ exports.remove = async (req, res, next) => {
   const { parcour } = req.locals;
   try {
     await User.findOneAndUpdate(
-      { _id: parcour.userId },
+      { _id: parcour.userId._id },
       {
         $pull: { parcours: parcour._id }
       }
