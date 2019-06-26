@@ -71,6 +71,7 @@ parcourSchema.statics = {
             select: '-resources',
             populate: { path: 'interests', select: '_id nom rank' }
           })
+          .populate('userId')
           .exec();
       }
       if (parcour) return parcour;
