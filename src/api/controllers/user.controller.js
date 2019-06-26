@@ -29,7 +29,7 @@ exports.load = async (req, res, next, id) => {
  */
 exports.get = async (req, res) => {
   const parcourPromise = Parcour.find({ userId: req.locals.user.transform()._id })
-    .distinct('_id')
+    .populate('parcours')
     .exec();
   const parcours = await Promise.all(parcourPromise);
   const newUser = {
@@ -135,7 +135,7 @@ exports.list = async (req, res, next) => {
 
     const parcourPromise = users.map((user) =>
       Parcour.find({ userId: user._id })
-        .distinct('_id')
+        .populate('parcours')
         .exec());
 
     const parcours = await Promise.all(parcourPromise);
