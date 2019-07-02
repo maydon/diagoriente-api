@@ -64,7 +64,7 @@ familySchema.statics = {
       let family;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        family = await this.findById(id)
+        family = await this.findOne({ _id: id, resources: { $exists: true, $ne: [] } })
           .populate('interests', '_id nom rank')
           .exec();
       }
@@ -82,7 +82,8 @@ familySchema.statics = {
     return this.find({
       _id: {
         $in: families
-      }
+      },
+      resources: { $exists: true, $ne: [] }
     })
       .select('_id nom interests')
       .populate({
@@ -103,7 +104,8 @@ familySchema.statics = {
   list({ page = 1, perPage = 30, search }) {
     const reg = new RegExp(search, 'i');
     return this.find({
-      $or: [{ nom: reg }, { rank: reg }]
+      $or: [{ nom: reg }, { rank: reg }],
+      resources: { $exists: true, $ne: [] }
     })
       .populate('interests', '_id nom rank')
       .select('-resources')
