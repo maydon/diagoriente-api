@@ -64,6 +64,11 @@ module.exports = {
       firstName: Joi.string().max(30),
       lastName: Joi.string().max(30),
       institution: Joi.string().max(70)
+    },
+    headers: {
+      context: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
     }
   },
   // PATCH /v1/users/advisors
@@ -120,6 +125,11 @@ module.exports = {
           .max(60)
           .required()
       }
+    },
+    headers: {
+      context: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
     }
   },
 

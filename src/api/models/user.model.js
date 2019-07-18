@@ -79,7 +79,8 @@ const userSchema = new mongoose.Schema(
         max: 30
       }
     },
-    parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }]
+    parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }],
+    context: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Context' }]
   },
   {
     timestamps: true
@@ -101,10 +102,11 @@ userSchema.method({
       'parcours',
       'profile',
       'question',
-      'createdAt'
+      'createdAt',
+      'context'
     ];
 
-    fields.forEach((field) => {
+    fields.forEach(field => {
       transformed[field] = this[field];
     });
 
@@ -255,7 +257,11 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (user && user.role === 'admin' && (await user.passwordMatches(password))) {
+      if (
+        user &&
+        user.role === 'admin' &&
+        (await user.passwordMatches(password))
+      ) {
         return { user, accessToken: user.token() };
       }
       err.message = 'Email ou mot de passe incorrect';
@@ -286,7 +292,11 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (advisor && advisor.role === 'advisor' && (await advisor.passwordMatches(password))) {
+      if (
+        advisor &&
+        advisor.role === 'advisor' &&
+        (await advisor.passwordMatches(password))
+      ) {
         return { advisor, accessToken: advisor.token() };
       }
       err.message = 'Email ou mot de passe incorrect';
@@ -309,21 +319,16 @@ userSchema.statics = {
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
    */
-  list({
-    page = 1, perPage = 30, role, search
-  }) {
+  list({ page = 1, perPage = 30, role, search }) {
     const reg1 = new RegExp(search, 'i');
 
-    const querySearch = [
-      {email: {$exists:false}},
-      {email: reg1}
-    ];
+    const querySearch = [{ email: { $exists: false } }, { email: reg1 }];
     return this.find({ role, $or: querySearch })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
-   },
+  },
 
   /**
    * incorect existing
