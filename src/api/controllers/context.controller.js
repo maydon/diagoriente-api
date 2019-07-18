@@ -47,8 +47,8 @@ exports.update = async (req, res, next) => {
   try {
     const newContext = omit(req.body, '_id');
     const updatedContext = Object.assign(context, newContext);
-    const savedActitvity = await updatedContext.save();
-    res.json(savedActitvity.transform());
+    const savedContext = await updatedContext.save();
+    res.json(savedContext.transform());
   } catch (error) {
     next(error);
   }
@@ -76,10 +76,8 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   try {
-    const actitvities = await Context.list(req.query);
-    const transformedContext = actitvities.map(actitvity =>
-      actitvity.transform()
-    );
+    const contexts = await Context.list(req.query);
+    const transformedContext = contexts.map(context => context.transform());
     const reg = new RegExp(req.query.search, 'i');
 
     const querySearch = { title: reg };

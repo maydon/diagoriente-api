@@ -320,7 +320,7 @@ exports.addUser = async (req, res, next) => {
         lastName,
         institution
       },
-      context
+      context: [context]
     };
 
     const newUser = new User(userProp);
@@ -351,7 +351,7 @@ exports.addAdvisor = async (req, res, next) => {
         lastName: body.lastName,
         institution: body.institution
       },
-      context: body.context
+      context: [body.context]
     };
 
     const advisor = new User(advisorProp);
