@@ -74,7 +74,10 @@ module.exports = {
         .required(),
       type: Joi.string()
         .valid(Theme.types)
-        .required()
+        .required(),
+      required: Joi.array()
+        .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
+        .default([])
     }
   },
 
@@ -91,7 +94,10 @@ module.exports = {
         .required(),
       activities: Joi.array()
         .items(Joi.objectId())
-        .unique()
+        .unique(),
+      required: Joi.array()
+        .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
+        .default([])
     }
   }
 };

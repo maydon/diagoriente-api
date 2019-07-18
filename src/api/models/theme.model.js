@@ -50,7 +50,8 @@ const themeSchema = new mongoose.Schema(
       default: true
     },
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
-    search: { type: String, trim: true }
+    search: { type: String, trim: true },
+    required: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }]
   },
   {
     timestamps: true
@@ -71,10 +72,11 @@ themeSchema.method({
       'type',
       'verified',
       'resources',
-      'activities'
+      'activities',
+      'required'
     ];
 
-    fields.forEach((field) => {
+    fields.forEach(field => {
       transformed[field] = this[field];
     });
 
@@ -118,13 +120,14 @@ themeSchema.statics = {
 
   async importThemes(data) {
     try {
-      const promisesActivities = data.map((item) =>
-        Activity.insertMany(item.activity));
+      const promisesActivities = data.map(item =>
+        Activity.insertMany(item.activity)
+      );
       const allPromisesActivities = await Promise.all(promisesActivities);
 
       const promisesThemes = data.map((item, index) => {
         const themeToIsert = item;
-        themeToIsert.activities = allPromisesActivities[index].map((x) => x._id);
+        themeToIsert.activities = allPromisesActivities[index].map(x => x._id);
         return this.insertMany(themeToIsert);
       });
       const allPromisesThemes = await Promise.all(promisesThemes);
@@ -155,14 +158,7 @@ themeSchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({
-    page = 1,
-    perPage = 30,
-    search,
-    type,
-    role,
-    population
-  }) {
+  list({ page = 1, perPage = 30, search, type, role, population }) {
     const reg = new RegExp(search, 'i');
     const reg1 = new RegExp(type, 'i');
     const reg2 = { $in: ['professional', 'personal'] };
@@ -170,9 +166,9 @@ themeSchema.statics = {
 
     const populateProp = population
       ? {
-        path: 'activities',
-        populate: { path: 'activities' }
-      }
+          path: 'activities',
+          populate: { path: 'activities' }
+        }
       : '';
 
     return this.find({
