@@ -24,7 +24,7 @@ router
    * @apiDescription Get a list of Contexts
    * @apiVersion 1.0.0
    * @apiName ListContexts
-   * @apiGroup Activity
+   * @apiGroup Context
    * @apiPermission admin / user
    *
    * @apiHeader {String} Authorization  access token
@@ -47,21 +47,21 @@ router
    * @apiDescription Create a new of Contexts
    * @apiVersion 1.0.0
    * @apiName CreateContexts
-   * @apiGroup Activity
+   * @apiGroup Context
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization  access token
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            title     Activity's title
-   * @apiParam  {String}            type     Activity's type ['professional', 'personal']
-   * @apiParam  {Boolean}           verified    Activity's verified
+   * @apiParam  {String}            title     Context's title
+   * @apiParam  {String}            type     Context's type ['professional', 'personal']
+   * @apiParam  {Boolean}           verified    Context's verified
    * @apiParam  {Object[]}          interests    interests's ids
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
-   * @apiSuccess {Object[]}   Activity object.
+   * @apiSuccess {Object[]}   Context object.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
@@ -74,13 +74,13 @@ router
    * @api {get} v1/contexts/:id patch Contexts
    * @apiDescription Get contexts information
    * @apiVersion 1.0.0
-   * @apiName GetIActivity
-   * @apiGroup Activity
+   * @apiName GetIContext
+   * @apiGroup Context
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            id     Activity id
+   * @apiParam  {String}            id     Context id
    * @apiParam  {Object[]}          interests    interests's ids
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
@@ -94,14 +94,14 @@ router
    * @apiDescription Get contexts information
    * @apiVersion 1.0.0
    * @apiName GetIContexts
-   * @apiGroup Activity
+   * @apiGroup Context
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            title     Activity's title
-   * @apiParam  {String}            type     Activity's type ['professional', 'personal']
-   * @apiParam  {Boolean}           verified    Activity's verified
+   * @apiParam  {String}            title     Context's title
+   * @apiParam  {String}            type     Context's type ['professional', 'personal']
+   * @apiParam  {Boolean}           verified    Context's verified
    * @apiParam  {Object[]}          interests    interests's ids
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
@@ -109,23 +109,6 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     Theme does not exist
    */
-  .patch(authorize(ADMIN), validate(update), controller.update)
-  /**
-   * @api {get} v1/contexts/:id Delete context
-   * @apiDescription Delete context information
-   * @apiVersion 1.0.0
-   * @apiName GetContexts
-   * @apiGroup Activity
-   * @apiPermission admin
-   *
-   * @apiHeader {String} Authorization   User's access token
-   *
-   * @apiParam  {String}      id id context
-   * @apiSuccess (No Content 204)  Successfully deleted
-   *
-   * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
-   * @apiError (Not Found 404)    NotFound     Theme does not exist
-   */
-  .delete(authorize(ADMIN), controller.remove);
+  .patch(authorize(ADMIN), validate(update), controller.update);
 
 module.exports = router;

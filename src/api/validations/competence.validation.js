@@ -27,6 +27,9 @@ module.exports = {
             .optional()
             .allow('')
         })
+        .required(),
+      color: Joi.string()
+        .regex(/^#[A-Fa-f0-9]{6}/)
         .required()
     }
   },
@@ -43,7 +46,8 @@ module.exports = {
           sub_title: Joi.string()
             .optional()
             .allow('')
-        })
+        }),
+      color: Joi.string().regex(/^#[A-Fa-f0-9]{6}/)
     }
   }
 };

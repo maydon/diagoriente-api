@@ -43,6 +43,10 @@ const competenceSchema = new mongoose.Schema(
         { title: '', sub_title: '' },
         { title: '', sub_title: '' }
       ]
+    },
+    color: {
+      type: String,
+      maxlength: 10
     }
   },
   {
@@ -56,9 +60,9 @@ const competenceSchema = new mongoose.Schema(
 competenceSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'title', 'rank', 'niveau'];
+    const fields = ['_id', 'title', 'rank', 'niveau', 'color'];
 
-    fields.forEach((field) => {
+    fields.forEach(field => {
       transformed[field] = this[field];
     });
 
