@@ -25,16 +25,13 @@ router
    * @apiVersion 1.0.0
    * @apiName ListContexts
    * @apiGroup Context
-   * @apiPermission admin / user
+   * @apiPermission admin / user / advisor
    *
    * @apiHeader {String} Authorization  access token
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiParam  {Number{1-100}}      [perPage=1]  context's per page
    * @apiParam  {String}  search      search param
-   * @apiParam  {String}  type      search by type param ['professional', 'personal']
-
-
    *
    * @apiSuccess {Object[]}   List of Contexts.
    *
@@ -43,7 +40,7 @@ router
    */
   .get(authorize([LOGGED_USER, ADVISOR]), validate(list), controller.list)
   /**
-   * @api {get} v1/contexts Create Contexts
+   * @api {post} v1/contexts Create Contexts
    * @apiDescription Create a new of Contexts
    * @apiVersion 1.0.0
    * @apiName CreateContexts
@@ -55,9 +52,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}            title     Context's title
-   * @apiParam  {String}            type     Context's type ['professional', 'personal']
-   * @apiParam  {Boolean}           verified    Context's verified
-   * @apiParam  {Object[]}          interests    interests's ids
+   * @apiParam  {String}            description     Context's description
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -81,7 +76,6 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}            id     Context id
-   * @apiParam  {Object[]}          interests    interests's ids
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
