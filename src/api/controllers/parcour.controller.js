@@ -31,6 +31,9 @@ exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
     const globalParcour = await addGlobals(parcour);
+    globalParcour.globalCopmetences.forEach((c) => {
+      c.taux = Math.round((c.count * 100) / parcour.skills.length);
+    });
     return res.json(globalParcour.transform());
   } catch (error) {
     next(error);
