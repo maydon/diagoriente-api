@@ -176,6 +176,11 @@ exports.myJob = async (req, res, next) => {
       user: user.role === 'user' ? user._id : parcour.userId
     });
 
+    parcour.skills.forEach((skill) => {
+      skill.competences.forEach((c) => {
+        if (c.value === 5) c.value = 0;
+      });
+    });
     const myJobs = matchingAlgo(suspectJobs, parcour, formatFamilies, favoriteJobList, algoType);
 
     res.json(

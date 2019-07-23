@@ -110,15 +110,19 @@ parcourSchema.statics = {
       .forEach((item) => {
         const refItem = competencesCartInitialized[item._id];
         /* increment count if competence is duplicated with positive velue */
-        if (item.value > 0) {
+        if (item.value === 5) {
           refItem.count += 1;
-          refItem.niveau = niveaux[item._id][item.value - 1];
-        }
-        /* increment count if competence is duplicated with positive velue */
-
-        /* pick max value competences */
-        if (refItem.value < item.value) {
-          competencesCartInitialized[item._id].value = item.value;
+          refItem.value = 5;
+        } else {
+          if (item.value > 0) {
+            refItem.count += 1;
+            refItem.niveau = niveaux[item._id][item.value - 1];
+          }
+          /* increment count if competence is duplicated with positive velue */
+          /* pick max value competences */
+          if (refItem.value < item.value) {
+            competencesCartInitialized[item._id].value = item.value;
+          }
         }
         /* pick max value competences */
       });

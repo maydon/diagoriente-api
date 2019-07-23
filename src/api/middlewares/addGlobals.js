@@ -23,7 +23,6 @@ const addGlobals = async (entry) => {
         select: 'rank nom'
       }
     });
-
   const staticCompentences = await Competence.find({}).select('_id title niveau');
 
   let globalInterest = [];
@@ -48,6 +47,14 @@ const addGlobals = async (entry) => {
   parcour.globalCopmetences = Parcour.AddGlobalCompetence({
     skills: parcour.skills,
     competencesCart: staticCompentences
+  });
+  parcour.globalCopmetences.forEach((gl) => {
+    if (gl.value === 5) gl.value = 0;
+  });
+  parcour.skills.forEach((skill) => {
+    skill.competences.forEach((c) => {
+      if (c.value === 5) c.value = 0;
+    });
   });
 
   return parcour;

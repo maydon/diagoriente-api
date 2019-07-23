@@ -2,10 +2,7 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/parcour.controller');
 const {
-  authorize,
-  ADVISOR,
-  LOGGED_USER,
-  ADMIN
+  authorize, ADVISOR, LOGGED_USER, ADMIN
 } = require('../../middlewares/auth');
 const {
   list,
@@ -13,7 +10,8 @@ const {
   create,
   update,
   addFamilies,
-  deleteParcour
+  deleteParcour,
+  updateCompetences
 } = require('../../validations/parcour.validation');
 
 const router = express.Router();
@@ -137,6 +135,30 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .post(authorize([LOGGED_USER, ADVISOR]), validate(update), controller.update)
+  /**
+   * @api {put} v1/parcours/:parcourId' Upadate Parcours Competences
+   * @apiDescription update parcour competences
+   * @apiVersion 1.0.0
+   * @apiName UpdateParcoursCompetences
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}            userId     Parcours  userId
+   * @apiParam  {Boolean}          completed    parcour completed or not
+   * @apiParam  {Object[]}          skills    skill's ids associated to parcour
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiSuccess {Object[]}   Parcour object.
+   *
+   * @apiSuccess {Object[]} parcour  parcour full object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .put(authorize([LOGGED_USER, ADVISOR]), validate(updateCompetences), controller.updateCompetences)
   /**
    * @api {get} v1/parcours Delete Parcours
    * @apiDescription Delete Parcour

@@ -133,6 +133,35 @@ exports.update = async (req, res, next) => {
   }
 };
 
+exports.updateCompetences = async (req, res, next) => {
+  const { parcour } = req.locals;
+  const { competences } = req.body;
+  try {
+    const skills = await Skill.find({
+      _id: { $in: parcour.skills }
+    });
+    const updatedSkills = [];
+    skills.forEach((skill) => {
+      skill.competences.forEach((c) => {
+        const nc = competences.find((com) => com._id.toString() === c._id.toString());
+        if (nc) {
+          c.value = nc.value;
+          updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
+        }
+      });
+    });
+    await Promise.all(updatedSkills);
+    const savedParcour = await Parcour.findById(parcour._id).populate({
+      path: 'skills',
+      select: '-createdAt -updatedAt -__v',
+      populate: { path: 'theme activities', select: '-createdAt -updatedAt -__v' }
+    });
+    res.json(savedParcour.transform());
+  } catch (error) {
+    next(error);
+  }
+};
+
 /**
  * add families to Parcour
  * @public

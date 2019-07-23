@@ -34,12 +34,20 @@ module.exports = {
         activities: Joi.array().items(Joi.objectId()),
         competences: Joi.array().items({
           _id: Joi.objectId().required(),
-          value: Joi.number()
-            .integer()
-            .min(1)
-            .max(4)
+          value: 5
         })
       }))
+    }
+  },
+
+  updateCompetences: {
+    body: {
+      competences: Joi.array().items({
+        _id: Joi.objectId().required(),
+        value: Joi.number()
+          .min(0)
+          .max(4)
+      })
     }
   },
 
