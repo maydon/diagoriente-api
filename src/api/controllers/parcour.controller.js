@@ -31,9 +31,20 @@ exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
     const globalParcour = await addGlobals(parcour);
+    const skills = await Skill.find({
+      _id: { $in: parcour.skills }
+    }).populate({ path: 'theme', select: 'title' });
     globalParcour.globalCopmetences.forEach((c) => {
       c.taux = Math.round((c.count * 100) / parcour.skills.length);
+      const themes = new Set();
+      skills.forEach((skill) => {
+        skill.competences.forEach((skc) => {
+          if (c._id.toString() === skc._id.toString()) themes.add(skill.theme.title);
+        });
+      });
+      c.themes = Array.from(themes);
     });
+
     return res.json(globalParcour.transform());
   } catch (error) {
     next(error);
