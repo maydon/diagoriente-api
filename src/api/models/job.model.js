@@ -49,7 +49,13 @@ const jobSchema = new mongoose.Schema(
         weight: { type: Number, min: 0, max: 1 }
       }
     ],
-    formations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }]
+    formations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }],
+    environments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Environment'
+      }
+    ]
   },
   {
     timestamps: true
@@ -73,7 +79,8 @@ jobSchema.method({
       'interests',
       'competences',
       'formations',
-      'favoriteId'
+      'favoriteId',
+      'environments'
     ];
 
     fields.forEach((field) => {
@@ -125,6 +132,7 @@ jobSchema.statics = {
           .populate('interests._id')
           .populate('competences._id', '_id title rank')
           .populate('secteur', '_id type title description')
+          .populate('environments', '_id title')
           .exec();
       }
       if (job) return job;
@@ -144,14 +152,20 @@ jobSchema.statics = {
    * @param {number} limit - Limit number of jobs to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search }) {
+  list({
+    page = 1, perPage = 30, search, environments
+  }) {
     const reg = new RegExp(search, 'i');
     return this.find({
-      $or: [{ title: reg }, { description: reg }]
+      $and: [
+        { $or: [{ title: reg }, { description: reg }] },
+        { environments: { $in: environments } }
+      ]
     })
       .populate('interests._id')
       .populate('competences._id', '_id title rank')
       .populate('secteur', '_id type title description')
+      .populate('environments', '_id title')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

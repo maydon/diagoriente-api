@@ -9,7 +9,10 @@ module.exports = {
       perPage: Joi.number()
         .min(1)
         .max(100),
-      search: Joi.string().empty('')
+      search: Joi.string().empty(''),
+      environments: Joi.array()
+        .items(Joi.objectId())
+        .unique()
     }
   },
 
@@ -24,7 +27,10 @@ module.exports = {
       parcourId: Joi.objectId().required(),
       algoType: Joi.string()
         .valid(Job.ALGO_TYPE)
-        .default('interest')
+        .default('interest'),
+      environments: Joi.array()
+        .items(Joi.objectId())
+        .unique()
     }
   },
 
@@ -58,6 +64,9 @@ module.exports = {
           .required()
       }),
       formations: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      environments: Joi.array()
         .items(Joi.objectId())
         .unique()
     }
@@ -93,6 +102,9 @@ module.exports = {
           .required()
       }),
       formations: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      environments: Joi.array()
         .items(Joi.objectId())
         .unique()
     }

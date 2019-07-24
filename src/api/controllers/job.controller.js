@@ -116,7 +116,13 @@ exports.list = async (req, res, next) => {
     const jobs = await Job.list(req.query);
     const transformedJobd = jobs.map((job) => job.transform());
 
-    const responsePagination = await pagination(transformedJobd, req.query, Job, {});
+    const { search, environments } = req.query;
+    const reg = new RegExp(search, 'i');
+    const querySearch = {
+      $and: [{ $or: [{ title: reg }, { description: reg }] }]
+    };
+    if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
+    const responsePagination = await pagination(transformedJobd, req.query, Job, querySearch);
 
     res.json(responsePagination);
   } catch (error) {
@@ -131,7 +137,7 @@ exports.list = async (req, res, next) => {
 
 exports.myJob = async (req, res, next) => {
   try {
-    const { parcourId, algoType } = req.query;
+    const { parcourId, algoType, environments } = req.query;
     const { user } = req;
     const parcour = await Parcour.findById(parcourId);
     if (!parcour) {
@@ -168,9 +174,12 @@ exports.myJob = async (req, res, next) => {
       suspectJobsSearchParam = uniq(listInterest.concat(listInterestByFamilies));
     }
 
-    const suspectJobs = await Job.find({
-      'interests._id': { $in: suspectJobsSearchParam }
-    }).populate('secteur');
+    const querySearch = {
+      $and: [{ 'interests._id': { $in: suspectJobsSearchParam } }]
+    };
+    if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
+
+    const suspectJobs = await Job.find(querySearch).populate('secteur');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId
@@ -178,6 +187,7 @@ exports.myJob = async (req, res, next) => {
 
     parcour.skills.forEach((skill) => {
       skill.competences.forEach((c) => {
+        // eslint-disable-next-line no-param-reassign
         if (c.value === 5) c.value = 0;
       });
     });
