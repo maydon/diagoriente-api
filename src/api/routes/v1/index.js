@@ -16,6 +16,7 @@ const favoriteRoutes = require('./favorite.route');
 const mailerRoutes = require('./mailer.route');
 const questionsRoutes = require('./question.route');
 const contextsRoutes = require('./context.route');
+const environmentsRoutes = require('./environment.route');
 
 const router = express.Router();
 
@@ -47,6 +48,7 @@ router.use('/parcours', parcourRoutes);
 router.use('/favorites', favoriteRoutes);
 router.use('/questions', questionsRoutes);
 router.use('/contexts', contextsRoutes);
+router.use('/environments', environmentsRoutes);
 
 router.use('/mailer', mailerRoutes);
 
