@@ -87,10 +87,7 @@ exports.update = async (req, res, next) => {
       const existingHashedPassword = user.password;
 
       if (user.role === 'user') {
-        const comparePasswords = await bcrypt.compare(
-          oldHashedPassword,
-          existingHashedPassword
-        );
+        const comparePasswords = await bcrypt.compare(oldHashedPassword, existingHashedPassword);
         if (!comparePasswords) {
           User.errorPassword();
         }
@@ -126,18 +123,13 @@ exports.list = async (req, res, next) => {
 
     const users = await User.list({ ...req.query });
 
-    const transformedUsers = users.map(user => user.transform());
+    const transformedUsers = users.map((user) => user.transform());
     const querySearch = {
       role,
       $or: [{ email: { $exists: false } }, { email: reg1 }]
     };
 
-    const responstPagination = await pagination(
-      transformedUsers,
-      req.query,
-      User,
-      querySearch
-    );
+    const responstPagination = await pagination(transformedUsers, req.query, User, querySearch);
 
     res.json(responstPagination);
   } catch (error) {
@@ -155,7 +147,7 @@ exports.remove = (req, res, next) => {
   user
     .remove()
     .then(() => res.status(httpStatus.NO_CONTENT).end())
-    .catch(e => next(e));
+    .catch((e) => next(e));
 };
 
 /**
@@ -165,7 +157,9 @@ exports.remove = (req, res, next) => {
 exports.aprouvedUser = async (req, res, next) => {
   try {
     const { user } = req.locals;
-    const { email, pseudo, password, firstName, lastName } = req.body;
+    const {
+      email, pseudo, password, firstName, lastName
+    } = req.body;
 
     user.profile = {
       pseudo,
@@ -244,14 +238,14 @@ exports.renewPasswordBySecretQuestion = async (req, res, next) => {
 
 exports.updatePasswordBySecretQuestion = async (req, res, next) => {
   try {
-    const { question, email, token, password } = req.body;
+    const {
+      question, email, token, password
+    } = req.body;
     const user = await User.decodeTokenUserPassword(token);
     const { question: storedQuestion } = user;
 
     if (user && user.email === email) {
-      const storedQuestionById = storedQuestion.filter(
-        item => item._id === question._id
-      );
+      const storedQuestionById = storedQuestion.filter((item) => item._id === question._id);
 
       console.log('dif res', storedQuestionById);
 
@@ -303,7 +297,7 @@ exports.addUser = async (req, res, next) => {
       institution,
       context
     } = req.body;
-
+    const thecontext = context || '5d2726337cdd133827c1fb03';
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
 
@@ -320,7 +314,7 @@ exports.addUser = async (req, res, next) => {
         lastName,
         institution
       },
-      context: [context]
+      context: [thecontext]
     };
 
     const newUser = new User(userProp);
@@ -351,7 +345,7 @@ exports.addAdvisor = async (req, res, next) => {
         lastName: body.lastName,
         institution: body.institution
       },
-      context: [body.context]
+      context: [body.context || '5d2726337cdd133827c1fb03']
     };
 
     const advisor = new User(advisorProp);
@@ -379,10 +373,7 @@ exports.updateAdvisor = async (req, res, next) => {
       const existingHashedPassword = advisor.password;
 
       if (user.role === 'advisor') {
-        const comparePasswords = await bcrypt.compare(
-          oldHashedPassword,
-          existingHashedPassword
-        );
+        const comparePasswords = await bcrypt.compare(oldHashedPassword, existingHashedPassword);
         if (!comparePasswords) {
           User.errorPassword();
         }

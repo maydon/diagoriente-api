@@ -66,9 +66,7 @@ module.exports = {
       institution: Joi.string().max(70)
     },
     headers: {
-      context: Joi.string()
-        .regex(/^[a-fA-F0-9]{24}$/)
-        .required()
+      context: Joi.string().regex(/^[a-fA-F0-9]{24}$/)
     }
   },
   // PATCH /v1/users/advisors
@@ -127,9 +125,7 @@ module.exports = {
       }
     },
     headers: {
-      context: Joi.string()
-        .regex(/^[a-fA-F0-9]{24}$/)
-        .required()
+      context: Joi.string().regex(/^[a-fA-F0-9]{24}$/)
     }
   },
 
