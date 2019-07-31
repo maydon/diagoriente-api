@@ -99,7 +99,8 @@ parcourSchema.statics = {
         title: item.title,
         value: 0,
         count: 0,
-        niveau: {}
+        niveau: {},
+        color: item.color
       };
       niveaux[keyItem] = item.niveau;
     });

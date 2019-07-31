@@ -23,7 +23,7 @@ const addGlobals = async (entry) => {
         select: 'rank nom'
       }
     });
-  const staticCompentences = await Competence.find({}).select('_id title niveau');
+  const staticCompentences = await Competence.find({}).select('_id title niveau color');
 
   let globalInterest = [];
 
