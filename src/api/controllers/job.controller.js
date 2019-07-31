@@ -179,7 +179,9 @@ exports.myJob = async (req, res, next) => {
     };
     if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
 
-    const suspectJobs = await Job.find(querySearch).populate('secteur');
+    const suspectJobs = await Job.find(querySearch)
+      .populate('secteur')
+      .populate('environments', '_id title');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId
@@ -196,6 +198,7 @@ exports.myJob = async (req, res, next) => {
     res.json(
       myJobs.map((job) => {
         const favorite = favoriteJobList.find((fav) => `${fav.job}` === `${job._id}`);
+        if (favorite) favorite.environments = suspectJobs.find((sj) => `${sj.id}` === `${job._id}`);
         return {
           ...job,
           favoriteId: favorite ? favorite._id : null

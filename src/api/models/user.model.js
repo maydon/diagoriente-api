@@ -106,7 +106,7 @@ userSchema.method({
       'context'
     ];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       transformed[field] = this[field];
     });
 
@@ -158,7 +158,9 @@ userSchema.statics = {
       let user;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        user = await this.findById(id).exec();
+        user = await this.findById(id)
+          .populate('context')
+          .exec();
       }
       if (user) {
         return user;
@@ -257,11 +259,7 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        user &&
-        user.role === 'admin' &&
-        (await user.passwordMatches(password))
-      ) {
+      if (user && user.role === 'admin' && (await user.passwordMatches(password))) {
         return { user, accessToken: user.token() };
       }
       err.message = 'Email ou mot de passe incorrect';
@@ -292,11 +290,7 @@ userSchema.statics = {
       isPublic: true
     };
     if (password) {
-      if (
-        advisor &&
-        advisor.role === 'advisor' &&
-        (await advisor.passwordMatches(password))
-      ) {
+      if (advisor && advisor.role === 'advisor' && (await advisor.passwordMatches(password))) {
         return { advisor, accessToken: advisor.token() };
       }
       err.message = 'Email ou mot de passe incorrect';
@@ -319,11 +313,14 @@ userSchema.statics = {
    * @param {number} limit - Limit number of users to be returned.
    * @returns {Promise<User[]>}
    */
-  list({ page = 1, perPage = 30, role, search }) {
+  list({
+    page = 1, perPage = 30, role, search
+  }) {
     const reg1 = new RegExp(search, 'i');
 
     const querySearch = [{ email: { $exists: false } }, { email: reg1 }];
     return this.find({ role, $or: querySearch })
+      .populate('context')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
