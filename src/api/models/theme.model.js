@@ -51,7 +51,7 @@ const themeSchema = new mongoose.Schema(
     },
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
     search: { type: String, trim: true },
-    required: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }]
+    requiredCompetences: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }]
   },
   {
     timestamps: true
@@ -73,7 +73,7 @@ themeSchema.method({
       'verified',
       'resources',
       'activities',
-      'required'
+      'requiredCompetences'
     ];
 
     fields.forEach(field => {
@@ -99,7 +99,7 @@ themeSchema.statics = {
       if (mongoose.Types.ObjectId.isValid(id)) {
         theme = await this.findById(id)
           .populate('activities', 'title type verified description')
-          .populate('required')
+          .populate('requiredCompetences')
           .exec();
       }
       if (theme) return theme;
