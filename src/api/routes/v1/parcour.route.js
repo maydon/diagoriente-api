@@ -24,14 +24,14 @@ router
    * @api {get} v1/parcours List Parcours
    * @apiDescription Get a list of Parcours
    * @apiVersion 1.0.0
-   * @apiName ListActivities
+   * @apiName ListParcours
    * @apiGroup Parcour
    * @apiPermission  user
    *
    * @apiHeader {String} Authorization  access token
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiParam  {Number{1-100}}      [perPage=1]  parcours per page
    *
    * @apiSuccess {Object[]}   List of parcours.
    *
@@ -93,10 +93,10 @@ router
 router
   .route('/:parcourId')
   /**
-   * @api {get} v1/parcours List Parcours
-   * @apiDescription Get a list of Parcours
+   * @api {get} v1/parcours Get Parcours
+   * @apiDescription Get a Parcours
    * @apiVersion 1.0.0
-   * @apiName ListParcours
+   * @apiName GetParcours
    * @apiGroup Parcour
    * @apiPermission  user
    *
@@ -112,7 +112,7 @@ router
    */
   .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get)
   /**
-   * @api {post} v1/parcours/:parcourId' List Parcours
+   * @api {post} v1/parcours/:parcourId' Update Parcours
    * @apiDescription update parcour
    * @apiVersion 1.0.0
    * @apiName UpdateParcours
@@ -131,6 +131,7 @@ router
    *
    * @apiSuccess {Object[]} parcour  parcour full object.
    *
+   * @apiError (Bad Request 400)  BadRequest  wrong value for wrong type of skill
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
@@ -145,9 +146,7 @@ router
    *
    * @apiHeader {String} Authorization  access token
    *
-   * @apiParam  {String}            userId     Parcours  userId
-   * @apiParam  {Boolean}          completed    parcour completed or not
-   * @apiParam  {Object[]}          skills    skill's ids associated to parcour
+   * @apiParam  {Object[]}          competences    array with objects having _id and value
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
