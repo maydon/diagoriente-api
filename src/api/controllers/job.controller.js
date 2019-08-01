@@ -116,12 +116,13 @@ exports.list = async (req, res, next) => {
     const jobs = await Job.list(req.query);
     const transformedJobd = jobs.map((job) => job.transform());
 
-    const { search, environments } = req.query;
+    const { search, environments, secteur } = req.query;
     const reg = new RegExp(search, 'i');
     const querySearch = {
       $and: [{ $or: [{ title: reg }, { description: reg }] }]
     };
     if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
+    if (secteur !== undefined) querySearch.$and.push({ secteur: { $in: secteur } });
     const responsePagination = await pagination(transformedJobd, req.query, Job, querySearch);
 
     res.json(responsePagination);
@@ -137,7 +138,9 @@ exports.list = async (req, res, next) => {
 
 exports.myJob = async (req, res, next) => {
   try {
-    const { parcourId, algoType, environments } = req.query;
+    const {
+      parcourId, algoType, environments, secteur
+    } = req.query;
     const { user } = req;
     const parcour = await Parcour.findById(parcourId);
     if (!parcour) {
@@ -178,6 +181,7 @@ exports.myJob = async (req, res, next) => {
       $and: [{ 'interests._id': { $in: suspectJobsSearchParam } }]
     };
     if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
+    if (secteur !== undefined) querySearch.$and.push({ secteur: { $in: secteur } });
 
     const suspectJobs = await Job.find(querySearch)
       .populate('secteur')

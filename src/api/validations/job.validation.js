@@ -12,6 +12,9 @@ module.exports = {
       search: Joi.string().empty(''),
       environments: Joi.array()
         .items(Joi.objectId())
+        .unique(),
+      secteur: Joi.array()
+        .items(Joi.objectId())
         .unique()
     }
   },
@@ -29,6 +32,9 @@ module.exports = {
         .valid(Job.ALGO_TYPE)
         .default('interest'),
       environments: Joi.array()
+        .items(Joi.objectId())
+        .unique(),
+      secteur: Joi.array()
         .items(Joi.objectId())
         .unique()
     }

@@ -153,12 +153,13 @@ jobSchema.statics = {
    * @returns {Promise<Post[]>}
    */
   list({
-    page = 1, perPage = 30, search, environments
+    page = 1, perPage = 30, search, environments, secteur
   }) {
     const reg = new RegExp(search, 'i');
     return this.find({
       $and: [
         { $or: [{ title: reg }, { description: reg }] },
+        { secteur: { $in: secteur } },
         { environments: { $in: environments } }
       ]
     })
