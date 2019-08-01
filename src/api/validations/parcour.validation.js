@@ -34,7 +34,9 @@ module.exports = {
         activities: Joi.array().items(Joi.objectId()),
         competences: Joi.array().items({
           _id: Joi.objectId().required(),
-          value: 5
+          value: Joi.number()
+            .min(1)
+            .max(5)
         })
       }))
     }

@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 const httpStatus = require('http-status');
+const APIError = require('../utils/APIError');
 const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
 const Skill = require('../models/skill.model');
@@ -103,6 +104,23 @@ exports.update = async (req, res, next) => {
     let skillsResult = null;
     if (skills) {
       const parcourSkills = await Skill.find({ parcourId: parcour._id });
+      skills.forEach((sk) => {
+        const skill = parcourSkills.find((ps) => `${ps.theme}` === `${sk.theme}`);
+        if (skill) {
+          if (skill.type === 'professional' && sk.competences.filter((c) => c.value > 4).length) {
+            throw new APIError({
+              message: `Pas autorisé à avoir valeur 5 pour skill pro: ${skill._id}`,
+              status: httpStatus.BAD_REQUEST
+            });
+          }
+          if (skill.type === 'personal' && sk.competences.filter((c) => c.value !== 5).length) {
+            throw new APIError({
+              message: `la valeur doit être 5 pour skill perso: ${skill._id}`,
+              status: httpStatus.BAD_REQUEST
+            });
+          }
+        }
+      });
       const skillsToAdd = skills.filter(({ theme }) => !parcourSkills.find((sk) => sk.theme === theme));
 
       const skillsToUpdate = skills.filter(({ theme }) =>
@@ -152,7 +170,8 @@ exports.updateCompetences = async (req, res, next) => {
   const { competences } = req.body;
   try {
     const skills = await Skill.find({
-      _id: { $in: parcour.skills }
+      _id: { $in: parcour.skills },
+      type: 'personal'
     });
     const updatedSkills = [];
     skills.forEach((skill) => {
