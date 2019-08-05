@@ -8,7 +8,10 @@ module.exports = {
       page: Joi.number().min(1),
       perPage: Joi.number()
         .min(1)
-        .max(100)
+        .max(100),
+      type: Joi.string()
+        .valid(Theme.types)
+        .default('personal')
     }
   },
 
@@ -55,6 +58,11 @@ module.exports = {
 
   // get /v1/parcours/:id
   get: {
+    query: {
+      type: Joi.string()
+        .valid(Theme.types)
+        .default('personal')
+    },
     params: {
       parcourId: Joi.string()
         .regex(/^[a-fA-F0-9]{24}$/)

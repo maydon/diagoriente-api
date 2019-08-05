@@ -8,9 +8,9 @@ const { reduceId } = require('../utils/reduceId');
  * add global compentences and interest to parcour object
  * @public
  */
-const addGlobals = async (entry) => {
+const addGlobals = async (entry, type) => {
   const parcour = entry;
-  const skills = await Skill.find({
+  let skills = await Skill.find({
     _id: { $in: parcour.skills }
   })
     .populate('theme', 'title description type resources parentId')
@@ -23,6 +23,10 @@ const addGlobals = async (entry) => {
         select: 'rank nom'
       }
     });
+  if (type) {
+    parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
+    skills = skills.filter((skill) => skill.theme && skill.theme.type === type);
+  }
   const staticCompentences = await Competence.find({}).select('_id title niveau color');
 
   let globalInterest = [];

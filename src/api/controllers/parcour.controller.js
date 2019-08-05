@@ -31,10 +31,14 @@ exports.load = async (req, res, next, id) => {
 exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
-    const globalParcour = await addGlobals(parcour);
+    const { type } = req.query;
+    const globalParcour = await addGlobals(parcour, type);
     const skills = await Skill.find({
       _id: { $in: parcour.skills }
-    }).populate({ path: 'theme', select: 'title' });
+    }).populate({ path: 'theme', select: 'title type' });
+    parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
+    // return res.json(parcour);
+
     globalParcour.globalCopmetences.forEach((c) => {
       c.taux = Math.round((c.count * 100) / parcour.skills.length);
       const themes = new Set();
