@@ -156,13 +156,13 @@ jobSchema.statics = {
     page = 1, perPage = 30, search, environments, secteur
   }) {
     const reg = new RegExp(search, 'i');
-    return this.find({
-      $and: [
-        { $or: [{ title: reg }, { description: reg }] },
-        { secteur: { $in: secteur } },
-        { environments: { $in: environments } }
-      ]
-    })
+    const querySearch = {
+      $and: [{ $or: [{ title: reg }, { description: reg }] }]
+    };
+    if (environments !== undefined) querySearch.$and.push({ environments: { $in: environments } });
+    if (secteur !== undefined) querySearch.$and.push({ secteur: { $in: secteur } });
+
+    return this.find(querySearch)
       .populate('interests._id')
       .populate('competences._id', '_id title rank')
       .populate('secteur', '_id type title description')
