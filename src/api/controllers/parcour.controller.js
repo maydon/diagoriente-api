@@ -37,10 +37,10 @@ exports.get = async (req, res, next) => {
       _id: { $in: parcour.skills }
     }).populate({ path: 'theme', select: 'title type' });
     parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
-    // return res.json(parcour);
 
+    const competencesNumber = skills.reduce((sum, skill) => skill.competences.length + sum, 0);
     globalParcour.globalCopmetences.forEach((c) => {
-      c.taux = Math.round((c.count * 100) / parcour.skills.length);
+      c.taux = Math.round((c.count * 100) / competencesNumber);
       const themes = new Set();
       skills.forEach((skill) => {
         skill.competences.forEach((skc) => {

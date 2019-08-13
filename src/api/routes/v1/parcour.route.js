@@ -80,6 +80,7 @@ router
    *
    * @apiParam  {String}            parcourId     Parcours  id
    * @apiParam  {Object[]}          families    add families ids
+   * @apiParam  {String}            type     Parcours personal or professional
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -103,7 +104,8 @@ router
    * @apiHeader {String} Authorization  access token
    *
    * @apiParam  {String}         id     parcour object id
-   *
+   * @apiParam  {String}            type     Parcours personal or professional
+   * 
    *
    * @apiSuccess {Object[]} parcour  parcour full object.
    *
