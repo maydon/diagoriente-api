@@ -52,7 +52,7 @@ module.exports = {
         value: Joi.number()
           .min(0)
           .max(4)
-      })
+      }).default([])
     }
   },
 

@@ -180,13 +180,16 @@ exports.updateCompetences = async (req, res, next) => {
     });
     const updatedSkills = [];
     skills.forEach((skill) => {
+      let updated = false;
       skill.competences.forEach((c) => {
-        const nc = skill.competences.find((com) => com._id.toString() === c._id.toString());
+        const nc = competences.find((com) => com._id.toString() === c._id.toString());
         if (nc) {
           c.value = nc.value;
-          updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
+          if (!updated) updated = true;
         }
       });
+      if (updated)
+        updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
     });
     await Promise.all(updatedSkills);
     const savedParcour = await Parcour.findById(parcour._id).populate({
