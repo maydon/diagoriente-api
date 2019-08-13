@@ -34,7 +34,8 @@ exports.get = async (req, res, next) => {
     const { type } = req.query;
     const globalParcour = await addGlobals(parcour, type);
     const skills = await Skill.find({
-      _id: { $in: parcour.skills }
+      _id: { $in: parcour.skills },
+      type
     }).populate({ path: 'theme', select: 'title type' });
     parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
 
@@ -180,7 +181,7 @@ exports.updateCompetences = async (req, res, next) => {
     const updatedSkills = [];
     skills.forEach((skill) => {
       skill.competences.forEach((c) => {
-        const nc = competences.find((com) => com._id.toString() === c._id.toString());
+        const nc = skill.competences.find((com) => com._id.toString() === c._id.toString());
         if (nc) {
           c.value = nc.value;
           updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
