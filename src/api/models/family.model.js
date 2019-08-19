@@ -106,7 +106,7 @@ familySchema.statics = {
     const querySearch = {
       $or: [{ nom: reg }, { rank: reg }]
     };
-    if (admin) querySearch.resources = { $exists: true, $ne: [] };
+    if (!admin) querySearch.resources = { $exists: true, $ne: [] };
     return this.find(querySearch)
       .populate('interests', '_id nom rank')
       .select('-resources')

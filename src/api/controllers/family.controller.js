@@ -66,7 +66,7 @@ const list = (admin) => async (req, res, next) => {
     const querySearch = {
       $or: [{ nom: reg }, { rank: reg }]
     };
-    if (admin) querySearch.resources = { $exists: true, $ne: [] };
+    if (!admin) querySearch.resources = { $exists: true, $ne: [] };
     const responstPagination = await pagination(
       transformedFamilies,
       req.query,
