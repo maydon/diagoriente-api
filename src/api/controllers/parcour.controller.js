@@ -106,7 +106,7 @@ exports.update = async (req, res, next) => {
 
   try {
     const { skills, played, families } = req.body;
-    let skillsResult = null;
+    const skillsResult = [];
     if (skills) {
       const parcourSkills = await Skill.find({ parcourId: parcour._id });
       skills.forEach((sk) => {
@@ -120,45 +120,55 @@ exports.update = async (req, res, next) => {
           }
         }
       });
-      const skillsToAdd = skills.filter(({ theme }) => !parcourSkills.find((sk) => sk.theme === theme));
+      const skillsToAdd = skills.filter((sk) => !parcourSkills.find((ps) => ps.theme.toString() === sk.theme.toString()));
 
-      const skillsToUpdate = skills.filter(({ theme }) =>
-        parcourSkills.find((row) => row.theme === theme));
-      const skillsToDelete = differenceBy(
-        skills,
-        [...skillsToAdd, ...skillsToUpdate],
-        ({ theme }) => theme
-      ).map(({ theme }) => parcourSkills.find((skill) => skill.theme === theme));
+      const updatedSkills = [];
+      parcourSkills.forEach((skill) => {
+        skillsToAdd.forEach((sktoa) => {
+          let updated = false;
+          sktoa.competences.forEach((skc) => {
+            skill.competences.forEach((c) => {
+              if (skc._id.toString() === c._id.toString() && c.value !== 5) {
+                c.value = 5;
+                if (!updated) updated = true;
+              }
+            });
+          });
+          if (updated) updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
+        });
+      });
+      await Promise.all(updatedSkills);
 
-      /* const kill = skills.map((skill) => skill.theme);
-      const ps = parcourSkills.map((skill) => skill.theme);
-      return res.json({
-        dif: differenceBy(skills, [...skillsToAdd, ...skillsToUpdate], ({ theme }) => theme),
-        skills,
+      const skillsToUpdate = skills.filter((skilltou) =>
+        parcourSkills.find((row) => row.theme.toString() === skilltou.theme.toString()));
+      const skillsToDelete = parcourSkills.filter((ps) => !skills.find((row) => row.theme.toString() === ps.theme.toString()));
+      /*       return res.json({
         parcourSkills,
         skillsToAdd,
-        skillsToDelete,
-        skillsToUpdate
+        skillsToUpdate,
+        skillsToDelete
       }); */
 
       const addPromise = skillsToAdd.map((sk) => {
         const skill = new Skill({ ...sk, parcourId: parcour._id });
+        skillsResult.push(skill._id);
         return skill.save();
       });
 
       const updatePromise = skillsToUpdate.map((sk) => {
-        const skill = parcourSkills.find(({ theme }) => sk.theme === theme);
+        const skill = parcourSkills.find((ps) => sk.theme.toString() === ps.theme.toString());
+        skillsResult.push(skill._id);
         return skill.updateOne({ competences: sk.competences, activities: sk.activities });
       });
 
       const deletePromise = skillsToDelete.map((skill) => skill.remove());
-      skillsResult = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
+      await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
     }
-    //console.log('èèèèèèskillllll', skillsResult);
+
     const updateObject = {};
 
     if (played) updateObject.played = played;
-    if (skillsResult) updateObject.skills = skillsResult;
+    if (skillsResult.length) updateObject.skills = skillsResult;
     if (families) updateObject.families = families;
 
     const currentParcours = await Parcour.findOneAndUpdate({ _id: parcour._id }, updateObject, {
