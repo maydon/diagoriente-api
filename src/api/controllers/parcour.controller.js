@@ -118,12 +118,6 @@ exports.update = async (req, res, next) => {
               status: httpStatus.BAD_REQUEST
             });
           }
-          if (skill.type === 'personal' && sk.competences.filter((c) => c.value !== 5).length) {
-            throw new APIError({
-              message: `la valeur doit être 5 pour skill perso: ${skill._id}`,
-              status: httpStatus.BAD_REQUEST
-            });
-          }
         }
       });
       const skillsToAdd = skills.filter(({ theme }) => !parcourSkills.find((sk) => sk.theme === theme));
@@ -135,6 +129,17 @@ exports.update = async (req, res, next) => {
         [...skillsToAdd, ...skillsToUpdate],
         ({ theme }) => theme
       ).map(({ theme }) => parcourSkills.find((skill) => skill.theme === theme));
+
+      /* const kill = skills.map((skill) => skill.theme);
+      const ps = parcourSkills.map((skill) => skill.theme);
+      return res.json({
+        dif: differenceBy(skills, [...skillsToAdd, ...skillsToUpdate], ({ theme }) => theme),
+        skills,
+        parcourSkills,
+        skillsToAdd,
+        skillsToDelete,
+        skillsToUpdate
+      }); */
 
       const addPromise = skillsToAdd.map((sk) => {
         const skill = new Skill({ ...sk, parcourId: parcour._id });
@@ -149,7 +154,7 @@ exports.update = async (req, res, next) => {
       const deletePromise = skillsToDelete.map((skill) => skill.remove());
       skillsResult = await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
     }
-
+    //console.log('èèèèèèskillllll', skillsResult);
     const updateObject = {};
 
     if (played) updateObject.played = played;
@@ -188,8 +193,7 @@ exports.updateCompetences = async (req, res, next) => {
           if (!updated) updated = true;
         }
       });
-      if (updated)
-        updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
+      if (updated) updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
     });
     await Promise.all(updatedSkills);
     const savedParcour = await Parcour.findById(parcour._id).populate({
