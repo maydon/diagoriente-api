@@ -186,7 +186,7 @@ exports.myJob = async (req, res, next) => {
     const suspectJobs = await Job.find(querySearch)
       .populate('secteur')
       .populate('environments', '_id title')
-      .populate('interests._id', 'nom');
+      .populate('interests._id', 'nom rank');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId
