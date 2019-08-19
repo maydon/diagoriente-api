@@ -64,7 +64,7 @@ familySchema.statics = {
       let family;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        family = await this.findOne({ _id: id, resources: { $exists: true, $ne: [] } })
+        family = await this.findOne({ _id: id })
           .populate('interests', '_id nom rank')
           .exec();
       }
@@ -101,12 +101,13 @@ familySchema.statics = {
    * @param {number} limit - Limit number of posts to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search }) {
+  list({ page = 1, perPage = 30, search }, admin) {
     const reg = new RegExp(search, 'i');
-    return this.find({
-      $or: [{ nom: reg }, { rank: reg }],
-      resources: { $exists: true, $ne: [] }
-    })
+    const querySearch = {
+      $or: [{ nom: reg }, { rank: reg }]
+    };
+    if (admin) querySearch.resources = { $exists: true, $ne: [] };
+    return this.find(querySearch)
       .populate('interests', '_id nom rank')
       .select('-resources')
       .sort({ createdAt: -1 })

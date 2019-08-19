@@ -16,8 +16,8 @@ exports.get = (req, res) => {
   /* select only one image if user is with role user */
 
   if (user.role === 'user') {
-    //const randomResources = random(family.resources.length - 1);
-   // family.resources = family.resources;
+    // const randomResources = random(family.resources.length - 1);
+    // family.resources = family.resources;
   }
 
   res.json(family.transform());
@@ -58,16 +58,20 @@ exports.update = async (req, res, next) => {
  * @public
  */
 
-exports.list = async (req, res, next) => {
+const list = (admin) => async (req, res, next) => {
   try {
-    const families = await Family.list(req.query);
+    const families = await Family.list(req.query, admin);
     const transformedFamilies = families.map((family) => family.transform());
     const reg = new RegExp(req.query.search, 'i');
-    const querySearch = { $or: [{ nom: reg }, { rank: reg }] };
+    const querySearch = {
+      $or: [{ nom: reg }, { rank: reg }]
+    };
+    if (admin) querySearch.resources = { $exists: true, $ne: [] };
     const responstPagination = await pagination(
       transformedFamilies,
       req.query,
-      Family, querySearch
+      Family,
+      querySearch
     );
 
     res.json(responstPagination);
@@ -75,6 +79,9 @@ exports.list = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.listAdmin = list(true);
+exports.listUser = list(false);
 
 /**
  * Create interest
@@ -103,12 +110,8 @@ exports.addResources = async (req, res, next) => {
     name: item.originalname,
     mimetype: item.mimetype,
     base64: Buffer.from(item.buffer, 'binary').toString('base64')
-  }
-  ));
-  await Family.update(
-    { _id: family._id },
-    { $push: { resources: { $each: resources } } }
-  );
+  }));
+  await Family.update({ _id: family._id }, { $push: { resources: { $each: resources } } });
 
   const savedFamily = await Family.get(family._id);
   res.json(savedFamily.transform(savedFamily));
@@ -124,10 +127,7 @@ exports.removeResources = async (req, res, next) => {
   const { resource } = req.body;
 
   try {
-    await Family.updateOne(
-      { _id: family._id },
-      { $pull: { resources: { _id: resource } } }
-    );
+    await Family.updateOne({ _id: family._id }, { $pull: { resources: { _id: resource } } });
     const savedFamily = await Family.get(family._id);
     res.json(savedFamily.transform(savedFamily));
   } catch (e) {

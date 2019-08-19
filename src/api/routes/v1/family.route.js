@@ -4,10 +4,7 @@ const multer = require('multer');
 const controller = require('../../controllers/family.controller');
 const { authorize, ADMIN, LOGGED_USER } = require('../../middlewares/auth');
 const {
-  list,
-  update,
-  create,
-  removeResources
+  list, update, create, removeResources
 } = require('../../validations/family.validation');
 
 const router = express.Router();
@@ -37,7 +34,29 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize(LOGGED_USER), validate(list), controller.list)
+  .get(authorize(LOGGED_USER), validate(list), controller.listUser);
+router
+  .route('/admin')
+  /**
+   * @api {get} v1/families List family admin
+   * @apiDescription Get a list of families
+   * @apiVersion 1.0.0
+   * @apiName ListFamiliesAdmin
+   * @apiGroup Family
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  interest's per page
+   * @apiParam  {String}      search search param
+   *
+   * @apiSuccess {Object[]}   List of families.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize(ADMIN), validate(list), controller.listAdmin)
   /**
    * @api {post} v1/families Create family
    * @apiDescription Create a new of Family
@@ -78,11 +97,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(
-    authorize(ADMIN),
-    uploadFamily.array('photos', 3),
-    controller.addResources
-  );
+  .post(authorize(ADMIN), uploadFamily.array('photos', 3), controller.addResources);
 
 router
   .route('/removeUploads/:familyId')
@@ -103,11 +118,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(
-    authorize(ADMIN),
-    validate(removeResources),
-    controller.removeResources
-  );
+  .post(authorize(ADMIN), validate(removeResources), controller.removeResources);
 
 router
   .route('/:familyId')
