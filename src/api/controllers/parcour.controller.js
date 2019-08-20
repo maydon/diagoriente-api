@@ -7,7 +7,7 @@ const Skill = require('../models/skill.model');
 
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
-const { pick, differenceBy } = require('lodash');
+const { pick } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -39,9 +39,8 @@ exports.get = async (req, res, next) => {
     }).populate({ path: 'theme', select: 'title type' });
     parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
 
-    const competencesNumber = skills.reduce((sum, skill) => skill.competences.length + sum, 0);
     globalParcour.globalCopmetences.forEach((c) => {
-      c.taux = Math.round((c.count * 100) / competencesNumber);
+      c.taux = Math.round((c.count * 100) / parcour.skills.length);
       const themes = new Set();
       skills.forEach((skill) => {
         skill.competences.forEach((skc) => {
@@ -122,53 +121,45 @@ exports.update = async (req, res, next) => {
       });
       const skillsToAdd = skills.filter((sk) => !parcourSkills.find((ps) => ps.theme.toString() === sk.theme.toString()));
 
-      const updatedSkills = [];
-      parcourSkills.forEach((skill) => {
-        skillsToAdd.forEach((sktoa) => {
-          let updated = false;
-          sktoa.competences.forEach((skc) => {
-            skill.competences.forEach((c) => {
-              if (skc._id.toString() === c._id.toString() && c.value !== 5) {
-                c.value = 5;
-                if (!updated) updated = true;
-              }
-            });
-          });
-          if (updated) updatedSkills.push(Skill.updateOne({ _id: skill._id }, skill));
-        });
-      });
-      await Promise.all(updatedSkills);
-
       const skillsToUpdate = skills.filter((skilltou) =>
         parcourSkills.find((row) => row.theme.toString() === skilltou.theme.toString()));
       const skillsToDelete = parcourSkills.filter((ps) => !skills.find((row) => row.theme.toString() === ps.theme.toString()));
-      /*       return res.json({
-        parcourSkills,
-        skillsToAdd,
-        skillsToUpdate,
-        skillsToDelete
-      }); */
 
-      const addPromise = skillsToAdd.map((sk) => {
+      skillsToAdd.forEach(async (sk) => {
         const skill = new Skill({ ...sk, parcourId: parcour._id });
-        skillsResult.push(skill._id);
-        return skill.save();
+        skillsResult.push(skill);
+        await skill.save();
+      });
+      const compSet = new Set();
+      skillsResult.forEach((skr) => {
+        skr.competences.forEach((c) => {
+          compSet.add(c._id.toString());
+        });
+      });
+      const compArray = Array.from(compSet);
+      parcourSkills.forEach(async (ps) => {
+        const updated = false;
+        ps.competences.forEach((psc) => {
+          if (compArray.includes(psc._id.toString())) psc.value = 5;
+        });
+        if (updated) await ps.updateOne();
       });
 
-      const updatePromise = skillsToUpdate.map((sk) => {
+      skillsToUpdate.forEach(async (sk) => {
         const skill = parcourSkills.find((ps) => sk.theme.toString() === ps.theme.toString());
-        skillsResult.push(skill._id);
-        return skill.updateOne({ competences: sk.competences, activities: sk.activities });
+        skillsResult.push(skill);
+        await skill.updateOne({ competences: sk.competences, activities: sk.activities });
       });
 
-      const deletePromise = skillsToDelete.map((skill) => skill.remove());
-      await Promise.all([...addPromise, ...updatePromise, ...deletePromise]);
+      skillsToDelete.forEach(async (skill) => {
+        await skill.remove();
+      });
     }
 
     const updateObject = {};
 
     if (played) updateObject.played = played;
-    if (skillsResult.length) updateObject.skills = skillsResult;
+    if (skillsResult.length) updateObject.skills = skillsResult.map((skr) => skr._id.toString());
     if (families) updateObject.families = families;
 
     const currentParcours = await Parcour.findOneAndUpdate({ _id: parcour._id }, updateObject, {
