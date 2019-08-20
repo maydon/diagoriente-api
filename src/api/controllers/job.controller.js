@@ -233,11 +233,10 @@ exports.listSecteurs = async (req, res, next) => {
     const secteurSet = jobs.map((job) => job.secteur.map((s) => s._id.toString()));
     const secteurArr = Array.from(new Set(flatten(secteurSet)));
     secteurArr.forEach((secteur) => {
-      secteurs.push(
-        jobs.find(
-          (job) => job.secteur && job.secteur.length && job.secteur[0]._id.toString() === secteur
-        )
+      const jobFound = jobs.find(
+        (job) => job.secteur && job.secteur.length && job.secteur[0]._id.toString() === secteur
       );
+      secteurs.push(jobFound.secteur);
     });
     return res.json(secteurs);
   } catch (error) {
