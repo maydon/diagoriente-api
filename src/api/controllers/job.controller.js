@@ -114,9 +114,13 @@ exports.remove = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   try {
     const jobs = await Job.list(req.query);
+    const environmentsQuery = req.query.environments;
+    const secteurQuery = req.query.secteur;
+    const environments = environmentsQuery && JSON.parse(environmentsQuery);
+    const secteur = secteurQuery && JSON.parse(secteurQuery);
     const transformedJobd = jobs.map((job) => job.transform());
 
-    const { search, environments, secteur } = req.query;
+    const { search } = req.query;
     const reg = new RegExp(search, 'i');
     const querySearch = {
       $and: [{ $or: [{ title: reg }, { description: reg }] }]
@@ -138,9 +142,11 @@ exports.list = async (req, res, next) => {
 
 exports.myJob = async (req, res, next) => {
   try {
-    const {
-      parcourId, algoType, environments, secteur
-    } = req.query;
+    const { parcourId, algoType } = req.query;
+    const environmentsQuery = req.query.environments;
+    const secteurQuery = req.query.secteur;
+    const environments = environmentsQuery && JSON.parse(environmentsQuery);
+    const secteur = secteurQuery && JSON.parse(secteurQuery);
     const { user } = req;
     const parcour = await Parcour.findById(parcourId);
     if (!parcour) {

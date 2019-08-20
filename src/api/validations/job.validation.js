@@ -10,12 +10,8 @@ module.exports = {
         .min(1)
         .max(100),
       search: Joi.string().empty(''),
-      environments: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
-      secteur: Joi.array()
-        .items(Joi.objectId())
-        .unique()
+      environments: Joi.string().allow(''),
+      secteur: Joi.string().allow('')
     }
   },
 
@@ -31,12 +27,8 @@ module.exports = {
       algoType: Joi.string()
         .valid(Job.ALGO_TYPE)
         .default('interest'),
-      environments: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
-      secteur: Joi.array()
-        .items(Joi.objectId())
-        .unique()
+      environments: Joi.string().allow(''),
+      secteur: Joi.string().allow('')
     }
   },
 
