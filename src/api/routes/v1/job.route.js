@@ -2,16 +2,10 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/job.controller');
 const {
-  authorize,
-  ADVISOR,
-  LOGGED_USER,
-  ADMIN
+  authorize, ADVISOR, LOGGED_USER, ADMIN
 } = require('../../middlewares/auth');
 const {
-  create,
-  update,
-  list,
-  myJob
+  create, update, list, myJob
 } = require('../../validations/job.validation');
 
 const router = express.Router();
@@ -46,6 +40,32 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize([ADVISOR, LOGGED_USER]), validate(myJob), controller.myJob);
+
+router
+  .route('/secteurs')
+  /**
+   * @api {get} v1/jobs/secteurs List secteurs
+   * @apiDescription Get a list of recommanded secteurs
+   * @apiVersion 1.0.0
+   * @apiName ListSecteurs
+   * @apiGroup Job
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  job's per page
+   * @apiParam  {String}      search  search param
+   * @apiParam  {String}        id     Parcour's id
+   * @apiParam  {String}        algoType     one of 'interest', 'family', 'interest_family'
+
+   *
+   * @apiSuccess {Object[]}   List of jobs.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize([ADVISOR, LOGGED_USER]), controller.listSecteurs);
 
 router
   .route('/')

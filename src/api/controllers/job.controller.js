@@ -9,7 +9,9 @@ const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
 const { matchingAlgo } = require('../middlewares/matchingAlgo');
 const { normalize } = require('../utils/Normalize');
-const { omit, uniq } = require('lodash');
+const {
+  omit, uniq, uniqBy, flatten
+} = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -145,6 +147,7 @@ exports.myJob = async (req, res, next) => {
     const { parcourId, algoType } = req.query;
     const environmentsQuery = req.query.environments;
     const secteurQuery = req.query.secteur;
+    console.log('****', decodeURIComponent(secteurQuery));
     const environments = environmentsQuery && JSON.parse(environmentsQuery);
     const secteur = secteurQuery && JSON.parse(secteurQuery);
     const { user } = req;
@@ -216,6 +219,27 @@ exports.myJob = async (req, res, next) => {
         };
       })
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.listSecteurs = async (req, res, next) => {
+  try {
+    const jobs = await Job.find()
+      .select('secteur')
+      .populate('secteur');
+    const secteurs = [];
+    const secteurSet = jobs.map((job) => job.secteur.map((s) => s._id.toString()));
+    const secteurArr = Array.from(new Set(flatten(secteurSet)));
+    secteurArr.forEach((secteur) => {
+      secteurs.push(
+        jobs.find(
+          (job) => job.secteur && job.secteur.length && job.secteur[0]._id.toString() === secteur
+        )
+      );
+    });
+    return res.json(secteurs);
   } catch (error) {
     next(error);
   }
