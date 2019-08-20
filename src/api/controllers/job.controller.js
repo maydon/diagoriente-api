@@ -236,7 +236,7 @@ exports.listSecteurs = async (req, res, next) => {
       const jobFound = jobs.find(
         (job) => job.secteur && job.secteur.length && job.secteur[0]._id.toString() === secteur
       );
-      secteurs.push(jobFound.secteur);
+      secteurs.push(jobFound.secteur[0]);
     });
     return res.json(secteurs);
   } catch (error) {
