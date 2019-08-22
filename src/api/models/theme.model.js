@@ -99,7 +99,6 @@ themeSchema.statics = {
       if (mongoose.Types.ObjectId.isValid(id)) {
         theme = await this.findById(id)
           .populate('activities', 'title type verified description')
-          .populate('required')
           .exec();
       }
       if (theme) return theme;
@@ -178,7 +177,6 @@ themeSchema.statics = {
       ...verified
     })
       .populate(populateProp)
-      .populate('required')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
