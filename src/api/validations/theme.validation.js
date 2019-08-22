@@ -75,7 +75,7 @@ module.exports = {
       type: Joi.string()
         .valid(Theme.types)
         .required(),
-      requiredCompetences: Joi.array()
+      required: Joi.array()
         .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
         .default([])
     }
@@ -95,7 +95,7 @@ module.exports = {
       activities: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      requiredCompetences: Joi.array()
+      required: Joi.array()
         .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
         .default([])
     }
