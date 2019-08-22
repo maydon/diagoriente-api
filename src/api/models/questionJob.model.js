@@ -15,7 +15,8 @@ const questionJobSchema = new mongoose.Schema(
       maxlength: 250,
       trim: true,
       required: true
-    }
+    },
+    jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' }
   },
   {
     timestamps: true
@@ -28,7 +29,7 @@ const questionJobSchema = new mongoose.Schema(
 questionJobSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'label'];
+    const fields = ['_id', 'label', 'jobId'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -51,7 +52,7 @@ questionJobSchema.statics = {
       let questionJob;
 
       if (mongoose.Types.ObjectId.isValid(id)) {
-        questionJob = await this.findById(id);
+        questionJob = await this.findById(id).populate('jobId', '_id title');
       }
       if (questionJob) return questionJob;
       throw new APIError({
@@ -69,10 +70,16 @@ questionJobSchema.statics = {
    * @param {number} limit - Limit number of questionJobs to be returned.
    * @returns {Promise<Post[]>}
    */
-  list({ page = 1, perPage = 30, search }) {
+  list({
+    page = 1, perPage = 30, search, jobId
+  }) {
     const reg = new RegExp(search, 'i');
-
-    return this.find({ label: reg })
+    const querySearch = {
+      $and: [{ label: reg }]
+    };
+    if (jobId !== undefined) querySearch.$and.push({ jobId });
+    return this.find(querySearch)
+      .populate('jobId', '_id title')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

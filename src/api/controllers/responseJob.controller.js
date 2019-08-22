@@ -33,8 +33,8 @@ exports.get = (req, res) => res.json(req.locals.responseJob.transform());
 exports.create = async (req, res, next) => {
   try {
     const { user } = req;
-    const { response, questionJobId, jobId } = req.body;
-    const responseBody = { response, questionJobId, jobId };
+    const { response, questionJobId } = req.body;
+    const responseBody = { response, questionJobId };
     responseBody.userId = user._id;
     const questionJob = await QuestionJob.findById(questionJobId);
     if (!questionJob) {
@@ -44,6 +44,7 @@ exports.create = async (req, res, next) => {
       });
     }
     responseBody.questionJobLabel = questionJob.label;
+    responseBody.jobId = questionJob.jobId;
     const responseJob = new ResponseJob(responseBody);
     const savedResponseJob = await responseJob.save();
     res.status(httpStatus.CREATED);

@@ -44,7 +44,9 @@ router
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            label     ResponseJob's label
+   * @apiParam  {Boolean}            response     ResponseJob's response
+   * @apiParam  {ObjectId}            questionJobId     QuestionJob's id
+   *
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *

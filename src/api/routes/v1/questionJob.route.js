@@ -25,6 +25,7 @@ router
    * @apiParam  {Number{1-}}         [page=1]     List page
    * @apiParam  {Number{1-100}}      [perPage=1]  questionJob's per page
    * @apiParam  {String}  search      search param
+   * @apiParam  {ObjectId}            jobId     Job's id
    *
    * @apiSuccess {Object[]}   List of QuestionJobs.
    *
@@ -45,6 +46,7 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {String}            label     QuestionJob's label
+   * @apiParam  {ObjectId}            jobId     Job's id
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *

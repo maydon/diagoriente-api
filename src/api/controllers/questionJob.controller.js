@@ -80,7 +80,10 @@ exports.list = async (req, res, next) => {
     const transformedQuestionJob = questionJobs.map((questionJob) => questionJob.transform());
     const reg = new RegExp(req.query.search, 'i');
 
-    const querySearch = { label: reg };
+    const querySearch = {
+      $and: [{ label: reg }]
+    };
+    if (req.query.jobId !== undefined) querySearch.$and.push({ jobId: req.query.jobId });
     const responstPagination = await pagination(
       transformedQuestionJob,
       req.query,

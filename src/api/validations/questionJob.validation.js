@@ -8,7 +8,8 @@ module.exports = {
       perPage: Joi.number()
         .min(1)
         .max(100),
-      search: Joi.string().empty('')
+      search: Joi.string().empty(''),
+      jobId: Joi.objectId().allow('')
     }
   },
 
@@ -18,7 +19,8 @@ module.exports = {
       label: Joi.string()
         .min(3)
         .max(250)
-        .required()
+        .required(),
+      jobId: Joi.objectId().required()
     }
   },
 
@@ -27,7 +29,8 @@ module.exports = {
     body: {
       label: Joi.string()
         .min(3)
-        .max(250)
+        .max(250),
+      jobId: Joi.objectId()
     }
   }
 };
