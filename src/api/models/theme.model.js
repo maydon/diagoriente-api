@@ -178,6 +178,7 @@ themeSchema.statics = {
       ...verified
     })
       .populate(populateProp)
+      .populate('required')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
