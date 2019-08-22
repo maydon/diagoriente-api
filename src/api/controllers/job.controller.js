@@ -9,9 +9,7 @@ const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
 const { matchingAlgo } = require('../middlewares/matchingAlgo');
 const { normalize } = require('../utils/Normalize');
-const {
-  omit, uniq, uniqBy, flatten
-} = require('lodash');
+const { omit, uniq, flatten } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 
 /**
@@ -194,7 +192,8 @@ exports.myJob = async (req, res, next) => {
     const suspectJobs = await Job.find(querySearch)
       .populate('secteur')
       .populate('environments', '_id title')
-      .populate('interests._id', 'nom rank');
+      .populate('interests._id', 'nom rank')
+      .populate('questionJobs', '_id label');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
       user: user.role === 'user' ? user._id : parcour.userId

@@ -55,7 +55,8 @@ const jobSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Environment'
       }
-    ]
+    ],
+    questionJobs: [{ type: mongoose.Schema.Types.ObjectId, ref: 'QuestionJob' }]
   },
   {
     timestamps: true
@@ -80,7 +81,8 @@ jobSchema.method({
       'competences',
       'formations',
       'favoriteId',
-      'environments'
+      'environments',
+      'questionJobs'
     ];
 
     fields.forEach((field) => {
@@ -133,6 +135,7 @@ jobSchema.statics = {
           .populate('competences._id', '_id title rank')
           .populate('secteur', '_id type title description')
           .populate('environments', '_id title')
+          .populate('questionJobs', '_id label')
           .exec();
       }
       if (job) return job;
@@ -167,6 +170,7 @@ jobSchema.statics = {
       .populate('competences._id', '_id title rank')
       .populate('secteur', '_id type title description')
       .populate('environments', '_id title')
+      .populate('questionJobs', '_id label')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

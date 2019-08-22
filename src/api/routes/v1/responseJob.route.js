@@ -1,54 +1,54 @@
 const express = require('express');
 const validate = require('express-validation');
-const controller = require('../../controllers/questionJob.controller');
+const controller = require('../../controllers/responseJob.controller');
 const {
   authorize, ADVISOR, ADMIN, LOGGED_USER
 } = require('../../middlewares/auth');
-const { list, update, create } = require('../../validations/questionJob.validation');
+const { list, update, create } = require('../../validations/responseJob.validation');
 
 const router = express.Router();
 
-router.param('questionJobId', controller.load);
+router.param('responseJobId', controller.load);
 
 router
   .route('/')
   /**
-   * @api {get} v1/questionJobs List QuestionJobs
-   * @apiDescription Get a list of QuestionJobs
+   * @api {get} v1/responseJobs List ResponseJobs
+   * @apiDescription Get a list of ResponseJobs
    * @apiVersion 1.0.0
-   * @apiName ListQuestionJobs
-   * @apiGroup QuestionJob
+   * @apiName ListResponseJobs
+   * @apiGroup ResponseJob
    * @apiPermission admin / user / advisor
    *
    * @apiHeader {String} Authorization  access token
    *
    * @apiParam  {Number{1-}}         [page=1]     List page
-   * @apiParam  {Number{1-100}}      [perPage=1]  questionJob's per page
+   * @apiParam  {Number{1-100}}      [perPage=1]  responseJob's per page
    * @apiParam  {String}  search      search param
    *
-   * @apiSuccess {Object[]}   List of QuestionJobs.
+   * @apiSuccess {Object[]}   List of ResponseJobs.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .get(authorize([LOGGED_USER, ADVISOR]), validate(list), controller.list)
   /**
-   * @api {post} v1/questionJobs Create QuestionJobs
-   * @apiDescription Create a new of QuestionJobs
+   * @api {post} v1/responseJobs Create ResponseJobs
+   * @apiDescription Create a new of ResponseJobs
    * @apiVersion 1.0.0
-   * @apiName CreateQuestionJobs
-   * @apiGroup QuestionJob
+   * @apiName CreateResponseJobs
+   * @apiGroup ResponseJob
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization  access token
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            label     QuestionJob's label
+   * @apiParam  {String}            label     ResponseJob's label
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
-   * @apiSuccess {Object[]}   QuestionJob object.
+   * @apiSuccess {Object[]}   ResponseJob object.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
@@ -56,18 +56,18 @@ router
   .post(authorize(ADMIN), validate(create), controller.create);
 
 router
-  .route('/:questionJobId')
+  .route('/:responseJobId')
   /**
-   * @api {get} v1/questionJobs/:id patch QuestionJobs
-   * @apiDescription Get questionJobs information
+   * @api {get} v1/responseJobs/:id patch ResponseJobs
+   * @apiDescription Get responseJobs information
    * @apiVersion 1.0.0
-   * @apiName GetIQuestionJob
-   * @apiGroup QuestionJob
+   * @apiName GetIResponseJob
+   * @apiGroup ResponseJob
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            id     QuestionJob id
+   * @apiParam  {String}            id     ResponseJob id
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -76,16 +76,16 @@ router
    */
   .get(authorize([LOGGED_USER, ADVISOR]), controller.get)
   /**
-   * @api {get} v1/questionJobs/:id patch QuestionJobs
-   * @apiDescription Get questionJobs information
+   * @api {get} v1/responseJobs/:id patch ResponseJobs
+   * @apiDescription Get responseJobs information
    * @apiVersion 1.0.0
-   * @apiName GetIQuestionJobs
-   * @apiGroup QuestionJob
+   * @apiName GetIResponseJobs
+   * @apiGroup ResponseJob
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}            label     QuestionJob's label
+   * @apiParam  {String}            label     ResponseJob's label
    *
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -94,16 +94,16 @@ router
    */
   .patch(authorize(ADMIN), validate(update), controller.update)
   /**
-   * @api {get} v1/questionJobs/:id Delete questionJob
-   * @apiDescription Delete questionJob information
+   * @api {get} v1/responseJobs/:id Delete responseJob
+   * @apiDescription Delete responseJob information
    * @apiVersion 1.0.0
-   * @apiName GetQuestionJobs
-   * @apiGroup QuestionJob
+   * @apiName GetResponseJobs
+   * @apiGroup ResponseJob
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token
    *
-   * @apiParam  {String}      id id questionJob
+   * @apiParam  {String}      id id responseJob
    * @apiSuccess (No Content 204)  Successfully deleted
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
