@@ -66,9 +66,6 @@ module.exports = {
         .unique(),
       environments: Joi.array()
         .items(Joi.objectId())
-        .unique(),
-      questionJobs: Joi.array()
-        .items(Joi.objectId())
         .unique()
     }
   },
@@ -106,9 +103,6 @@ module.exports = {
         .items(Joi.objectId())
         .unique(),
       environments: Joi.array()
-        .items(Joi.objectId())
-        .unique(),
-      questionJobs: Joi.array()
         .items(Joi.objectId())
         .unique()
     }
