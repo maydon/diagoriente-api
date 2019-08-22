@@ -46,7 +46,7 @@ const jobSchema = new mongoose.Schema(
     competences: [
       {
         _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Competence' },
-        weight: { type: Number, min: 0, max: 1 }
+        weight: { type: Number, min: 0, max: 4 }
       }
     ],
     formations: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Formation' }],

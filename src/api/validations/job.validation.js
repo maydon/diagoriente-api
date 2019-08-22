@@ -58,7 +58,7 @@ module.exports = {
         _id: Joi.objectId().required(),
         weight: Joi.number()
           .min(0)
-          .max(1)
+          .max(4)
           .required()
       }),
       formations: Joi.array()
@@ -99,7 +99,7 @@ module.exports = {
         _id: Joi.objectId().required(),
         weight: Joi.number()
           .min(0)
-          .max(1)
+          .max(4)
           .required()
       }),
       formations: Joi.array()
