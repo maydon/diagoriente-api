@@ -147,7 +147,6 @@ exports.myJob = async (req, res, next) => {
     const { parcourId, algoType } = req.query;
     const environmentsQuery = req.query.environments;
     const secteurQuery = req.query.secteur;
-    console.log('****', decodeURIComponent(secteurQuery));
     const environments = environmentsQuery && JSON.parse(environmentsQuery);
     const secteur = secteurQuery && JSON.parse(secteurQuery);
     const { user } = req;
