@@ -9,6 +9,7 @@ const { list, update, create } = require('../../validations/responseJob.validati
 const router = express.Router();
 
 router.param('responseJobId', controller.load);
+router.param('jobId', controller.loadJob);
 
 router
   .route('/')

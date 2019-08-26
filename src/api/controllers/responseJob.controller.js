@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const ResponseJob = require('../models/responseJob.model');
-const QuestionJob = require('../models/questionJob.model');
+const Job = require('../models/job.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
 const APIError = require('../utils/APIError');
@@ -14,6 +14,16 @@ exports.load = async (req, res, next, id) => {
   try {
     const responseJob = await ResponseJob.get(id);
     req.locals = { responseJob };
+    return next();
+  } catch (error) {
+    return errorHandler(error, req, res);
+  }
+};
+
+exports.loadJob = async (req, res, next, id) => {
+  try {
+    const job = await Job.get(id);
+    req.locals = { job };
     return next();
   } catch (error) {
     return errorHandler(error, req, res);
@@ -33,10 +43,17 @@ exports.get = (req, res) => res.json(req.locals.responseJob.transform());
 exports.create = async (req, res, next) => {
   try {
     const { user } = req;
-    const { response, questionJobId } = req.body;
-    const responseBody = { response, questionJobId };
+    const { response, questionJobId, jobId } = req.body;
+    const job = await Job.get(jobId);
+    if (!job) {
+      throw new APIError({
+        message: 'Job does not exist',
+        status: httpStatus.NOT_FOUND
+      });
+    }
+    const responseBody = { response, questionJobId, jobId };
     responseBody.userId = user._id;
-    const questionJob = await QuestionJob.findById(questionJobId);
+    const questionJob = job.questionJobs.id(questionJobId);
     if (!questionJob) {
       throw new APIError({
         message: 'Question does not exist',
@@ -44,7 +61,6 @@ exports.create = async (req, res, next) => {
       });
     }
     responseBody.questionJobLabel = questionJob.label;
-    responseBody.jobId = questionJob.jobId;
     const responseJob = new ResponseJob(responseBody);
     const savedResponseJob = await responseJob.save();
     res.status(httpStatus.CREATED);

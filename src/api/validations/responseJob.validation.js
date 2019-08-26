@@ -15,6 +15,7 @@ module.exports = {
   create: {
     body: {
       response: Joi.boolean().required(),
+      jobId: Joi.objectId().required(),
       questionJobId: Joi.objectId().required()
     }
   },
