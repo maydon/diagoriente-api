@@ -37,12 +37,10 @@ module.exports = {
     body: {
       title: Joi.string()
         .min(3)
-        .max(500)
-        .required(),
+        .max(500),
       description: Joi.string()
         .min(3)
-        .max(1000)
-        .required(),
+        .max(1000),
       secteur: Joi.array()
         .items(Joi.objectId())
         .unique(),
