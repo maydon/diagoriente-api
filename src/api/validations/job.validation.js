@@ -67,7 +67,14 @@ module.exports = {
       environments: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      link: Joi.string().max(500)
+      link: Joi.string().max(500),
+      questionJobs: Joi.array()
+        .items({
+          label: Joi.string()
+            .max(250)
+            .required()
+        })
+        .max(10)
     }
   },
 
@@ -106,7 +113,15 @@ module.exports = {
       environments: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      link: Joi.string().max(500)
+      link: Joi.string().max(500),
+      questionJobs: Joi.array()
+        .items({
+          _id: Joi.objectId(),
+          label: Joi.string()
+            .max(250)
+            .required()
+        })
+        .max(10)
     }
   }
 };

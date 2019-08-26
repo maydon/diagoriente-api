@@ -11,6 +11,15 @@ const ALGO_TYPE = ['interest', 'family', 'interest_family'];
  * @private
  */
 
+const questionJob = new mongoose.Schema({
+  label: {
+    type: String,
+    maxlength: 250,
+    trim: true,
+    required: true
+  }
+});
+
 const jobSchema = new mongoose.Schema(
   {
     title: {
@@ -59,7 +68,8 @@ const jobSchema = new mongoose.Schema(
     link: {
       type: String,
       maxlength: 500
-    }
+    },
+    questionJobs: [questionJob]
   },
   {
     timestamps: true
@@ -85,7 +95,8 @@ jobSchema.method({
       'formations',
       'favoriteId',
       'environments',
-      'link'
+      'link',
+      'questionJobs'
     ];
 
     fields.forEach((field) => {
@@ -111,6 +122,11 @@ jobSchema.method({
             };
           }
         });
+      } else if (field === 'questionJobs') {
+        transformed[field] = this[field].map((item) => ({
+          _id: item._id,
+          label: item.label
+        }));
       } else {
         transformed[field] = this[field];
       }
@@ -138,6 +154,7 @@ jobSchema.statics = {
           .populate('competences._id', '_id title rank')
           .populate('secteur', '_id type title description')
           .populate('environments', '_id title')
+          .populate('questionJobs')
           .exec();
       }
       if (job) return job;
@@ -172,6 +189,7 @@ jobSchema.statics = {
       .populate('competences._id', '_id title rank')
       .populate('secteur', '_id type title description')
       .populate('environments', '_id title')
+      .populate('questionJobs')
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

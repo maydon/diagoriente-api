@@ -81,8 +81,21 @@ exports.update = async (req, res, next) => {
   try {
     const { title, description } = req.body;
     req.body.search = normalize([title, description]);
+    const { questionJobs } = req.body;
     const newJob = omit(req.body, '_id');
     const updatedJob = Object.assign(job, newJob);
+    if (questionJobs) {
+      const QJtoAdd = questionJobs.filter((qj) => !qj._id);
+      const QJtoDelete = job.questionJobs.filter(
+        (jqj) => !questionJobs.find((qj) => qj._id && jqj._id.toString() === qj._id.toString())
+      );
+      QJtoAdd.forEach((qj) => {
+        updatedJob.questionJobs.push(qj);
+      });
+      QJtoDelete.forEach((qj) => {
+        updatedJob.questionJobs.id(qj._id).remove();
+      });
+    }
     const savedJob = await updatedJob.save();
     res.json(savedJob.transform());
   } catch (error) {
