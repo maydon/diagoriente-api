@@ -66,7 +66,8 @@ module.exports = {
         .unique(),
       environments: Joi.array()
         .items(Joi.objectId())
-        .unique()
+        .unique(),
+      link: Joi.string().max(500)
     }
   },
 
@@ -104,7 +105,8 @@ module.exports = {
         .unique(),
       environments: Joi.array()
         .items(Joi.objectId())
-        .unique()
+        .unique(),
+      link: Joi.string().max(500)
     }
   }
 };

@@ -55,7 +55,11 @@ const jobSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Environment'
       }
-    ]
+    ],
+    link: {
+      type: String,
+      maxlength: 500
+    }
   },
   {
     timestamps: true
@@ -80,7 +84,8 @@ jobSchema.method({
       'competences',
       'formations',
       'favoriteId',
-      'environments'
+      'environments',
+      'link'
     ];
 
     fields.forEach((field) => {
