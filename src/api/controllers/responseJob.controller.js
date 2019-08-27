@@ -82,6 +82,68 @@ exports.create = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.updateMany = async (req, res, next) => {
+  try {
+    const result = [];
+    const { responses } = req.body;
+    responses.forEach(async (responseBody) => {
+      const {
+        _id, response, questionJobId, jobId, parcourId
+      } = responseBody;
+
+      if (!_id) {
+        const responseJob = await ResponseJob.findById(_id);
+        if (!responseJob) {
+          throw new APIError({
+            message: `response with id ${_id} does not exist`,
+            status: httpStatus.NOT_FOUND
+          });
+        }
+        const updatedResponseJob = Object.assign(responseJob, responseBody);
+        const savedResponseJob = await updatedResponseJob.save();
+        result.push(savedResponseJob.transform());
+      } else {
+        const parcour = await Parcour.get(parcourId);
+        if (!parcour) {
+          throw new APIError({
+            message: 'parcours does not exist',
+            status: httpStatus.NOT_FOUND
+          });
+        }
+        const job = await Job.get(jobId);
+        if (!job) {
+          throw new APIError({
+            message: 'Job does not exist',
+            status: httpStatus.NOT_FOUND
+          });
+        }
+
+        const responseObj = {
+          response,
+          questionJobId,
+          jobId,
+          parcourId
+        };
+        const questionJob = job.questionJobs.id(questionJobId);
+        if (!questionJob) {
+          throw new APIError({
+            message: 'Question does not exist',
+            status: httpStatus.NOT_FOUND
+          });
+        }
+        responseObj.questionJobLabel = questionJob.label;
+        const responseJob = new ResponseJob(responseObj);
+        const savedResponseJob = await responseJob.save();
+        result.push(savedResponseJob.transform());
+      }
+    });
+    res.status(httpStatus.CREATED);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
 /**
  * Update  responseJob
  * @public

@@ -4,7 +4,9 @@ const controller = require('../../controllers/responseJob.controller');
 const {
   authorize, ADVISOR, ADMIN, LOGGED_USER
 } = require('../../middlewares/auth');
-const { list, update, create } = require('../../validations/responseJob.validation');
+const {
+  list, update, create, updateMany
+} = require('../../validations/responseJob.validation');
 
 const router = express.Router();
 
@@ -46,6 +48,8 @@ router
    * @apiHeader {String} Authorization   User's access token
    *
    * @apiParam  {Boolean}            response     ResponseJob's response
+   * @apiParam  {ObjectId}            parcourId     Parcour's id
+   * @apiParam  {ObjectId}            jobId     Job's id
    * @apiParam  {ObjectId}            questionJobId     QuestionJob's id
    *
    *
@@ -56,7 +60,34 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(authorize(ADMIN), validate(create), controller.create);
+  .post(authorize(ADMIN), validate(create), controller.create)
+  /**
+   * @api {put} v1/responseJobs Create ResponseJobs
+   * @apiDescription Create a new of ResponseJobs
+   * @apiVersion 1.0.0
+   * @apiName CreateResponseJobs
+   * @apiGroup ResponseJob
+   * @apiPermission admin
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiHeader {String} Authorization   User's access token
+   *
+   * @apiParam  {ObjectId}            _id     ResponseJob's id
+   * @apiParam  {Boolean}            response     ResponseJob's response
+   * @apiParam  {ObjectId}            parcourId     Parcour's id
+   * @apiParam  {ObjectId}            jobId     Job's id
+   * @apiParam  {ObjectId}            questionJobId     QuestionJob's id
+   *
+   *
+   * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
+   *
+   * @apiSuccess {Object[]}   ResponseJob object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .put(authorize([LOGGED_USER, ADVISOR]), validate(updateMany), controller.updateMany);
 
 router
   .route('/:responseJobId')
