@@ -5,6 +5,7 @@ const Favorite = require('../models/favorite.model');
 const Parcour = require('../models/parcour.model');
 const Family = require('../models/family.model');
 const FamiliesRank = require('../models/familiesRank.model');
+const ResponseJob = require('../models/responseJob.model');
 const { pagination } = require('../utils/Pagination');
 const { addGlobals } = require('../middlewares/addGlobals');
 const { matchingAlgo } = require('../middlewares/matchingAlgo');
@@ -220,16 +221,25 @@ exports.myJob = async (req, res, next) => {
     });
     const myJobs = matchingAlgo(suspectJobs, parcour, formatFamilies, favoriteJobList, algoType);
 
-    res.json(
-      myJobs.map((job) => {
-        const favorite = favoriteJobList.find((fav) => `${fav.job}` === `${job._id}`);
-        if (favorite) favorite.environments = suspectJobs.find((sj) => `${sj.id}` === `${job._id}`);
-        return {
-          ...job,
-          favoriteId: favorite ? favorite._id : null
-        };
-      })
-    );
+    const myJobstosend = myJobs.map((job) => {
+      const favorite = favoriteJobList.find((fav) => `${fav.job}` === `${job._id}`);
+      if (favorite) favorite.environments = suspectJobs.find((sj) => `${sj.id}` === `${job._id}`);
+      return {
+        ...job,
+        favoriteId: favorite ? favorite._id : null
+      };
+    });
+
+    const jobIds = myJobs.map((job) => job._id);
+    const responses = await ResponseJob.find({ jobId: { $in: jobIds } });
+    myJobstosend.forEach((m) => {
+      m.responseJobs = [];
+    });
+    responses.forEach((response) => {
+      const jobFound = myJobstosend.find((m) => m._id.toString() === response.jobId.toString());
+      if (jobFound) jobFound.responseJobs.push(response);
+    });
+    res.json(myJobstosend);
   } catch (error) {
     next(error);
   }
