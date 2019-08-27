@@ -16,7 +16,7 @@ const responseJobSchema = new mongoose.Schema(
     },
     parcourId: { type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' },
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
-    questionJobId: { type: mongoose.Schema.Types.ObjectId, ref: 'QuestionJob' },
+    questionJobId: { type: mongoose.Schema.Types.ObjectId },
     questionJobLabel: { type: String, maxlength: 250, trim: true },
     description: { type: String, maxlength: 450, trim: true }
   },
