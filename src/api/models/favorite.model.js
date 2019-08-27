@@ -25,7 +25,7 @@ const favoriteSchema = new mongoose.Schema(
 favoriteSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'user', 'parcour', 'job', 'interested'];
+    const fields = ['_id', 'user', 'parcour', 'job', 'interested', 'responseJobs'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];

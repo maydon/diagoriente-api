@@ -1,7 +1,10 @@
 const Favorite = require('../models/favorite.model');
+const Job = require('../models/job.model');
 const { omit } = require('lodash');
 const { pagination } = require('../utils/Pagination');
 const httpStatus = require('http-status');
+const APIError = require('../utils/APIError');
+const ResponseJob = require('../models/responseJob.model');
 
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -50,11 +53,18 @@ exports.list = async (req, res, next) => {
   try {
     const { role, _id } = req.user;
 
-    console.log('role', role, _id);
-
     const search = role === 'user' ? { user: _id } : { user: null };
 
     const favorites = await Favorite.list({ ...req.query, _id });
+    const jobIds = favorites.map((favorite) => favorite.job._id);
+    const responses = await ResponseJob.find({ jobId: { $in: jobIds } });
+    favorites.forEach((f) => {
+      f.responseJobs = [];
+    });
+    responses.forEach((response) => {
+      const favorite = favorites.find((f) => f.job._id.toString() === response.jobId.toString());
+      if (favorite) favorite.responseJobs.push(response);
+    });
     const transformedFamilies = favorites.map((fav) => fav.transform());
     const querySearch = { ...search };
     const responstPagination = await pagination(
@@ -77,15 +87,46 @@ exports.list = async (req, res, next) => {
 exports.create = async (req, res, next) => {
   try {
     const { user } = req;
+    const {
+      job, parcour, interested, responses
+    } = req.body;
+    if (responses) {
+      responses.forEach(async (responseObject) => {
+        const { response, questionJobId } = responseObject;
+        const jobObject = await Job.get(job);
+        if (!jobObject) {
+          throw new APIError({
+            message: 'Job does not exist',
+            status: httpStatus.NOT_FOUND
+          });
+        }
+        const responseBody = {
+          response,
+          questionJobId,
+          jobId: job,
+          parcourId: parcour
+        };
+        const questionJob = jobObject.questionJobs.id(questionJobId);
+        if (!questionJob) {
+          throw new APIError({
+            message: 'Question does not exist',
+            status: httpStatus.NOT_FOUND
+          });
+        }
+        responseBody.questionJobLabel = questionJob.label;
+        const responseJob = new ResponseJob(responseBody);
+        await responseJob.save();
+      });
+    }
+
     await Favorite.update(
-      { job: req.body.job, parcour: req.body.parcour, user: user._id },
-      { $set: { interested: req.body.interested } },
+      { job, parcour, user: user._id },
+      { $set: { interested } },
       { upsert: true }
     );
-
     const newFavorite = await Favorite.findOne({
-      job: req.body.job,
-      parcour: req.body.parcour,
+      job,
+      parcour,
       user: user._id
     });
 
