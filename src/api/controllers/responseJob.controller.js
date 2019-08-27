@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { pagination } = require('../utils/Pagination');
 const ResponseJob = require('../models/responseJob.model');
+const Parcour = require('../models/parcour.model');
 const Job = require('../models/job.model');
 const { omit } = require('lodash');
 const { handler: errorHandler } = require('../middlewares/error');
@@ -42,8 +43,16 @@ exports.get = (req, res) => res.json(req.locals.responseJob.transform());
  */
 exports.create = async (req, res, next) => {
   try {
-    const { user } = req;
-    const { response, questionJobId, jobId } = req.body;
+    const {
+      response, questionJobId, jobId, parcourId
+    } = req.body;
+    const parcour = await Parcour.get(parcourId);
+    if (!parcour) {
+      throw new APIError({
+        message: 'parcours does not exist',
+        status: httpStatus.NOT_FOUND
+      });
+    }
     const job = await Job.get(jobId);
     if (!job) {
       throw new APIError({
@@ -51,8 +60,12 @@ exports.create = async (req, res, next) => {
         status: httpStatus.NOT_FOUND
       });
     }
-    const responseBody = { response, questionJobId, jobId };
-    responseBody.userId = user._id;
+    const responseBody = {
+      response,
+      questionJobId,
+      jobId,
+      parcourId
+    };
     const questionJob = job.questionJobs.id(questionJobId);
     if (!questionJob) {
       throw new APIError({

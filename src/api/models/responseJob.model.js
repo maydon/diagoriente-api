@@ -14,7 +14,7 @@ const responseJobSchema = new mongoose.Schema(
       type: Boolean,
       required: true
     },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    parcourId: { type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' },
     jobId: { type: mongoose.Schema.Types.ObjectId, ref: 'Job' },
     questionJobId: { type: mongoose.Schema.Types.ObjectId, ref: 'QuestionJob' },
     questionJobLabel: { type: String, maxlength: 250, trim: true },
@@ -31,7 +31,7 @@ const responseJobSchema = new mongoose.Schema(
 responseJobSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['_id', 'response', 'userId', 'jobId', 'questionJobId', 'questionJobLabel'];
+    const fields = ['_id', 'response', 'parcourId', 'jobId', 'questionJobId', 'questionJobLabel'];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
