@@ -23,15 +23,18 @@ module.exports = {
 
   updateMany: {
     body: {
-      responses: Joi.array().items({
-        _id: Joi.objectId(),
-        response: Joi.boolean().required(),
-        jobId: Joi.objectId().required(),
-        questionJobId: Joi.objectId().required(),
-        parcourId: Joi.objectId().required()
-      }).min(1).max(10)
+      responses: Joi.array()
+        .items({
+          _id: Joi.objectId(),
+          response: Joi.boolean().required(),
+          jobId: Joi.objectId().required(),
+          questionJobId: Joi.objectId().required(),
+          parcourId: Joi.objectId().required()
+        })
+        .min(1)
+        .max(10)
     }
-  }
+  },
 
   // PATCH /v1/contexts
   update: {
