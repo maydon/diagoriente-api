@@ -86,58 +86,53 @@ exports.create = async (req, res, next) => {
 exports.updateMany = async (req, res, next) => {
   try {
     const result = [];
-    const { responses } = req.body;
-    responses.forEach(async (responseBody) => {
-      const {
-        _id, response, questionJobId, jobId, parcourId
-      } = responseBody;
+    const { responses, jobId, parcourId } = req.body;
+    const parcour = await Parcour.get(parcourId);
+    if (!parcour) {
+      throw new APIError({
+        message: 'parcours does not exist',
+        status: httpStatus.NOT_FOUND
+      });
+    }
+    const job = await Job.get(jobId);
+    if (!job) {
+      throw new APIError({
+        message: 'Job does not exist',
+        status: httpStatus.NOT_FOUND
+      });
+    }
+    for (let i = 0; i < responses.length; i++) {
+      const responseBody = responses[i];
+      const { response, questionJobId } = responseBody;
 
-      if (!_id) {
-        const responseJob = await ResponseJob.findById(_id);
-        if (!responseJob) {
-          throw new APIError({
-            message: `response with id ${_id} does not exist`,
-            status: httpStatus.NOT_FOUND
-          });
-        }
-        const updatedResponseJob = Object.assign(responseJob, responseBody);
+      const questionJob = job.questionJobs.id(questionJobId);
+      if (!questionJob) {
+        throw new APIError({
+          message: 'Question does not exist',
+          status: httpStatus.NOT_FOUND
+        });
+      }
+      // eslint-disable-next-line no-await-in-loop
+      const responseJob = await ResponseJob.findOne({ parcourId, jobId, questionJobId });
+      if (responseJob) {
+        const newResponseJob = { response, questionJobLabel: questionJob.label };
+        const updatedResponseJob = Object.assign(responseJob, newResponseJob);
+        // eslint-disable-next-line no-await-in-loop
         const savedResponseJob = await updatedResponseJob.save();
         result.push(savedResponseJob.transform());
       } else {
-        const parcour = await Parcour.get(parcourId);
-        if (!parcour) {
-          throw new APIError({
-            message: 'parcours does not exist',
-            status: httpStatus.NOT_FOUND
-          });
-        }
-        const job = await Job.get(jobId);
-        if (!job) {
-          throw new APIError({
-            message: 'Job does not exist',
-            status: httpStatus.NOT_FOUND
-          });
-        }
-
         const responseObj = {
           response,
           questionJobId,
           jobId,
           parcourId
         };
-        const questionJob = job.questionJobs.id(questionJobId);
-        if (!questionJob) {
-          throw new APIError({
-            message: 'Question does not exist',
-            status: httpStatus.NOT_FOUND
-          });
-        }
         responseObj.questionJobLabel = questionJob.label;
-        const responseJob = new ResponseJob(responseObj);
-        const savedResponseJob = await responseJob.save();
+        const newResponseJob = new ResponseJob(responseObj);
+        const savedResponseJob = await newResponseJob.save();
         result.push(savedResponseJob.transform());
       }
-    });
+    }
     res.status(httpStatus.CREATED);
     res.json(result);
   } catch (error) {

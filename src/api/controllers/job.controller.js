@@ -54,7 +54,17 @@ exports.get = async (req, res, next) => {
     );
 
     const transformedJob = job.transform();
-    if (response) transformedJob.responseJobs = response;
+    transformedJob.questionJobs.forEach((qj) => {
+      qj.response = null;
+    });
+    if (response) {
+      response.forEach((r) => {
+        const foundQuestionJob = transformedJob.questionJobs.find(
+          (qj) => qj._id.toString() === r.questionJobId.toString()
+        );
+        foundQuestionJob.response = r.response;
+      });
+    }
 
     res.json(transformedJob);
   } catch (error) {
