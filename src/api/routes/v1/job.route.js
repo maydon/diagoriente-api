@@ -5,7 +5,7 @@ const {
   authorize, ADVISOR, LOGGED_USER, ADMIN
 } = require('../../middlewares/auth');
 const {
-  create, update, list, myJob
+  create, update, list, myJob, get
 } = require('../../validations/job.validation');
 
 const router = express.Router();
@@ -133,7 +133,7 @@ router
    *
    * @apiError (Not Found 404)    NotFound     Job does not exist
    */
-  .get(authorize(LOGGED_USER), controller.get)
+  .get(authorize(LOGGED_USER), validate(get), controller.get)
   /**
    * @api {patch} v1/jobs/:id update Job
    * @apiDescription Get job information

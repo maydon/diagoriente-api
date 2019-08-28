@@ -34,6 +34,7 @@ exports.load = async (req, res, next, id) => {
 exports.get = async (req, res, next) => {
   try {
     const { user } = req;
+    const { parcourId } = req.params;
     const { job } = req.locals;
 
     const favoriteJob = await Favorite.findOne({
@@ -49,8 +50,8 @@ exports.get = async (req, res, next) => {
       job.favoriteId = favoriteJob._id;
     }
 
-    const response = await ResponseJob.find({ jobId: job._id }).select(
-      '_id response questionJobId'
+    const response = await ResponseJob.find({ jobId: job._id, parcourId }).select(
+      'response questionJobId'
     );
 
     const transformedJob = job.transform();
@@ -78,7 +79,7 @@ exports.create = async (req, res, next) => {
     const { title, description } = req.body;
 
     req.body.search = normalize([title, description]);
-    const job = new Job(req.body);
+    const job = new Job({ ...req.body, questionJobs: [] });
     const savedJob = await job.save();
     res.status(httpStatus.CREATED);
     res.json(savedJob.transform());

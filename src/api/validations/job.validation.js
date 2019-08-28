@@ -2,6 +2,11 @@ const Joi = require('../utils/myJoi');
 const Job = require('../models/job.model');
 
 module.exports = {
+  get: {
+    query: {
+      parcourId: Joi.objectId().required()
+    }
+  },
   // GET /v1/themes
   list: {
     query: {
@@ -67,14 +72,7 @@ module.exports = {
       environments: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      link: Joi.string().max(500),
-      questionJobs: Joi.array()
-        .items({
-          label: Joi.string()
-            .max(250)
-            .required()
-        })
-        .max(10)
+      link: Joi.string().max(500)
     }
   },
 

@@ -108,7 +108,7 @@ exports.updateMany = async (req, res, next) => {
       const questionJob = job.questionJobs.id(questionJobId);
       if (!questionJob) {
         throw new APIError({
-          message: 'Question does not exist',
+          message: `Question with id ${questionJobId} does not exist`,
           status: httpStatus.NOT_FOUND
         });
       }
@@ -129,6 +129,7 @@ exports.updateMany = async (req, res, next) => {
         };
         responseObj.questionJobLabel = questionJob.label;
         const newResponseJob = new ResponseJob(responseObj);
+        // eslint-disable-next-line no-await-in-loop
         const savedResponseJob = await newResponseJob.save();
         result.push(savedResponseJob.transform());
       }
