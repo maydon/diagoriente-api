@@ -94,23 +94,30 @@ exports.create = async (req, res, next) => {
  */
 exports.update = async (req, res, next) => {
   const { job } = req.locals;
-
   try {
     const { title, description } = req.body;
     req.body.search = normalize([title, description]);
     const { questionJobs } = req.body;
-    const newJob = omit(req.body, '_id');
+    const newJob = omit(req.body, ['_id', 'questionJobs']);
     const updatedJob = Object.assign(job, newJob);
     if (questionJobs) {
       const QJtoAdd = questionJobs.filter((qj) => !qj._id);
-      const QJtoDelete = job.questionJobs.filter(
-        (jqj) => !questionJobs.find((qj) => qj._id && jqj._id.toString() === qj._id.toString())
+      const QJtoDelete = job.questionJobs.filter((jqj) => {
+        const questionJobsWithId = questionJobs.filter((qj) => qj._id);
+        return !questionJobsWithId.find((qj) => jqj._id.toString() === qj._id.toString());
+      });
+      const QJtoUpdate = questionJobs.filter(
+        (qj) => qj._id && job.questionJobs.find((jqj) => qj._id.toString() === jqj._id.toString())
       );
       QJtoAdd.forEach((qj) => {
-        updatedJob.questionJobs.push(qj);
+        updatedJob.questionJobs.push({ label: qj.label });
       });
       QJtoDelete.forEach((qj) => {
         updatedJob.questionJobs.id(qj._id).remove();
+      });
+      QJtoUpdate.forEach((qj) => {
+        const toUpdate = updatedJob.questionJobs.id(qj._id);
+        if (toUpdate.label !== qj.label) toUpdate.set({ label: qj.label });
       });
     }
     const savedJob = await updatedJob.save();

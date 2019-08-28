@@ -112,7 +112,7 @@ module.exports = {
       link: Joi.string().max(500),
       questionJobs: Joi.array()
         .items({
-          _id: Joi.objectId(),
+          _id: Joi.string().allow(null),
           label: Joi.string()
             .max(250)
             .required()
