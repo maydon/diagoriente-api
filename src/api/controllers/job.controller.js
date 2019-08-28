@@ -34,7 +34,7 @@ exports.load = async (req, res, next, id) => {
 exports.get = async (req, res, next) => {
   try {
     const { user } = req;
-    const { parcourId } = req.params;
+    const { parcourId } = req.query;
     const { job } = req.locals;
 
     const favoriteJob = await Favorite.findOne({
