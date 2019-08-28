@@ -4,7 +4,7 @@ const Job = require('../models/job.model');
 module.exports = {
   get: {
     query: {
-      parcourId: Joi.objectId().required()
+      parcourId: Joi.objectId()
     }
   },
   // GET /v1/themes

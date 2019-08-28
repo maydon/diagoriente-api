@@ -50,18 +50,19 @@ exports.get = async (req, res, next) => {
       job.favoriteId = favoriteJob._id;
     }
 
-    const response = await ResponseJob.find({ jobId: job._id, parcourId }).select(
-      'response questionJobId'
-    );
-
     const transformedJob = job.transform();
-    if (response) {
-      response.forEach((r) => {
-        const foundQuestionJob = transformedJob.questionJobs.find(
-          (qj) => qj._id.toString() === r.questionJobId.toString()
-        );
-        foundQuestionJob.response = r.response;
-      });
+    if (parcourId) {
+      const response = await ResponseJob.find({ jobId: job._id, parcourId }).select(
+        'response questionJobId'
+      );
+      if (response) {
+        response.forEach((r) => {
+          const foundQuestionJob = transformedJob.questionJobs.find(
+            (qj) => qj._id.toString() === r.questionJobId.toString()
+          );
+          foundQuestionJob.response = r.response;
+        });
+      }
     }
 
     res.json(transformedJob);
