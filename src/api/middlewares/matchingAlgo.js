@@ -5,13 +5,11 @@ const { reduceJobs } = require('../utils/reduceId');
 const formatToObject = (data) => {
   const formatObjectDate = {};
 
-
   data.forEach((item) => {
     formatObjectDate[item.interests] = item;
   });
   return formatObjectDate;
 };
-
 
 const addJpInts = (data) => {
   const formatDate = {
@@ -56,7 +54,6 @@ const addJpComps = (data) => {
     formatObjectDate[item._id] = item;
   });
 
-
   return formatObjectDate;
 };
 
@@ -64,19 +61,19 @@ const sorteJobsByHigerRank = (job, JpInts, JpComps) => {
   let jobRank = 0;
 
   job.interests.forEach((interest) => {
-    if (interest._id in JpInts) {
-      const m = math.multiply(JpInts[interest._id].jpInt, interest.weight);
+    console.log('in**', jobRank);
+    if (interest._id._id in JpInts) {
+      const m = math.multiply(JpInts[interest._id._id].jpInt, interest.weight);
 
       jobRank += math.number(m);
+      console.log('end**', jobRank);
     }
+    console.log('out**', jobRank);
   });
 
   job.competences.forEach((competence) => {
     if (competence._id in JpComps) {
-      const m = math.multiply(
-        JpComps[competence._id].jpComp,
-        competence.weight
-      );
+      const m = math.multiply(JpComps[competence._id].jpComp, competence.weight);
 
       jobRank += math.number(m);
     }
@@ -88,8 +85,8 @@ const sorteJobsByHigerRank = (job, JpInts, JpComps) => {
 const sorteJobsByFamilyHigerRank = (job, pExpInt) => {
   let jobRank = 0;
   job.interests.forEach((interest) => {
-    if (interest._id in pExpInt) {
-      const m = math.multiply(pExpInt[interest._id].pExpInt, interest.weight);
+    if (interest._id._id in pExpInt) {
+      const m = math.multiply(pExpInt[interest._id._id].pExpInt, interest.weight);
       jobRank += math.number(m);
     }
   });

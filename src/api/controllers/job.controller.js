@@ -229,7 +229,7 @@ exports.myJob = async (req, res, next) => {
     const suspectJobs = await Job.find(querySearch)
       .populate('secteur')
       .populate('environments', '_id title')
-      .populate('interests._id', 'nom rank')
+      .populate('interests._id', '_id nom rank')
       .populate('questionJobs', '_id label');
     const favoriteJobList = await Favorite.find({
       parcour: parcourId,
