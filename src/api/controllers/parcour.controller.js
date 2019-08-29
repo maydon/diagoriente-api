@@ -4,6 +4,8 @@ const APIError = require('../utils/APIError');
 const { pagination } = require('../utils/Pagination');
 const Parcour = require('../models/parcour.model');
 const Skill = require('../models/skill.model');
+const Job = require('../models/job.model');
+const ResponseJob = require('../models/responseJob.model');
 
 const User = require('../models/user.model');
 const { addGlobals } = require('../middlewares/addGlobals');
@@ -31,7 +33,6 @@ exports.load = async (req, res, next, id) => {
 exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
-    const { type } = req.query;
     const globalParcour = await addGlobals(parcour);
     const skills = await Skill.find({
       _id: { $in: parcour.skills }
@@ -47,6 +48,24 @@ exports.get = async (req, res, next) => {
       });
       c.themes = Array.from(themes);
     });
+
+    const responseJobs = await ResponseJob.find({ parcourId: parcour._id });
+    if (responseJobs && responseJobs.length) {
+      const jobIds = Array.from(new Set(responseJobs.map((rj) => rj.jobId.toString())));
+      const jobs = await Job.find({ _id: { $in: jobIds } }).select('_id title questionJobs');
+      const newJobs = jobs.map((job) => {
+        const newJobObj = { ...job };
+        const newJob = newJobObj._doc;
+        const questionJobsWithResponse = newJob.questionJobs.filter((tjq) =>
+          responseJobs.find((rj) => rj.questionJobId.toString() === tjq._id.toString()));
+        newJob.questionJobs = questionJobsWithResponse.map((qj) => {
+          const foundResponseJob = responseJobs.find((r) => qj._id.toString() === r.questionJobId.toString());
+          return { _id: qj._id, label: qj.label, response: foundResponseJob.response };
+        });
+        return newJob;
+      });
+      globalParcour.jobs = newJobs;
+    } else globalParcour.jobs = [];
 
     return res.json(globalParcour.transform());
   } catch (error) {

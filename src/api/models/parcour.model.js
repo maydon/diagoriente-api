@@ -43,7 +43,8 @@ parcourSchema.method({
       'globalInterest',
       'createdAt',
       'updatedAt',
-      'played'
+      'played',
+      'jobs'
     ];
 
     fields.forEach((field) => {

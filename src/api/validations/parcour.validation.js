@@ -8,10 +8,7 @@ module.exports = {
       page: Joi.number().min(1),
       perPage: Joi.number()
         .min(1)
-        .max(100),
-      type: Joi.string()
-        .valid(Theme.types)
-        .default('personal')
+        .max(100)
     }
   },
 
@@ -47,12 +44,14 @@ module.exports = {
 
   updateCompetences: {
     body: {
-      competences: Joi.array().items({
-        _id: Joi.objectId().required(),
-        value: Joi.number()
-          .min(0)
-          .max(4)
-      }).default([])
+      competences: Joi.array()
+        .items({
+          _id: Joi.objectId().required(),
+          value: Joi.number()
+            .min(0)
+            .max(4)
+        })
+        .default([])
     }
   },
 
