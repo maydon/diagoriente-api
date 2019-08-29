@@ -32,12 +32,10 @@ exports.get = async (req, res, next) => {
   try {
     const { parcour } = req.locals;
     const { type } = req.query;
-    const globalParcour = await addGlobals(parcour, type);
+    const globalParcour = await addGlobals(parcour);
     const skills = await Skill.find({
-      _id: { $in: parcour.skills },
-      type
-    }).populate({ path: 'theme', select: 'title type' });
-    parcour.skills = parcour.skills.filter((skill) => skill.theme && skill.theme.type === type);
+      _id: { $in: parcour.skills }
+    }).populate({ path: 'theme', select: 'title' });
 
     globalParcour.globalCopmetences.forEach((c) => {
       c.taux = Math.round((c.count * 100) / parcour.skills.length);
