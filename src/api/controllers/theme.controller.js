@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const Theme = require('../models/theme.model');
 const Interest = require('../models/interest.model');
+const Competence = require('../models/competence.model');
 const { pagination } = require('../utils/Pagination');
 const { importFormater } = require('../utils/Import');
 const { normalize } = require('../utils/Normalize');
@@ -34,9 +35,16 @@ exports.get = (req, res) => res.json(req.locals.theme.transform());
  */
 exports.create = async (req, res, next) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, tooltips } = req.body;
     req.body.search = normalize([title, description]);
+    const competences = await Competence.find();
+    const competenceIdArray = competences.map((c) => c._id);
     const newTheme = omit(req.body, 'resources');
+    const tooltipArray = competenceIdArray.map((cid) => ({
+      competenceId: cid,
+      tooltip: ''
+    }));
+    if (tooltips && tooltips.length) newTheme.tooltips = [...tooltipArray, tooltips];
     const theme = new Theme(newTheme);
     const savedTheme = await theme.save();
     res.status(httpStatus.CREATED);
@@ -53,10 +61,11 @@ exports.update = async (req, res, next) => {
   const { theme } = req.locals;
 
   try {
-    const { title, description } = req.body;
+    const { title, description, tooltips } = req.body;
     req.body.search = normalize([title, description]);
-    const newTheme = omit(req.body, '_id', 'resources');
+    const newTheme = omit(req.body, ['_id', 'resources', 'tooltips']);
     const updatedTheme = Object.assign(theme, newTheme);
+    if (tooltips && tooltips.length) updatedTheme.tooltips = [...updatedTheme.tooltips, tooltips];
     const savedpost = await updatedTheme.save();
     res.json(savedpost.transform());
   } catch (error) {
@@ -133,12 +142,7 @@ exports.list = async (req, res, next) => {
       ...verified
     };
 
-    const responstPagination = await pagination(
-      transformedThemes,
-      req.query,
-      Theme,
-      querySearch
-    );
+    const responstPagination = await pagination(transformedThemes, req.query, Theme, querySearch);
 
     res.json(responstPagination);
   } catch (error) {
@@ -159,12 +163,7 @@ exports.secteurChildList = async (req, res, next) => {
     const secteurs = await Theme.listSecteur({ parentId });
     const transformedSecteurs = secteurs.map((theme) => theme.transform());
 
-    const responstPagination = await pagination(
-      transformedSecteurs,
-      req.query,
-      Theme,
-      null
-    );
+    const responstPagination = await pagination(transformedSecteurs, req.query, Theme, null);
 
     responstPagination.secteur = secteur.transform();
 
@@ -219,10 +218,8 @@ exports.updateSecteur = async (req, res, next) => {
     secteur.search = normalize([title, description]);
 
     // we should set to null unavailable id theme
-    const recentUpdatedChilds = map(
-      await Theme.find({ parentId: secteur._id }),
-      (item) => item._id.toString()
-    );
+    const recentUpdatedChilds = map(await Theme.find({ parentId: secteur._id }), (item) =>
+      item._id.toString());
 
     const addParentId = difference(secteurChilds, recentUpdatedChilds);
     const removeParentId = difference(recentUpdatedChilds, secteurChilds);
@@ -237,12 +234,7 @@ exports.updateSecteur = async (req, res, next) => {
       { $set: { parentId: secteur._id } }
     );
 
-    const newSecteur = omit(req.body, [
-      'resources',
-      'type',
-      'activities',
-      'parentId'
-    ]);
+    const newSecteur = omit(req.body, ['resources', 'type', 'activities', 'parentId']);
 
     const updatedSecteur = Object.assign(secteur, newSecteur);
 

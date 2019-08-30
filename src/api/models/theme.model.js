@@ -49,6 +49,9 @@ const themeSchema = new mongoose.Schema(
       type: Boolean,
       default: true
     },
+    tooltips: [
+      { competenceId: { type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }, tooltip: String }
+    ],
     activities: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
     search: { type: String, trim: true },
     required: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Competence' }]
@@ -73,7 +76,8 @@ themeSchema.method({
       'verified',
       'resources',
       'activities',
-      'required'
+      'required',
+      'tooltips'
     ];
 
     fields.forEach((field) => {

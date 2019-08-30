@@ -77,7 +77,11 @@ module.exports = {
         .required(),
       required: Joi.array()
         .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
-        .default([])
+        .default([]),
+      tooltips: Joi.array().items({
+        competenceId: Joi.objectId().required(),
+        tooltip: Joi.string().default('')
+      })
     }
   },
 
@@ -97,7 +101,11 @@ module.exports = {
         .unique(),
       required: Joi.array()
         .items(Joi.string().regex(/^[a-fA-F0-9]{24}$/))
-        .default([])
+        .default([]),
+      tooltips: Joi.array().items({
+        competenceId: Joi.objectId().required(),
+        tooltip: Joi.string().default('')
+      })
     }
   }
 };
