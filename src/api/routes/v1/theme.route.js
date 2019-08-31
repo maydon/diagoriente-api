@@ -81,6 +81,7 @@ router
    * @apiSuccess (Created 201) {String}  description      Theme's description
    * @apiSuccess (Created 201) {String}  role       Theme's role
    * @apiSuccess (Created 201) {boolean} verified       Theme's role
+   * @apiSuccess (Created 201) {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
 
    * @apiSuccess (Created 201) {Date}    createdAt  Timestamp
    *
@@ -143,6 +144,8 @@ router
    * @apiSuccess {String}  type       Themes's type
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {boolean} verified  Theme's role
+   * @apiSuccess {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
+   * 
    * @apiSuccess {Date}    createdAt  Timestamp
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
@@ -164,6 +167,8 @@ router
    * @apiSuccess {String}  type       Themes's type
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Date}    createdAt  Timestamp
+   * @apiSuccess {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
+   * 
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist

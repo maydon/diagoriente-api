@@ -80,7 +80,7 @@ module.exports = {
         .default([]),
       tooltips: Joi.array().items({
         competenceId: Joi.objectId().required(),
-        tooltip: Joi.string().default('')
+        tooltip: Joi.string().allow('').default('')
       })
     }
   },
@@ -104,7 +104,7 @@ module.exports = {
         .default([]),
       tooltips: Joi.array().items({
         competenceId: Joi.objectId().required(),
-        tooltip: Joi.string().default('')
+        tooltip: Joi.string().allow('').default('')
       })
     }
   }
