@@ -18,6 +18,7 @@ const questionsRoutes = require('./question.route');
 const contextsRoutes = require('./context.route');
 const environmentsRoutes = require('./environment.route');
 const responseJobsRoutes = require('./responseJob.route');
+const communeRoute = require('./commune.route');
 
 const router = express.Router();
 
@@ -51,6 +52,7 @@ router.use('/questions', questionsRoutes);
 router.use('/contexts', contextsRoutes);
 router.use('/environments', environmentsRoutes);
 router.use('/responseJobs', responseJobsRoutes);
+router.use('/commune', communeRoute);
 
 router.use('/mailer', mailerRoutes);
 

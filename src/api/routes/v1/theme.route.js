@@ -137,6 +137,7 @@ router
    * @apiParam  {Boolean}            verified    Theme's verified
    * @apiParam  {String=profesional,personal}  [role]    Theme's role
    * @apiParam  {String}  resources     add resources object {'color','backgroundColor'}
+   * @apiSuccess {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
    *
    * @apiSuccess {String}  id         Themes's id
    * @apiSuccess {String}  title       Themes's name
@@ -145,7 +146,7 @@ router
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
-   * 
+   *
    * @apiSuccess {Date}    createdAt  Timestamp
    *
    * @apiError (Not Found 404)    NotFound     User does not exist
@@ -168,7 +169,7 @@ router
    * @apiSuccess {boolean} verified  Theme's role
    * @apiSuccess {Date}    createdAt  Timestamp
    * @apiSuccess {Object[]} tooltips       [ {competenceId: ObjectId, tooltip: String } ]
-   * 
+   *
    *
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     User does not exist
