@@ -4,7 +4,7 @@ const APIError = require('../utils/APIError');
 
 const communeSchema = new mongoose.Schema({
   Code_commune_INSEE: {
-    type: Number
+    type: String
   },
   Nom_commune: {
     type: String
@@ -69,10 +69,14 @@ communeSchema.statics = {
     }
   },
 
-  list({ search }) {
+  list({ page = 1, perPage = 30, search }) {
     const reg = new RegExp(search, 'i');
-    console.log('reg', reg);
-    return this.find({ Code_commune_INSEE: reg }).exec();
+    return this.find({
+      $or: [{ Code_commune_INSEE: reg }, { search: reg }]
+    })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
   }
 };
 /**
