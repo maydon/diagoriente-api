@@ -4,21 +4,28 @@ const APIError = require('../utils/APIError');
 
 const communeSchema = new mongoose.Schema(
   {
-    code_INSEE: {
+    Code_commune_INSEE: {
       type: Number,
       required: true
     },
-    nom: {
+    Nom_commune: {
       type: String,
       required: true
     },
-    code_postal: {
+    Code_postal: {
       type: Number,
       required: true
     },
-    libelle: {
+    Libelle_acheminement: {
       type: String,
       required: true
+    },
+    coordonnees_gps: {
+      type: String,
+      required: true
+    },
+    Ligne_5: {
+      type: String
     },
     search: { type: String, trim: true }
   },
@@ -32,7 +39,14 @@ const communeSchema = new mongoose.Schema(
 communeSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['code_INSEE', 'nom', 'code_postal', 'libelle'];
+    const fields = [
+      'Code_commune_INSEE',
+      'Nom_commune',
+      'Code_postal',
+      'Libelle_acheminement',
+      'Ligne_5',
+      'coordonnees_gps'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
@@ -64,7 +78,7 @@ communeSchema.statics = {
       throw error;
     }
   },
-  list({
+  /*   list({
     page = 1, perPage = 30, search, type
   }) {
     const reg = new RegExp(search, 'i');
@@ -74,6 +88,13 @@ communeSchema.statics = {
       $or: [{ title: reg }, { search: reg }],
       type: reg1
     })
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
+  } */
+  list({ page = 1, perPage = 30 }) {
+    return this.find()
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)

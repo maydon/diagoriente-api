@@ -41,12 +41,15 @@ exports.create = async (req, res, next) => {
     const competenceIdArray = competences.map((c) => c._id);
     const newTheme = omit(req.body, 'resources');
     newTheme.tooltips = competenceIdArray.map((cid) => {
-      const tooltipFound = tooltips && tooltips.length && tooltips.find(t => t.competenceId.toString() === cid.toString());      
-      const tooltip = tooltipFound ? tooltipFound.tooltip : ''
-      return({
-      competenceId: cid,
-      tooltip
-    });
+      const tooltipFound =
+        tooltips &&
+        tooltips.length &&
+        tooltips.find((t) => t.competenceId.toString() === cid.toString());
+      const tooltip = tooltipFound ? tooltipFound.tooltip : '';
+      return {
+        competenceId: cid,
+        tooltip
+      };
     });
     const theme = new Theme(newTheme);
     const savedTheme = await theme.save();
@@ -69,12 +72,15 @@ exports.update = async (req, res, next) => {
     const newTheme = omit(req.body, ['_id', 'resources', 'tooltips']);
     const updatedTheme = Object.assign(theme, newTheme);
     updatedTheme.tooltips = theme.tooltips.map((tt) => {
-      const tooltipFound = tooltips && tooltips.length && tooltips.find(t => t.competenceId.toString() === tt.competenceId.toString());      
-      const tooltip = tooltipFound ? tooltipFound.tooltip : tt.tooltip; 
-      return({
-      competenceId: tt.competenceId,
-      tooltip
-    });
+      const tooltipFound =
+        tooltips &&
+        tooltips.length &&
+        tooltips.find((t) => t.competenceId.toString() === tt.competenceId.toString());
+      const tooltip = tooltipFound ? tooltipFound.tooltip : tt.tooltip;
+      return {
+        competenceId: tt.competenceId,
+        tooltip
+      };
     });
     const savedpost = await updatedTheme.save();
     res.json(savedpost.transform());

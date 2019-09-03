@@ -7,8 +7,7 @@ module.exports = {
       page: Joi.number().min(1),
       perPage: Joi.number()
         .min(1)
-        .max(100),
-      search: Joi.string().empty('')
+        .max(100)
     }
   }
 };
