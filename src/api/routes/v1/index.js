@@ -19,6 +19,8 @@ const contextsRoutes = require('./context.route');
 const environmentsRoutes = require('./environment.route');
 const responseJobsRoutes = require('./responseJob.route');
 const communeRoute = require('./commune.route');
+const entrepriseRoute = require('./entreprise.route');
+
 
 const router = express.Router();
 
@@ -53,6 +55,8 @@ router.use('/contexts', contextsRoutes);
 router.use('/environments', environmentsRoutes);
 router.use('/responseJobs', responseJobsRoutes);
 router.use('/commune', communeRoute);
+router.use('/entreprise', entrepriseRoute);
+
 
 router.use('/mailer', mailerRoutes);
 

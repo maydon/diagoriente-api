@@ -69,7 +69,7 @@ communeSchema.statics = {
     }
   },
 
-  list({ page = 1, perPage = 30, search }) {
+  list({ page = 1, perPage = 200, search }) {
     const reg = new RegExp(search, 'i');
     return this.find({
       $or: [{ Code_commune_INSEE: reg }, { search: reg }]
