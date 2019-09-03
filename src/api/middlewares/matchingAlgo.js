@@ -61,14 +61,11 @@ const sorteJobsByHigerRank = (job, JpInts, JpComps) => {
   let jobRank = 0;
 
   job.interests.forEach((interest) => {
-    console.log('in**', jobRank);
     if (interest._id._id in JpInts) {
       const m = math.multiply(JpInts[interest._id._id].jpInt, interest.weight);
 
       jobRank += math.number(m);
-      console.log('end**', jobRank);
     }
-    console.log('out**', jobRank);
   });
 
   job.competences.forEach((competence) => {

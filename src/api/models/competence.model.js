@@ -62,10 +62,9 @@ competenceSchema.method({
     const transformed = {};
     const fields = ['_id', 'title', 'rank', 'niveau', 'color'];
 
-    fields.forEach(field => {
+    fields.forEach((field) => {
       transformed[field] = this[field];
     });
-
     return transformed;
   }
 });

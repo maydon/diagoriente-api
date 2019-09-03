@@ -1,4 +1,3 @@
-const { pagination } = require('../utils/Pagination');
 const Commune = require('../models/communeINSEE.model');
 const { handler: errorHandler } = require('../middlewares/error');
 
@@ -17,16 +16,11 @@ exports.load = async (req, res, next, id) => {
   }
 };
 
-exports.get = (req, res) => {
-  res.json(req.locals.commune.transform());
-};
-
-
 exports.list = async (req, res, next) => {
   try {
-    const skills = await Commune.list(req.query);
-    const transformedSkills = skills.map((skill) => skill.transform());
-    res.json(transformedSkills);
+    const commune = await Commune.list(req.query);
+    const transformedCommunes = commune.map((com) => com.transform());
+    res.json(transformedCommunes);
   } catch (error) {
     next(error);
   }

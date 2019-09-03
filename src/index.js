@@ -6,7 +6,6 @@ const mongoose = require('./config/mongoose');
 
 // open mongoose connection
 mongoose.connect();
-
 // listen to requests
 app.listen(port, () => console.info(`server started on port ${port} (${env})`));
 

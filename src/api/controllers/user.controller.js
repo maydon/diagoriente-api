@@ -246,9 +246,6 @@ exports.updatePasswordBySecretQuestion = async (req, res, next) => {
 
     if (user && user.email === email) {
       const storedQuestionById = storedQuestion.filter((item) => item._id === question._id);
-
-      console.log('dif res', storedQuestionById);
-
       if (storedQuestionById[0].response === question.response) {
         user.password = await hashPassword(password);
       } else {
@@ -354,7 +351,6 @@ exports.addAdvisor = async (req, res, next) => {
     res.status(httpStatus.CREATED);
     res.json(savedAdvisor.transform());
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };

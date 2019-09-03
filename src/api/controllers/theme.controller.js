@@ -306,7 +306,6 @@ exports.uploadTheme = async (req, res, next) => {
 
     const formatedContent = importFormater(fileContent.split('\r\n'), interrestRankObject);
     const importedThemes = await Theme.importThemes(formatedContent);
-    console.log('importedThemes', importedThemes);
     res.json(importedThemes);
   } catch (error) {
     next(error);

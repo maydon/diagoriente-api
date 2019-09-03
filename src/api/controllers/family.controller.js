@@ -123,7 +123,6 @@ exports.addResources = async (req, res, next) => {
  */
 exports.removeResources = async (req, res, next) => {
   const { family } = req.locals;
-  console.log(family.resources);
   const { resource } = req.body;
 
   try {

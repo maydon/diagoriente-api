@@ -2,37 +2,27 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const APIError = require('../utils/APIError');
 
-const communeSchema = new mongoose.Schema(
-  {
-    Code_commune_INSEE: {
-      type: Number,
-      required: true
-    },
-    Nom_commune: {
-      type: String,
-      required: true
-    },
-    Code_postal: {
-      type: Number,
-      required: true
-    },
-    Libelle_acheminement: {
-      type: String,
-      required: true
-    },
-    coordonnees_gps: {
-      type: String,
-      required: true
-    },
-    Ligne_5: {
-      type: String
-    },
-    search: { type: String, trim: true }
+const communeSchema = new mongoose.Schema({
+  Code_commune_INSEE: {
+    type: Number
   },
-  {
-    timestamps: true
-  }
-);
+  Nom_commune: {
+    type: String
+  },
+  Code_postal: {
+    type: Number
+  },
+  Libelle_acheminement: {
+    type: String
+  },
+  coordonnees_gps: {
+    type: String
+  },
+  Ligne_5: {
+    type: String
+  },
+  search: { type: String, trim: true }
+});
 /**
  * Methods
  */
@@ -78,27 +68,11 @@ communeSchema.statics = {
       throw error;
     }
   },
-  /*   list({
-    page = 1, perPage = 30, search, type
-  }) {
-    const reg = new RegExp(search, 'i');
-    const reg1 = new RegExp(type, 'i');
 
-    return this.find({
-      $or: [{ title: reg }, { search: reg }],
-      type: reg1
-    })
-      .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
-      .exec();
-  } */
-  list({ page = 1, perPage = 30 }) {
-    return this.find()
-      .sort({ createdAt: -1 })
-      .skip(perPage * (page - 1))
-      .limit(perPage)
-      .exec();
+  list({ search }) {
+    const reg = new RegExp(search, 'i');
+    console.log('reg', reg);
+    return this.find({ Code_commune_INSEE: reg }).exec();
   }
 };
 /**

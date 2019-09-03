@@ -7,7 +7,6 @@ const { list } = require('../../validations/commune.validation');
 
 const router = express.Router();
 
-router.param('communeId', controller.load);
 router
   .route('/')
   /**
@@ -32,26 +31,5 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize([LOGGED_USER, ADVISOR]), validate(list), controller.list);
-router
-  .route('/:communeId')
-  /**
-   * @api {get} v1/commune get commune
-   * @apiDescription Get a  commune
-   * @apiVersion 1.0.0
-   * @apiName getCommune
-   * @apiGroup Commune
-   * @apiPermission  user
-   *
-   * @apiHeader {String} Authorization  access token
-   *
-   * @apiParam  {String}         id     parcour object id
-   *
-   *
-   * @apiSuccess {Object[]} parcour  parcour full object.
-   *
-   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
-   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
-   */
-  .get(authorize([LOGGED_USER]), controller.get);
+  .get(authorize(ADVISOR, LOGGED_USER), validate(list), controller.list);
 module.exports = router;
