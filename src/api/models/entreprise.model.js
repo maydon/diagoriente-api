@@ -45,8 +45,12 @@ entrepriseSchema.statics = {
    * @returns {Promise<Category, APIError>}
    */
 
-  list() {
-    return this.find().exec();
+  list({ page = 1, perPage = 30 }) {
+    return this.find()
+      .sort({ createdAt: -1 })
+      .skip(perPage * (page - 1))
+      .limit(perPage)
+      .exec();
   }
 };
 /**

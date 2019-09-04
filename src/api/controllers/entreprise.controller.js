@@ -1,6 +1,7 @@
 const Entreprise = require('../models/entreprise.model');
 const { handler: errorHandler } = require('../middlewares/error');
 const axios = require('axios');
+const { GenerateToken } = require('../utils/GenerateToken');
 /**
  * Load activity and append to req.
  * @public
@@ -18,15 +19,23 @@ exports.load = async (req, res, next, id) => {
 
 exports.list = async (req, res, next) => {
   try {
-    const entreprises = await Entreprise.list({ ...req.query });
-    axios
-      .get('https://jsonplaceholder.typicode.com/todos/1')
-      .then((response) => response.json())
-      .then((json) => console.log(json));
+    const entreprises = req.query;
 
-    const transformedEntreprises = entreprises.map((com) => com.transform());
-
-    res.json(transformedEntreprises);
+    const token = await GenerateToken();
+    await axios
+      .get(
+        `https://api.emploi-store.fr/partenaire/labonneboite/v1/company/?distance=${entreprises.distance}&latitude=${entreprises.latitude}&longitude=${entreprises.longitude}&rome_codes=M1607`,
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`
+          }
+        }
+      )
+      .then((response) => {
+        const transformedEntreprises = response.data.companies;
+        res.json(transformedEntreprises);
+      })
+      .catch((error) => console.log(error.response));
   } catch (error) {
     next(error);
   }
