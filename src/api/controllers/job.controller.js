@@ -244,7 +244,7 @@ exports.myJob = async (req, res, next) => {
     });
     const myJobs = matchingAlgo(suspectJobs, parcour, formatFamilies, favoriteJobList, algoType);
 
-    let myJobstosend = myJobs.map((job) => {
+    const myJobstosend = myJobs.map((job) => {
       const favorite = favoriteJobList.find((fav) => `${fav.job}` === `${job._id}`);
       if (favorite) favorite.environments = suspectJobs.find((sj) => `${sj.id}` === `${job._id}`);
       return {
@@ -253,21 +253,22 @@ exports.myJob = async (req, res, next) => {
       };
     });
 
-    
-for (let i=0; i<myJobstosend.length; i++) {
-  const updatedJob = myJobstosend[i];
-  const response = await ResponseJob.find({ jobId: myJobstosend[i]._id, parcourId }).select(
-    'response questionJobId'
-  );
-  if (response && response.length) {
-    response.forEach((r) => {
-      const foundQuestionJob = updatedJob.questionJobs.find(
-        (qj) => qj._id.toString() === r.questionJobId.toString()
+    for (let i = 0; i < myJobstosend.length; i++) {
+      const updatedJob = myJobstosend[i];
+      const response = await ResponseJob.find({ jobId: myJobstosend[i]._id, parcourId }).select(
+        'response questionJobId'
       );
-      foundQuestionJob.response = r.response
-    });
-  }
-};
+      if (response && response.length) {
+        response.forEach((r) => {
+          const foundQuestionJob = updatedJob.questionJobs.find(
+            (qj) => qj._id.toString() === r.questionJobId.toString()
+          );
+          if (foundQuestionJob) {
+            foundQuestionJob.response = r.response;
+          }
+        });
+      }
+    }
     res.json(myJobstosend);
   } catch (error) {
     next(error);
