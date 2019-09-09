@@ -7,6 +7,7 @@ const {
 const {
   list,
   get,
+  getByUser,
   create,
   update,
   addFamilies,
@@ -105,14 +106,35 @@ router
    *
    * @apiParam  {String}         id     parcour object id
    * @apiParam  {String}            type     Parcours personal or professional
-   * 
+   *
    *
    * @apiSuccess {Object[]} parcour  parcour full object.
    *
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get)
+  .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get);
+router
+  .route('/public/:userId')
+  /**
+   * @api {get} v1/parcours/public/:userId Get Parcours
+   * @apiDescription Get a Parcours
+   * @apiVersion 1.0.0
+   * @apiName GetParcours
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         id     user object id
+   *
+   *
+   * @apiSuccess {Object[]} parcour  parcour full object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(validate(getByUser), controller.getParcourByUserId)
   /**
    * @api {post} v1/parcours/:parcourId' Update Parcours
    * @apiDescription update parcour

@@ -299,7 +299,6 @@ exports.addUser = async (req, res, next) => {
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
     if (code !== '') {
-      console.log('here')
       await Groupe.groupeDosentExist(code);
     }
     const userProp = {

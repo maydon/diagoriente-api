@@ -68,6 +68,18 @@ module.exports = {
         .required()
     }
   },
+  getByUser: {
+    query: {
+      type: Joi.string()
+        .valid(Theme.types)
+        .default('personal')
+    },
+    params: {
+      userId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
+  },
 
   addFamilies: {
     params: {

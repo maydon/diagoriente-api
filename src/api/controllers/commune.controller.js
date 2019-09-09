@@ -18,8 +18,6 @@ exports.load = async (req, res, next, id) => {
 };
 
 exports.list = async (req, res, next) => {
-  console.log(req.query);
-
   try {
     const { search } = req.query;
     const communes = await Commune.list({ ...req.query });
