@@ -20,7 +20,7 @@ const environmentsRoutes = require('./environment.route');
 const responseJobsRoutes = require('./responseJob.route');
 const communeRoute = require('./commune.route');
 const entrepriseRoute = require('./entreprise.route');
-
+const groupeAdvisor = require('./groupeAdvisor.route');
 
 const router = express.Router();
 
@@ -56,7 +56,7 @@ router.use('/environments', environmentsRoutes);
 router.use('/responseJobs', responseJobsRoutes);
 router.use('/commune', communeRoute);
 router.use('/entreprise', entrepriseRoute);
-
+router.use('/groupe', groupeAdvisor);
 
 router.use('/mailer', mailerRoutes);
 

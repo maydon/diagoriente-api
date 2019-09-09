@@ -64,7 +64,7 @@ exports.remove = async (req, res, next) => {
     context
       .remove()
       .then(() => res.status(httpStatus.NO_CONTENT).end())
-      .catch(e => next(e));
+      .catch((e) => next(e));
   } catch (error) {
     next(error);
   }
@@ -77,7 +77,7 @@ exports.remove = async (req, res, next) => {
 exports.list = async (req, res, next) => {
   try {
     const contexts = await Context.list(req.query);
-    const transformedContext = contexts.map(context => context.transform());
+    const transformedContext = contexts.map((context) => context.transform());
     const reg = new RegExp(req.query.search, 'i');
 
     const querySearch = { title: reg };
