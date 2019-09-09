@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
-const { omit, random } = require('lodash');
+const { omit } = require('lodash');
 const bcrypt = require('bcryptjs');
 const { pagination } = require('../utils/Pagination');
 const User = require('../models/user.model');
 const Parcour = require('../models/parcour.model');
-const Question = require('../models/question.model');
+const Groupe = require('../models/groupeAdvisor.model');
 const { hashPassword } = require('../utils/Bcrypt');
 const { handler: errorHandler } = require('../middlewares/error');
 const { generateUniqueId } = require('../utils/uniqueId');
@@ -292,12 +292,16 @@ exports.addUser = async (req, res, next) => {
       lastName,
       question,
       institution,
-      context
+      context,
+      code
     } = req.body;
     const thecontext = context || '5d2726337cdd133827c1fb03';
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
-
+    if (code !== '') {
+      console.log('here')
+      await Groupe.groupeDosentExist(code);
+    }
     const userProp = {
       uniqId,
       platform,
@@ -311,10 +315,19 @@ exports.addUser = async (req, res, next) => {
         lastName,
         institution
       },
-      context: [thecontext]
+      context: [thecontext],
+      code
     };
 
     const newUser = new User(userProp);
+    if (code) {
+      const groupe = await Groupe.findOneAndUpdate({ code });
+      const { users } = groupe;
+      const newTable = users.push(newUser);
+      const updatedGroupe = Object.assign(groupe, newTable);
+      const savedGroupe = await updatedGroupe.save();
+      res.json(savedGroupe.transform());
+    }
     const savedUser = await newUser.save();
     res.json(savedUser.transform());
   } catch (e) {

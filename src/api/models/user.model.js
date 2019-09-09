@@ -80,7 +80,11 @@ const userSchema = new mongoose.Schema(
       }
     },
     parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }],
-    context: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Context' }]
+    context: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Context' }],
+    code: {
+      type: String,
+      max: 6
+    }
   },
   {
     timestamps: true
@@ -103,7 +107,8 @@ userSchema.method({
       'profile',
       'question',
       'createdAt',
-      'context'
+      'context',
+      'code'
     ];
 
     fields.forEach((field) => {

@@ -83,6 +83,19 @@ groupeSchema.statics = {
       .skip(perPage * (page - 1))
       .limit(perPage)
       .exec();
+  },
+  async groupeDosentExist(code) {
+    try {
+      const groupe = await this.findOne({ code }).exec();
+      if (!groupe) {
+        throw new APIError({
+          message: 'invalid Code or Groupe doest not exist',
+          status: httpStatus.CONFLICT
+        });
+      }
+    } catch (e) {
+      throw e;
+    }
   }
 };
 
