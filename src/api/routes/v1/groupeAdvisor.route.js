@@ -2,7 +2,12 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/groupeAdvisor.contoller');
 const { authorize, ADVISOR, ADMIN } = require('../../middlewares/auth');
-const { list, update, create } = require('../../validations/groupeAdvisor.validation');
+const {
+  list,
+  listByAdvisor,
+  update,
+  create
+} = require('../../validations/groupeAdvisor.validation');
 
 const router = express.Router();
 
@@ -55,6 +60,28 @@ router
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
   .post(authorize(ADMIN, ADVISOR), validate(create), controller.create);
+router
+  .route('/:advisorId')
+  /**
+   * @api {get} v1/groupes List groupes of advisor
+   * @apiDescription Get a list of groupes
+   * @apiVersion 1.0.0
+   * @apiName Listgroupes
+   * @apiGroup groupe
+   * @apiPermission admin / advisor
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Number{1-}}         [page=1]     List page
+   * @apiParam  {Number{1-100}}      [perPage=1]  groupe's per page
+   * @apiParam  {String}  search      search param
+   *
+   * @apiSuccess {Object[]}   List of groupes.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(authorize([ADMIN, ADVISOR]), validate(listByAdvisor), controller.list);
 
 router
   .route('/:groupeId')

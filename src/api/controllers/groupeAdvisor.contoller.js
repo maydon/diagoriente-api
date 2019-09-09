@@ -76,9 +76,15 @@ exports.remove = async (req, res, next) => {
  */
 exports.list = async (req, res, next) => {
   try {
-    const groupes = await Groupe.list(req.query);
+    const { search } = req.query;
+    const groupes = await Groupe.find({ ...req.params });
+    console.log(groupes);
     const transformedGroupe = groupes.map((groupe) => groupe.transform());
-    const responstPagination = await pagination(transformedGroupe, req.query, Groupe);
+    const reg = new RegExp(search, 'i');
+    const querySearch = {
+      $or: [{ search: reg }]
+    };
+    const responstPagination = await pagination(transformedGroupe, req.query, Groupe, querySearch);
     res.json(responstPagination);
   } catch (error) {
     next(error);

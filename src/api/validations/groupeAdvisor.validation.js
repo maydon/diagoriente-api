@@ -10,6 +10,19 @@ module.exports = {
         .max(100)
     }
   },
+  listByAdvisor: {
+    query: {
+      page: Joi.number().min(1),
+      perPage: Joi.number()
+        .min(1)
+        .max(100)
+    },
+    params: {
+      advisorId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
+  },
 
   // POST /v1/groupe
   create: {

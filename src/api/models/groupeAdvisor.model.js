@@ -22,8 +22,10 @@ const groupeSchema = new mongoose.Schema(
       trim: true,
       required: true
     },
-    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+    users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    search: { type: String, trim: true }
   },
+
   {
     timestamps: true
   }
@@ -77,8 +79,7 @@ groupeSchema.statics = {
    */
   list({ page = 1, perPage = 30, search }) {
     const reg = new RegExp(search, 'i');
-
-    return this.find({ title: reg })
+    return this.find({ search: reg })
       .sort({ createdAt: -1 })
       .skip(perPage * (page - 1))
       .limit(perPage)
