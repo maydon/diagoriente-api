@@ -296,8 +296,13 @@ exports.addUser = async (req, res, next) => {
       code
     } = req.body;
     const thecontext = context || '5d2726337cdd133827c1fb03';
+    const tutorialArray = {
+      tutorial: [false, false, false, false, false, false, false, false, false, false]
+    };
+ 
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
+    // throw error if groupe does not exist
     if (code !== '') {
       await Groupe.groupeDosentExist(code);
     }
@@ -318,7 +323,10 @@ exports.addUser = async (req, res, next) => {
       code
     };
 
-    const newUser = new User(userProp);
+    const newProps = { ...userProp, ...tutorialArray };
+
+    const newUser = new User(newProps);
+
     if (code) {
       const groupe = await Groupe.findOneAndUpdate({ code });
       const { users } = groupe;
@@ -371,6 +379,14 @@ exports.addAdvisor = async (req, res, next) => {
  * patch advisor
  * @public
  */
+exports.updateTutorialUser = async (req, res, next) => {
+  const { body } = req;
+  const { user } = req.locals;
+  const { tutorial } = body;
+  user.tutorial = tutorial;
+  const savedUser = await user.save();
+  res.json(savedUser.transform());
+};
 
 exports.updateAdvisor = async (req, res, next) => {
   try {

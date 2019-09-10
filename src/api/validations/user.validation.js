@@ -50,6 +50,16 @@ module.exports = {
       lastName: Joi.string().max(30)
     }
   },
+  updateTutorial: {
+    params: {
+      userId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    },
+    body: {
+      tutorial: Joi.array()
+    }
+  },
 
   // POST /v1/users/advisors
   addAdvisor: {
@@ -118,6 +128,7 @@ module.exports = {
       pseudo: Joi.string().max(25),
       institution: Joi.string().max(70),
       code: Joi.string().max(6).allow(''),
+      tutorial: Joi.array(),
       question: {
         _id: Joi.string().required(),
         response: Joi.string()

@@ -84,6 +84,9 @@ const userSchema = new mongoose.Schema(
     code: {
       type: String,
       max: 6
+    },
+    tutorial: {
+      type: Array
     }
   },
   {
@@ -108,7 +111,8 @@ userSchema.method({
       'question',
       'createdAt',
       'context',
-      'code'
+      'code',
+      'tutorial'
     ];
 
     fields.forEach((field) => {

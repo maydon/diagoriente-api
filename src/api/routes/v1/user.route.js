@@ -2,14 +2,12 @@ const express = require('express');
 const validate = require('express-validation');
 const controller = require('../../controllers/user.controller');
 const {
-  authorize,
-  ADMIN,
-  ADVISOR,
-  LOGGED_USER
+  authorize, ADMIN, ADVISOR, LOGGED_USER
 } = require('../../middlewares/auth');
 const {
   list,
   update,
+  updateTutorial,
   addUser,
   addAdvisor,
   aprouvedUser,
@@ -158,10 +156,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
-  .post(
-    validate(renewPasswordBySecretQuestion),
-    controller.renewPasswordBySecretQuestion
-  );
+  .post(validate(renewPasswordBySecretQuestion), controller.renewPasswordBySecretQuestion);
 
 router
   .route('/updatePasswordBySecretQuestion')
@@ -184,10 +179,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can create the data
    */
-  .post(
-    validate(updatePasswordBySecretQuestion),
-    controller.updatePasswordBySecretQuestion
-  );
+  .post(validate(updatePasswordBySecretQuestion), controller.updatePasswordBySecretQuestion);
 
 router
   .route('/updateMe/:userId')
@@ -214,6 +206,26 @@ router
   .patch(authorize(LOGGED_USER), validate(update), controller.update);
 
 router
+  .route('/updateTuto/:userId')
+  /**
+   * @api {patch} v1/users/updateTuto/:userId patch  user
+   * @apiDescription patch  user
+   * @apiVersion 1.0.0
+   * @apiName UpdateUserTuto
+   * @apiGroup User
+   * @apiPermission admin / user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {Array}       tutorial    user tutorials
+   *
+   * @apiSuccess {Object[]}   user object.
+   *
+   * @apiError (Forbidden 403)     Forbidden     Only admins can update the data
+   */
+  .patch(authorize(LOGGED_USER), validate(updateTutorial), controller.updateTutorialUser);
+
+router
   .route('/advisors/:userId')
   /**
    * @api {patch} v1/users/advisors patch  advisor
@@ -235,11 +247,7 @@ router
    *
    * @apiError (Forbidden 403)     Forbidden     Only admins can update the data
    */
-  .patch(
-    authorize([ADMIN, ADVISOR]),
-    validate(updateAdvisor),
-    controller.updateAdvisor
-  );
+  .patch(authorize([ADMIN, ADVISOR]), validate(updateAdvisor), controller.updateAdvisor);
 
 router
   .route('/:userId')
