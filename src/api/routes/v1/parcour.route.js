@@ -93,6 +93,27 @@ router
   .post(authorize(LOGGED_USER), validate(addFamilies), controller.addFamilies);
 
 router
+  .route('/public/:userId')
+  /**
+   * @api {get} v1/parcours/public/:userId Get Parcours
+   * @apiDescription Get a Parcours
+   * @apiVersion 1.0.0
+   * @apiName GetParcours
+   * @apiGroup Parcour
+   * @apiPermission  user
+   *
+   * @apiHeader {String} Authorization  access token
+   *
+   * @apiParam  {String}         id     user object id
+   *
+   *
+   * @apiSuccess {Object[]} parcour  parcour full object.
+   *
+   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
+   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
+   */
+  .get(validate(getByUser), controller.getParcourByUserId);
+router
   .route('/:parcourId')
   /**
    * @api {get} v1/parcours Get Parcours
@@ -113,28 +134,8 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get);
-router
-  .route('/public/:userId')
-  /**
-   * @api {get} v1/parcours/public/:userId Get Parcours
-   * @apiDescription Get a Parcours
-   * @apiVersion 1.0.0
-   * @apiName GetParcours
-   * @apiGroup Parcour
-   * @apiPermission  user
-   *
-   * @apiHeader {String} Authorization  access token
-   *
-   * @apiParam  {String}         id     user object id
-   *
-   *
-   * @apiSuccess {Object[]} parcour  parcour full object.
-   *
-   * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
-   * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
-   */
-  .get(validate(getByUser), controller.getParcourByUserId)
+  .get(authorize([LOGGED_USER, ADVISOR]), validate(get), controller.get)
+
   /**
    * @api {post} v1/parcours/:parcourId' Update Parcours
    * @apiDescription update parcour
