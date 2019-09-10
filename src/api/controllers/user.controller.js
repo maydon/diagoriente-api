@@ -122,7 +122,7 @@ exports.list = async (req, res, next) => {
     const reg1 = new RegExp(search, 'i');
 
     const users = await User.list({ ...req.query });
-       
+       /*
     User.update(
             {role:'user'},
             { tutorial: [false, false, false, false, false, false, false, false, false, false] },
@@ -130,7 +130,7 @@ exports.list = async (req, res, next) => {
             (err) => {
               console.log('err', err);
             }
-          );
+          );*/
       
     const transformedUsers = users.map((user) => user.transform());
     const querySearch = {
