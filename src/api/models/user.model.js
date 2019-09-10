@@ -85,9 +85,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       max: 6
     },
-    tutorial: {
-      type: Array
-    }
+    tutorial: [
+      {
+        type: Boolean
+      }
+    ]
   },
   {
     timestamps: true
