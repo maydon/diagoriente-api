@@ -20,7 +20,6 @@ exports.load = async (req, res, next, id) => {
 exports.list = async (req, res, next) => {
   try {
     const entreprises = req.query;
-    console.log('tessst ', entreprises);
 
     const token = await GenerateToken();
     await axios
