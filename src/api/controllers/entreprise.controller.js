@@ -20,11 +20,12 @@ exports.load = async (req, res, next, id) => {
 exports.list = async (req, res, next) => {
   try {
     const entreprises = req.query;
+    console.log('tessst ', entreprises);
 
     const token = await GenerateToken();
     await axios
       .get(
-        `https://api.emploi-store.fr/partenaire/labonneboite/v1/company/?distance=${entreprises.distance}&latitude=${entreprises.latitude}&longitude=${entreprises.longitude}&rome_codes=M1607`,
+        `https://api.emploi-store.fr/partenaire/labonneboite/v1/company/?distance=${entreprises.distance}&latitude=${entreprises.latitude}&longitude=${entreprises.longitude}&rome_codes_keyword_search=${entreprises.rome_codes_keyword_search}`,
         {
           headers: {
             Authorization: `Bearer ${token.access_token}`

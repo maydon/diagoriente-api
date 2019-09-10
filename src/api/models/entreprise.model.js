@@ -20,6 +20,9 @@ const entrepriseSchema = new mongoose.Schema({
   },
   rome_codes: {
     type: String
+  },
+  rome_codes_keyword_search: {
+    type: String
   }
 });
 /**
@@ -28,7 +31,15 @@ const entrepriseSchema = new mongoose.Schema({
 entrepriseSchema.method({
   transform() {
     const transformed = {};
-    const fields = ['commune_id', 'contract', 'latitude', 'longitude', 'distance', 'rome_codes'];
+    const fields = [
+      'commune_id',
+      'contract',
+      'latitude',
+      'longitude',
+      'distance',
+      'rome_codes',
+      'rome_codes_keyword_search'
+    ];
 
     fields.forEach((field) => {
       transformed[field] = this[field];
