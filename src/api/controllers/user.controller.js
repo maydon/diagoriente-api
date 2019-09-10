@@ -122,7 +122,16 @@ exports.list = async (req, res, next) => {
     const reg1 = new RegExp(search, 'i');
 
     const users = await User.list({ ...req.query });
-
+       
+    User.update(
+            {role:'user'},
+            { tutorial: [false, false, false, false, false, false, false, false, false, false] },
+            { multi: true },
+            (err) => {
+              console.log('err', err);
+            }
+          );
+      
     const transformedUsers = users.map((user) => user.transform());
     const querySearch = {
       role,
@@ -299,7 +308,6 @@ exports.addUser = async (req, res, next) => {
     const tutorialArray = {
       tutorial: [false, false, false, false, false, false, false, false, false, false]
     };
- 
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
     // throw error if groupe does not exist
@@ -380,12 +388,22 @@ exports.addAdvisor = async (req, res, next) => {
  * @public
  */
 exports.updateTutorialUser = async (req, res, next) => {
-  const { body } = req;
-  const { user } = req.locals;
-  const { tutorial } = body;
-  user.tutorial = tutorial;
-  const savedUser = await user.save();
-  res.json(savedUser.transform());
+  try {
+    const { body } = req;
+    const { user } = req.locals;
+    const { tutorial, token } = body;
+   //console.log(token);
+    const userToken = await User.decodeTokenUserPassword(token);
+    if (userToken._id.toString() === user._id.toString()) {
+      user.tutorial = tutorial;
+      const savedUser = await user.save();
+      res.json(savedUser.transform());
+    } else {
+      User.checkTutorialUserExist();
+    }
+  } catch (e) {
+    next(e);
+  }
 };
 
 exports.updateAdvisor = async (req, res, next) => {
