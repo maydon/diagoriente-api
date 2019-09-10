@@ -78,7 +78,6 @@ exports.list = async (req, res, next) => {
   try {
     const { search } = req.query;
     const groupes = await Groupe.find({ ...req.params });
-    console.log(groupes);
     const transformedGroupe = groupes.map((groupe) => groupe.transform());
     const reg = new RegExp(search, 'i');
     const querySearch = {
