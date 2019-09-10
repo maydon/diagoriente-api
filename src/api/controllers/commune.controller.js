@@ -24,7 +24,7 @@ exports.list = async (req, res, next) => {
     const transformedCommunes = communes.map((com) => com.transform());
     const reg = new RegExp(search, 'i');
     const querySearch = {
-      $or: [{ Code_commune_INSEE: reg }, { search: reg }]
+      $or: [{ Nom_commune: reg }, { search: reg }]
     };
 
     const responsePagination = await pagination(

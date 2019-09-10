@@ -72,7 +72,7 @@ communeSchema.statics = {
   list({ page = 1, perPage = 10, search }) {
     const reg = new RegExp(search, 'i');
     return this.find({
-      $or: [{ Code_commune_INSEE: reg }, { search: reg }]
+      $or: [{ Nom_commune: reg }, { search: reg }]
     })
       .skip(perPage * (page - 1))
       .limit(perPage)
