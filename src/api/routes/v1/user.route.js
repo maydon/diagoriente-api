@@ -209,7 +209,7 @@ router
   .route('/updateTuto/:userId')
   /**
    * @api {patch} v1/users/updateTuto/:userId patch  user
-   * @apiDescription patch  user
+   * @apiDescription patch  user tuto
    * @apiVersion 1.0.0
    * @apiName UpdateUserTuto
    * @apiGroup User
