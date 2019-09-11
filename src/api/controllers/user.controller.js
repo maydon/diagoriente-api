@@ -121,8 +121,9 @@ exports.list = async (req, res, next) => {
 
     const reg1 = new RegExp(search, 'i');
 
-    const users = await User.list({ ...req.query });
-       /*
+    const users = await User.list({
+      ...req.query
+    }); /*
     User.update(
             {role:'user'},
             { tutorial: [false, false, false, false, false, false, false, false, false, false] },
@@ -130,8 +131,7 @@ exports.list = async (req, res, next) => {
             (err) => {
               console.log('err', err);
             }
-          );*/
-      
+          ); */
     const transformedUsers = users.map((user) => user.transform());
     const querySearch = {
       role,
@@ -392,15 +392,16 @@ exports.updateTutorialUser = async (req, res, next) => {
     const { body } = req;
     const { user } = req.locals;
     const { tutorial, token } = body;
-   //console.log(token);
-    const userToken = await User.decodeTokenUserPassword(token);
-    if (userToken._id.toString() === user._id.toString()) {
-      user.tutorial = tutorial;
-      const savedUser = await user.save();
-      res.json(savedUser.transform());
-    } else {
+    // console.log(token);
+    //const userToken = await User.decodeTokenUserPassword(token);
+    // if (userToken._id.toString() === user._id.toString()) {
+    user.tutorial = tutorial;
+    const savedUser = await user.save();
+    res.json(savedUser.transform());
+    /*  }
+    else {
       User.checkTutorialUserExist();
-    }
+    } */
   } catch (e) {
     next(e);
   }
