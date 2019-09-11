@@ -10,6 +10,13 @@ module.exports = {
         .max(100)
     }
   },
+  get: {
+    params: {
+      groupeId: Joi.string()
+        .regex(/^[a-fA-F0-9]{24}$/)
+        .required()
+    }
+  },
   listByAdvisor: {
     query: {
       page: Joi.number().min(1),

@@ -4,6 +4,7 @@ const controller = require('../../controllers/groupeAdvisor.contoller');
 const { authorize, ADVISOR, ADMIN } = require('../../middlewares/auth');
 const {
   list,
+  get,
   listByAdvisor,
   update,
   create
@@ -84,12 +85,12 @@ router
   .get(authorize([ADMIN, ADVISOR]), validate(listByAdvisor), controller.list);
 
 router
-  .route('/:groupeId')
+  .route('/groupeId/:groupeId')
   /**
-   * @api {get} v1/groupes/:id patch groupes
-   * @apiDescription Get groupes information
+   * @api {get} v1/groupe/:id get one groupe
+   * @apiDescription Get groupe one information
    * @apiVersion 1.0.0
-   * @apiName GetGroupe
+   * @apiName Get one Groupe
    * @apiGroup groupe
    * @apiPermission admin
    *
@@ -103,9 +104,9 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     Theme does not exist
    */
-  .get(authorize([ADMIN, ADVISOR]), controller.get)
+  .get(authorize([ADMIN, ADVISOR]), validate(get), controller.get)
   /**
-   * @api {get} v1/groupes/:id patch groupes
+   * @api {get} v1/groupe/:id patch groupes
    * @apiDescription Get groupes information
    * @apiVersion 1.0.0
    * @apiName GetGroupe
