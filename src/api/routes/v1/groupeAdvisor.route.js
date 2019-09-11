@@ -87,7 +87,7 @@ router
 router
   .route('/groupeId/:groupeId')
   /**
-   * @api {get} v1/groupe/:id get one groupe
+   * @api {get} v1/groupe/groupeId/:id get one groupe
    * @apiDescription Get groupe one information
    * @apiVersion 1.0.0
    * @apiName Get one Groupe
