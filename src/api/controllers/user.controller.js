@@ -336,15 +336,18 @@ exports.addUser = async (req, res, next) => {
     const newUser = new User(newProps);
 
     if (code) {
-      const groupe = await Groupe.findOneAndUpdate({ code });
+      const groupe = await Groupe.findOne({ code });
       const { users } = groupe;
       const newTable = users.push(newUser);
       const updatedGroupe = Object.assign(groupe, newTable);
+      const savedUser = await newUser.save();
+      res.json(savedUser.transform());
       const savedGroupe = await updatedGroupe.save();
       res.json(savedGroupe.transform());
+    } else {
+      const savedUser = await newUser.save();
+      res.json(savedUser.transform());
     }
-    const savedUser = await newUser.save();
-    res.json(savedUser.transform());
   } catch (e) {
     next(e);
   }
@@ -393,7 +396,7 @@ exports.updateTutorialUser = async (req, res, next) => {
     const { user } = req.locals;
     const { tutorial, token } = body;
     // console.log(token);
-    //const userToken = await User.decodeTokenUserPassword(token);
+    // const userToken = await User.decodeTokenUserPassword(token);
     // if (userToken._id.toString() === user._id.toString()) {
     user.tutorial = tutorial;
     const savedUser = await user.save();
