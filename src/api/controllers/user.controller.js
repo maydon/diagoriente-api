@@ -340,8 +340,6 @@ exports.addUser = async (req, res, next) => {
       const { users } = groupe;
       const newTable = users.push(newUser);
       const updatedGroupe = Object.assign(groupe, newTable);
-      const savedUser = await newUser.save();
-      res.json(savedUser.transform());
       const savedGroupe = await updatedGroupe.save();
       res.json(savedGroupe.transform());
     } else {
