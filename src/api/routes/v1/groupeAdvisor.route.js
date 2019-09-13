@@ -17,7 +17,7 @@ router.param('groupeId', controller.load);
 router
   .route('/')
   /**
-   * @api {get} v1/groupes List groupes
+   * @api {get} v1/groupe List groupes
    * @apiDescription Get a list of groupes
    * @apiVersion 1.0.0
    * @apiName Listgroupes
@@ -37,8 +37,8 @@ router
    */
   .get(authorize([ADMIN, ADVISOR]), validate(list), controller.list)
   /**
-   * @api {post} v1/groupe Create groupes
-   * @apiDescription Create a new of groupes
+   * @api {post} v1/groupe Create groupe
+   * @apiDescription Create a new of groupe
    * @apiVersion 1.0.0
    * @apiName CreateGroupe
    * @apiGroup groupe
@@ -64,7 +64,7 @@ router
 router
   .route('/:advisorId')
   /**
-   * @api {get} v1/groupe/:advisorId List groupes of advisor
+   * @api {get} v1/groupe/:id List groupes of advisor
    * @apiDescription Get a list of groupes  of advisor
    * @apiVersion 1.0.0
    * @apiName Listgroupes
@@ -87,7 +87,7 @@ router
 router
   .route('/groupeId/:groupeId')
   /**
-   * @api {get} v1/groupe/groupeId/:id get one groupe
+   * @api {get} v1/groupe/groupeId/:id get one groupe by id
    * @apiDescription Get groupe one information
    * @apiVersion 1.0.0
    * @apiName Get one Groupe
