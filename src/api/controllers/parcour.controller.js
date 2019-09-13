@@ -77,8 +77,14 @@ exports.get = async (req, res, next) => {
  */
 exports.getParcourByUserId = async (req, res, next) => {
   try {
-    const parcour = await Parcour.findOne({ ...req.params }).exec();
+    const _id = req.params.userId;
+    const user = await User.findById(_id).exec();
+    const parcour = await Parcour.findOne({ ...req.params })
+      .populate({ path: 'userId' })
+      .exec();
+
     const globalParcour = await addGlobals(parcour);
+    // globalParcour[user] = user;
     const skills = await Skill.find({
       _id: { $in: parcour.skills }
     }).populate({ path: 'theme', select: 'title' });
@@ -109,9 +115,9 @@ exports.getParcourByUserId = async (req, res, next) => {
         });
         return newJob;
       });
+
       globalParcour.jobs = newJobs;
     } else globalParcour.jobs = [];
-
     return res.json(globalParcour.transform());
   } catch (error) {
     next(error);
