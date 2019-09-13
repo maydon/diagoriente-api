@@ -64,8 +64,8 @@ router
 router
   .route('/:advisorId')
   /**
-   * @api {get} v1/groupes List groupes of advisor
-   * @apiDescription Get a list of groupes
+   * @api {get} v1/groupe/:advisorId List groupes of advisor
+   * @apiDescription Get a list of groupes  of advisor
    * @apiVersion 1.0.0
    * @apiName Listgroupes
    * @apiGroup groupe
@@ -94,7 +94,7 @@ router
    * @apiGroup groupe
    * @apiPermission admin
    *
-   * @apiHeader {String} Authorization   User's access token
+   * @apiHeader {String} Authorization   advisor's access token
    *
    * @apiParam  {String}            id     groupe id
    * @apiParam  {String}            title     groupe title
@@ -106,10 +106,10 @@ router
    */
   .get(authorize([ADMIN, ADVISOR]), validate(get), controller.get)
   /**
-   * @api {get} v1/groupe/:id patch groupes
-   * @apiDescription Get groupes information
+   * @api {get} v1/groupe/:id patch groupes by id
+   * @apiDescription update groupes information
    * @apiVersion 1.0.0
-   * @apiName GetGroupe
+   * @apiName UpdateGroupe
    * @apiGroup groupe
    * @apiPermission admin
    *
