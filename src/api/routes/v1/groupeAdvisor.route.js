@@ -21,7 +21,7 @@ router
    * @apiDescription Get a list of groupes
    * @apiVersion 1.0.0
    * @apiName Listgroupes
-   * @apiGroup groupe
+   * @apiGroup Groupe
    * @apiPermission admin / advisor
    *
    * @apiHeader {String} Authorization  access token
@@ -41,7 +41,7 @@ router
    * @apiDescription Create a new of groupe
    * @apiVersion 1.0.0
    * @apiName CreateGroupe
-   * @apiGroup groupe
+   * @apiGroup Groupe
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization  access token
@@ -68,7 +68,7 @@ router
    * @apiDescription Get a list of groupes  of advisor
    * @apiVersion 1.0.0
    * @apiName List groupes of advisor
-   * @apiGroup groupe
+   * @apiGroup Groupe
    * @apiPermission admin / advisor
    *
    * @apiHeader {String} Authorization  access token
@@ -91,7 +91,7 @@ router
    * @apiDescription Get groupe one information
    * @apiVersion 1.0.0
    * @apiName Get one Groupe
-   * @apiGroup groupe
+   * @apiGroup Groupe
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   advisor's access token
@@ -110,7 +110,7 @@ router
    * @apiDescription update groupe information
    * @apiVersion 1.0.0
    * @apiName UpdateGroupe
-   * @apiGroup groupe
+   * @apiGroup Groupe
    * @apiPermission admin
    *
    * @apiHeader {String} Authorization   User's access token

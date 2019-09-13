@@ -98,7 +98,7 @@ router
    * @api {get} v1/parcours/public/:userId Get Parcours
    * @apiDescription Get a Parcours
    * @apiVersion 1.0.0
-   * @apiName GetParcours
+   * @apiName GetPublicParcours
    * @apiGroup Parcour
    * @apiPermission  user
    *
