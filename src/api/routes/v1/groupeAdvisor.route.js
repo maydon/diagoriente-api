@@ -62,7 +62,7 @@ router
    */
   .post(authorize(ADMIN, ADVISOR), validate(create), controller.create);
 router
-  .route('/:advisorId')
+  .route('/advisor/:advisorId')
   /**
    * @api {get} v1/groupe/:id List groupes of advisor
    * @apiDescription Get a list of groupes  of advisor
@@ -107,7 +107,7 @@ router
   .get(authorize([ADMIN, ADVISOR]), validate(get), controller.get)
   /**
    * @api {get} v1/groupe/:id patch groupes by id
-   * @apiDescription update groupes information
+   * @apiDescription update groupe information
    * @apiVersion 1.0.0
    * @apiName UpdateGroupe
    * @apiGroup groupe
