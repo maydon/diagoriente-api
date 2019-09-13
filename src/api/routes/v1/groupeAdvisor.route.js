@@ -64,10 +64,10 @@ router
 router
   .route('/advisor/:advisorId')
   /**
-   * @api {get} v1/groupe/advisor/:id groupes of advisor
+   * @api {get} v1/groupe/advisor/:id list groupes of advisor
    * @apiDescription Get a list of groupes  of advisor
    * @apiVersion 1.0.0
-   * @apiName List groupes of advisor
+   * @apiName ListGroupesOfAdvisor
    * @apiGroup Groupe
    * @apiPermission admin / advisor
    *
