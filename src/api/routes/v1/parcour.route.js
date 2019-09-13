@@ -95,8 +95,8 @@ router
 router
   .route('/public/:userId')
   /**
-   * @api {get} v1/parcours/public/:userId Get Parcours
-   * @apiDescription Get a Parcours
+   * @api {get} v1/parcours/public/:userId Get Public Parcours
+   * @apiDescription Get Public Parcours
    * @apiVersion 1.0.0
    * @apiName GetPublicParcours
    * @apiGroup Parcour
