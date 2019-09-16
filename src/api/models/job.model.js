@@ -69,7 +69,10 @@ const jobSchema = new mongoose.Schema(
       type: String,
       maxlength: 500
     },
-    questionJobs: [questionJob]
+    questionJobs: [questionJob],
+    rome_codes: {
+      type: String
+    }
   },
   {
     timestamps: true
@@ -96,7 +99,8 @@ jobSchema.method({
       'favoriteId',
       'environments',
       'link',
-      'questionJobs'
+      'questionJobs',
+      'rome_codes'
     ];
 
     fields.forEach((field) => {

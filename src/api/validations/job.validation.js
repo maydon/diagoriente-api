@@ -72,7 +72,8 @@ module.exports = {
       environments: Joi.array()
         .items(Joi.objectId())
         .unique(),
-      link: Joi.string().max(500)
+      link: Joi.string().max(500),
+      rome_codes: Joi.string()
     }
   },
 
@@ -117,7 +118,8 @@ module.exports = {
             .max(250)
             .required()
         })
-        .max(10)
+        .max(10),
+      rome_codes: Joi.string()
     }
   }
 };
