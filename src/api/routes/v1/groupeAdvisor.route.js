@@ -108,7 +108,7 @@ router
    */
   .get(authorize([ADMIN, ADVISOR]), validate(get), controller.get)
   /**
-   * @api {get} v1/groupe/:id patch groupes by id
+   * @api {patch} v1/groupe/groupeId/:id patch groupes by id
    * @apiDescription update groupe information
    * @apiVersion 1.0.0
    * @apiName UpdateGroupe
@@ -124,6 +124,6 @@ router
    * @apiError (Forbidden 403)    Forbidden    Only admin can access the data
    * @apiError (Not Found 404)    NotFound     Theme does not exist
    */
-  .patch(authorize(ADMIN), validate(update), controller.update);
+  .patch(authorize(ADVISOR), validate(update), controller.update);
 
 module.exports = router;
