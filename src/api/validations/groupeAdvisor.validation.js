@@ -41,6 +41,7 @@ module.exports = {
         .required(),
       users: Joi.array(),
       code: Joi.string()
+        .min(8)
         .max(8)
         .required()
     }

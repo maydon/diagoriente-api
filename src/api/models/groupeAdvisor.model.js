@@ -19,6 +19,7 @@ const groupeSchema = new mongoose.Schema(
     code: {
       type: String,
       maxlength: 8,
+      minlength: 8,
       trim: true,
       required: true
     },
