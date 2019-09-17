@@ -18,7 +18,8 @@ const parcourSchema = new mongoose.Schema(
     },
     skills: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
     families: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Family' }],
-    played: 'boolean'
+    played: 'boolean',
+    search: { type: String, trim: true }
   },
   {
     timestamps: true
@@ -152,17 +153,21 @@ parcourSchema.statics = {
    * @returns {Promise<Post[]>}
    */
   list({
-    page = 1, perPage = 30, role, _id
+    page = 1, perPage = 30, role, _id, search
   }) {
     const RolesSearch = {
       admin: {},
       advisor: { advisorId: _id },
       user: { userId: _id }
     };
+    const reg = new RegExp(search, 'i');
 
     const querySearch = { ...RolesSearch[role] };
-    return this.find({ ...querySearch })
-      .populate('userId', 'uniqId email platform profile')
+    return this.find({
+      $or: [{ codeGroupe: reg }],
+      ...querySearch
+    })
+      .populate('userId', 'uniqId email platform profile userGroupe')
       .populate('advisorId', 'email profile')
       .sort({ updatedAt: -1 })
       .skip(perPage * (page - 1))

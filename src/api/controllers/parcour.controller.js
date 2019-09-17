@@ -77,7 +77,6 @@ exports.get = async (req, res, next) => {
  */
 exports.getParcourByUserId = async (req, res, next) => {
   try {
-    const _id = req.params.userId;
     const parcour = await Parcour.findOne({ ...req.params })
       .populate({ path: 'userId' })
       .exec();

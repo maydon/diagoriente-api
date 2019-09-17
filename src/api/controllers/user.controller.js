@@ -304,6 +304,8 @@ exports.addUser = async (req, res, next) => {
       context,
       codeGroupe
     } = req.body;
+    console.log('codeGroupe', codeGroupe);
+
     const thecontext = context || '5d2726337cdd133827c1fb03';
     const tutorialArray = {
       tutorial: [false, false, false, false, false, false, false, false, false, false]
@@ -334,12 +336,16 @@ exports.addUser = async (req, res, next) => {
     const newProps = { ...userProp, ...tutorialArray };
 
     const newUser = new User(newProps);
-
+    let userGroupe = {};
     if (codeGroupe) {
-      const groupe = await Groupe.findOne({ codeGroupe });
+      const groupe = await Groupe.findOne({ code: codeGroupe });
+      userGroupe = groupe;
       const { users } = groupe;
       const newTable = users.push(newUser);
       const updatedGroupe = Object.assign(groupe, newTable);
+
+      const savedUser = await newUser.save();
+      res.json({ ...savedUser.transform(), userGroupe });
       const savedGroupe = await updatedGroupe.save();
       res.json(savedGroupe.transform());
     } else {
