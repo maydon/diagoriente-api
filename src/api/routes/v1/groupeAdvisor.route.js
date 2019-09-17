@@ -35,7 +35,9 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .get(authorize([ADMIN, ADVISOR]), validate(list), controller.list)
+  .get(authorize([ADMIN, ADVISOR]), validate(list), controller.list);
+router
+  .route('/')
   /**
    * @api {post} v1/groupe Create groupe
    * @apiDescription Create a new of groupe
@@ -60,7 +62,7 @@ router
    * @apiError (Unauthorized 401)  Unauthorized  Only authenticated users can access the data
    * @apiError (Forbidden 403)     Forbidden     Only admins can access the data
    */
-  .post(authorize(ADMIN, ADVISOR), validate(create), controller.create);
+  .post(authorize(ADVISOR), validate(create), controller.create);
 router
   .route('/advisor/:advisorId')
   /**
