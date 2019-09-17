@@ -302,7 +302,7 @@ exports.addUser = async (req, res, next) => {
       question,
       institution,
       context,
-      code
+      codeGroupe
     } = req.body;
     const thecontext = context || '5d2726337cdd133827c1fb03';
     const tutorialArray = {
@@ -311,8 +311,8 @@ exports.addUser = async (req, res, next) => {
     // throw error if email alrady exist
     await User.checkDuplicateEmail(email, next);
     // throw error if groupe does not exist
-    if (code) {
-      await Groupe.groupeDosentExist(code);
+    if (codeGroupe) {
+      await Groupe.groupeDosentExist(codeGroupe);
     }
     const userProp = {
       uniqId,
@@ -328,15 +328,15 @@ exports.addUser = async (req, res, next) => {
         institution
       },
       context: [thecontext],
-      code
+      codeGroupe
     };
 
     const newProps = { ...userProp, ...tutorialArray };
 
     const newUser = new User(newProps);
 
-    if (code) {
-      const groupe = await Groupe.findOne({ code });
+    if (codeGroupe) {
+      const groupe = await Groupe.findOne({ codeGroupe });
       const { users } = groupe;
       const newTable = users.push(newUser);
       const updatedGroupe = Object.assign(groupe, newTable);

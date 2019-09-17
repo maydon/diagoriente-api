@@ -81,7 +81,7 @@ const userSchema = new mongoose.Schema(
     },
     parcours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Parcour' }],
     context: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Context' }],
-    code: {
+    codeGroupe: {
       type: String,
       max: 6
     },
@@ -113,7 +113,7 @@ userSchema.method({
       'question',
       'createdAt',
       'context',
-      'code',
+      'codeGroupe',
       'tutorial'
     ];
 
