@@ -127,7 +127,7 @@ module.exports = {
       lastName: Joi.string().max(30),
       pseudo: Joi.string().max(25),
       institution: Joi.string().max(70),
-      codeGroupe: Joi.string(),
+      codeGroupe: Joi.string().allow(''),
       tutorial: Joi.array(),
       question: {
         _id: Joi.string().required(),
