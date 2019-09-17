@@ -162,7 +162,7 @@ parcourSchema.statics = {
 
     const querySearch = { ...RolesSearch[role] };
     return this.find({ ...querySearch })
-      .populate('userId', 'uniqId email platform profile')
+      .populate('userId', 'uniqId email platform profile userGroupe')
       .populate('advisorId', 'email profile')
       .sort({ updatedAt: -1 })
       .skip(perPage * (page - 1))
